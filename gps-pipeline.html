@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPS Processing Pipeline — Eamon McGleenan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fg: #1a1a1a;
+      --fg-secondary: #555;
+      --fg-muted: #888;
+      --bg: #fafaf8;
+      --bg-card: #fff;
+      --accent: #2a5a4c;
+      --accent-light: #e8f0ed;
+      --border: #e5e5e0;
+      --serif: 'Newsreader', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --max-w: 780px;
+      --space: 1.5rem;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.65;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250,250,248,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: .85rem var(--space);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav .name {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.05rem;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -.01em;
+    }
+    nav ul { list-style: none; display: flex; gap: 1.75rem; }
+    nav a {
+      text-decoration: none;
+      color: var(--fg-secondary);
+      font-size: .85rem;
+      font-weight: 500;
+      letter-spacing: .02em;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* ── ARTICLE ── */
+    .article {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 3.5rem var(--space) 2rem;
+    }
+    .article-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .breadcrumb {
+      font-size: .78rem;
+      color: var(--fg-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .breadcrumb a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article-header h1 {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+      line-height: 1.25;
+      letter-spacing: -.02em;
+      margin-bottom: .6rem;
+    }
+    .article-header .subtitle {
+      font-size: .92rem;
+      color: var(--fg-secondary);
+      line-height: 1.6;
+    }
+    .article-meta {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      font-size: .8rem;
+      color: var(--fg-muted);
+    }
+    .article-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .article-meta svg { width: 13px; height: 13px; }
+
+    /* ── TABLE OF CONTENTS ── */
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .toc-title {
+      font-family: var(--sans);
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--fg-muted);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+    .toc ol {
+      list-style: none;
+      counter-reset: toc-counter;
+    }
+    .toc ol li {
+      counter-increment: toc-counter;
+      margin-bottom: .35rem;
+    }
+    .toc ol li::before {
+      content: counter(toc-counter) ".";
+      font-family: var(--mono);
+      font-size: .75rem;
+      color: var(--accent);
+      margin-right: .5rem;
+      font-weight: 500;
+    }
+    .toc a {
+      font-size: .88rem;
+      color: var(--fg-secondary);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .toc a:hover { color: var(--accent); }
+
+    /* ── PROSE ── */
+    .prose h2 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.3rem;
+      letter-spacing: -.01em;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: .55rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .prose h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.05rem;
+      margin: 1.8rem 0 .7rem;
+    }
+    .prose p {
+      margin-bottom: 1.1rem;
+      color: var(--fg-secondary);
+      line-height: 1.75;
+    }
+    .prose a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s;
+    }
+    .prose a:hover { border-bottom-color: var(--accent); }
+
+    /* ── CALLOUT BOX ── */
+    .callout {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 0 6px 6px 0;
+      margin: 1.5rem 0;
+    }
+    .callout p {
+      color: var(--fg);
+      margin: 0;
+      font-size: .9rem;
+    }
+    .callout-title {
+      font-weight: 500;
+      font-size: .82rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: .35rem;
+    }
+
+    .callout-warn {
+      background: #fef7ec;
+      border-left-color: #c4820a;
+    }
+    .callout-warn .callout-title { color: #a06c05; }
+
+    /* ── CODE ── */
+    code {
+      font-family: var(--mono);
+      font-size: .82rem;
+      background: #f0f0ec;
+      padding: .15rem .4rem;
+      border-radius: 3px;
+      color: var(--fg);
+    }
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      margin: 1.2rem 0 1.5rem;
+      line-height: 1.6;
+      font-size: .82rem;
+      border: 1px solid #333;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2d2d2d;
+      padding: .5rem 1rem;
+      border-radius: 6px 6px 0 0;
+      border: 1px solid #333;
+      border-bottom: none;
+      margin-top: 1.2rem;
+    }
+    .code-header + pre {
+      margin-top: 0;
+      border-radius: 0 0 6px 6px;
+    }
+    .code-header span {
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: #888;
+      font-weight: 500;
+    }
+    .code-header .copy-btn {
+      background: none;
+      border: 1px solid #555;
+      color: #aaa;
+      padding: .2rem .5rem;
+      border-radius: 3px;
+      font-size: .68rem;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: all .2s;
+    }
+    .code-header .copy-btn:hover {
+      border-color: #888;
+      color: #ddd;
+    }
+
+    /* Syntax highlighting tokens */
+    .tok-kw   { color: #c586c0; }
+    .tok-fn   { color: #dcdcaa; }
+    .tok-str  { color: #ce9178; }
+    .tok-cmt  { color: #6a9955; font-style: italic; }
+    .tok-num  { color: #b5cea8; }
+    .tok-op   { color: #d4d4d4; }
+    .tok-cls  { color: #4ec9b0; }
+    .tok-var  { color: #9cdcfe; }
+
+    /* ── PIPELINE DIAGRAM ── */
+    .pipeline-diagram {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 2rem 0;
+      overflow-x: auto;
+      padding: .5rem 0;
+    }
+    .pipeline-stage {
+      flex: 1;
+      min-width: 160px;
+      padding: 1.1rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: center;
+      position: relative;
+    }
+    .pipeline-stage .stage-num {
+      font-family: var(--mono);
+      font-size: .65rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .35rem;
+    }
+    .pipeline-stage h4 {
+      font-family: var(--serif);
+      font-size: .9rem;
+      font-weight: 500;
+      margin-bottom: .3rem;
+    }
+    .pipeline-stage p {
+      font-size: .75rem;
+      color: var(--fg-muted);
+      line-height: 1.5;
+    }
+    .pipeline-arrow {
+      display: flex;
+      align-items: center;
+      padding: 0 .3rem;
+      color: var(--accent);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* ── METRIC TABLE ── */
+    .metric-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0 1.5rem;
+      font-size: .84rem;
+    }
+    .metric-table th {
+      font-family: var(--sans);
+      font-weight: 500;
+      text-align: left;
+      padding: .65rem .8rem;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+      font-size: .78rem;
+      letter-spacing: .03em;
+    }
+    .metric-table td {
+      padding: .6rem .8rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--fg-secondary);
+      line-height: 1.5;
+    }
+    .metric-table tr:hover td {
+      background: rgba(42,90,76,.03);
+    }
+
+    /* ── CLONE BUTTON ── */
+    .clone-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .clone-section .clone-url {
+      flex: 1;
+      min-width: 250px;
+      font-family: var(--mono);
+      font-size: .82rem;
+      background: #f0f0ec;
+      padding: .55rem .85rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--fg-secondary);
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+    .clone-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .82rem;
+      font-weight: 500;
+      color: #fff;
+      background: var(--accent);
+      text-decoration: none;
+      padding: .55rem 1.1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .clone-btn:hover { background: #1e4a3d; }
+    .clone-btn svg { width: 14px; height: 14px; }
+
+    /* ── FILE TREE ── */
+    .file-tree {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.2rem 0 1.5rem;
+      font-family: var(--mono);
+      font-size: .8rem;
+      line-height: 1.9;
+      border: 1px solid #333;
+      overflow-x: auto;
+    }
+    .file-tree .dir  { color: #9cdcfe; }
+    .file-tree .file { color: #d4d4d4; }
+    .file-tree .desc { color: #6a9955; }
+
+    /* ── SCREENSHOTS ── */
+    .screenshot {
+      margin: 1.5rem 0 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+    .screenshot:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+    .screenshot img {
+      width: 100%;
+      display: block;
+    }
+    .screenshot figcaption {
+      padding: .75rem 1.2rem;
+      font-size: .78rem;
+      color: var(--fg-muted);
+      border-top: 1px solid var(--border);
+      line-height: 1.5;
+    }
+
+    /* ── REFERENCES ── */
+    .ref-list {
+      list-style: none;
+      counter-reset: ref-counter;
+      margin: 1rem 0;
+    }
+    .ref-list li {
+      counter-increment: ref-counter;
+      padding: .6rem 0 .6rem 2.2rem;
+      position: relative;
+      font-size: .84rem;
+      color: var(--fg-secondary);
+      line-height: 1.6;
+      border-bottom: 1px solid var(--border);
+    }
+    .ref-list li:last-child { border-bottom: none; }
+    .ref-list li::before {
+      content: "[" counter(ref-counter) "]";
+      position: absolute;
+      left: 0;
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .ref-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .ref-list a:hover { text-decoration: underline; }
+
+    /* ── TALK CARD ── */
+    .talk-card {
+      padding: 1.25rem 1.4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 1.2rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .talk-card:hover {
+      border-color: #ccc;
+      box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 2.5rem var(--space);
+      border-top: 1px solid var(--border);
+      font-size: .8rem;
+      color: var(--fg-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    footer a { color: var(--fg-secondary); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp .6s ease forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in:nth-child(1) { animation-delay: .05s; }
+    .fade-in:nth-child(2) { animation-delay: .12s; }
+    .fade-in:nth-child(3) { animation-delay: .19s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav ul { gap: 1rem; font-size: .75rem; }
+      .pipeline-diagram { flex-direction: column; }
+      .pipeline-arrow { transform: rotate(90deg); justify-content: center; padding: .3rem 0; }
+      .clone-section { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="inner">
+    <a href="index.html" class="name">Eamon McGleenan</a>
+    <ul>
+      <li><a href="index.html#publications">Publications</a></li>
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="index.html#media">Media</a></li>
+      <li><a href="index.html#talks">Talks</a></li>
+      <li><a href="index.html#qualifications">Qualifications</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── ARTICLE ── -->
+<article class="article">
+
+  <div class="article-header fade-in">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <a href="index.html#projects">Projects</a>
+      <span>›</span>
+      <span>GPS Pipeline</span>
+    </div>
+    <h1>GPS Processing Pipeline for Gaelic Games</h1>
+    <p class="subtitle">
+      An open-source Python pipeline for processing STATSports GPS data into
+      Tableau-ready summaries, built on evidence-informed thresholds from the
+      sports science literature.
+    </p>
+    <div class="article-meta">
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        15 min read
+      </span>
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Updated May 2026
+      </span>
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Python · NumPy · SciPy · Pandas
+      </span>
+    </div>
+  </div>
+
+  <!-- ── TABLE OF CONTENTS ── -->
+  <div class="toc fade-in">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#overview">Overview &amp; Motivation</a></li>
+      <li><a href="#screenshots">Screenshots</a></li>
+      <li><a href="#quickstart">Quick Start</a></li>
+      <li><a href="#architecture">Pipeline Architecture</a></li>
+      <li><a href="#metrics">Metric Definitions &amp; Scientific Basis</a></li>
+      <li><a href="#privacy">Data Privacy &amp; Ethical Use</a></li>
+      <li><a href="#configuration">Configuration &amp; Customisation</a></li>
+      <li><a href="#extending">Extending the Pipeline</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </div>
+
+  <div class="prose">
+
+    <!-- ── 1. OVERVIEW ── -->
+    <h2 id="overview">1. Overview &amp; Motivation</h2>
+
+    <p>
+      Wearable GPS tracking devices have become essential tools in team sports, enabling practitioners to quantify training
+      loads and monitor fatigue across a season. This pipeline was developed to process raw 10&nbsp;Hz GPS data exported
+      from <a href="https://statsports.com/" target="_blank">STATSports</a> units into a structured, Tableau-ready summary
+      suitable for weekly monitoring and long-term athlete profiling.
+    </p>
+
+    <p>
+      The project originated from applied work with a GAA club, where GPS tracking was used across
+      an entire competitive season to individualise training loads and inform match preparation. The underlying signal processing
+      methods and threshold choices are grounded in the peer-reviewed literature, drawing principally on the metabolic power
+      model of di&nbsp;Prampero&nbsp;&amp;&nbsp;Osgnach <a href="#ref-1">[1,&nbsp;2]</a>, the injury-risk training targets
+      proposed by Buchheit <a href="#ref-3">[3]</a>, and the speed-exposure framework from McGleenan et al. <a href="#ref-4">[4]</a>.
+    </p>
+
+    <div class="callout">
+      <div class="callout-title">Why open-source this?</div>
+      <p>
+        GPS analytics is widespread in professional sport but often inaccessible at grassroots level due to cost and
+        expertise barriers. This pipeline is released to give club-level practitioners a working starting point
+        they can adapt to their own context, with full transparency about the calculations involved.
+      </p>
+    </div>
+
+
+    <!-- ── 2. SCREENSHOTS ── -->
+    <h2 id="screenshots">2. Screenshots</h2>
+
+    <p>
+      Below are screenshots from the live deployment of this pipeline — from raw data collection in
+      STATSports Sonra through to the Tableau dashboards used for weekly reporting. Player names and
+      match details have been redacted.
+    </p>
+
+    <h3>STATSports Sonra — Raw Data View</h3>
+    <p>
+      The Sonra platform provides the raw multi-player speed traces used as input to the pipeline.
+      Each row shows one player's speed over the full session, with drill markers overlaid on the timeline.
+    </p>
+    <figure class="screenshot fade-in">
+      <img src="screenshot-sonra.jpg" alt="STATSports Sonra multi-player speed trace view" loading="lazy">
+      <figcaption>Multi-player speed traces in STATSports Sonra, showing a full training session with 12 drills across 18 players.</figcaption>
+    </figure>
+
+    <h3>Tableau Dashboard — Match Summary</h3>
+    <p>
+      The main summary dashboard shows a weekly total distance timeline with match/training breakdown,
+      per-player % of max speed reached, and individual bar charts for total distance, HSR distance,
+      sprint distance, and peak speed.
+    </p>
+    <figure class="screenshot fade-in">
+      <img src="screenshot-tableau-summary.jpg" alt="Tableau match summary dashboard" loading="lazy">
+      <figcaption>Match summary — team total distance timeline, individual metrics, and % of max speed chart.</figcaption>
+    </figure>
+
+    <h3>Tableau Dashboard — Extras</h3>
+    <p>
+      The extras dashboard covers the additional metrics computed by the pipeline: high metabolic load
+      distance, absolute sprint counts, acceleration and deceleration zone&nbsp;3+ counts, and
+      speed-band exposure (efforts at 80%, 85%, 90%, and 95% of max speed).
+    </p>
+    <figure class="screenshot fade-in">
+      <img src="screenshot-tableau-extras.jpg" alt="Tableau extras dashboard — HML, sprints, acceleration, speed exposure" loading="lazy">
+      <figcaption>Session extras — HML distance, sprint counts, acceleration/deceleration zones, and speed-band exposure counts.</figcaption>
+    </figure>
+
+    <h3>Tableau Dashboard — 10-Minute Period Breakdown</h3>
+    <p>
+      The 10-minute period breakdown shows how each player's total distance output changes across the
+      match, with separate bars for each half (1h&nbsp;FTD = first-half ten-minute block, 2h&nbsp;FTD = second-half).
+      This helps identify fatigue patterns — a steep drop-off in the second half may indicate fitness
+      issues or the need for tactical substitution.
+    </p>
+    <figure class="screenshot fade-in">
+      <img src="screenshot-tableau-periods.jpg" alt="Tableau 10-minute period breakdown chart" loading="lazy">
+      <figcaption>Match 10-minute period breakdown — each colour represents one player, with bars showing distance per 10-minute block across both halves.</figcaption>
+    </figure>
+
+    <h3>Tableau Dashboard — Weekly HSR &amp; Sprint Targets</h3>
+    <p>
+      Weekly accumulated HSR and sprint distances are plotted against the Buchheit et al. (2023) training
+      targets. The green bands represent the recommended ranges (0.6–0.9× match HSR, 0.6–1.1× match sprint
+      distance), with red bars showing actual weekly totals. Weeks where bars exceed the green band may
+      indicate overloading; weeks below it suggest under-exposure.
+    </p>
+    <figure class="screenshot fade-in">
+      <img src="screenshot-tableau-targets.jpg" alt="Tableau weekly HSR and sprint distance targets" loading="lazy">
+      <figcaption>Weekly HSR and sprint distance against Buchheit (2023) training targets — green bands show the recommended range.</figcaption>
+    </figure>
+
+
+
+
+    <!-- ── 3. QUICK START ── -->
+    <h2 id="quickstart">3. Quick Start</h2>
+
+    <p>
+      The code requires Python 3.9+ and three dependencies. Clone the repository, install requirements, point the
+      pipeline at a raw session folder, and run.
+    </p>
+
+    <div class="clone-section fade-in">
+      <div class="clone-url" id="clone-url">git clone https://github.com/emcgleenan23/gps-pipeline.git</div>
+      <button class="clone-btn" onclick="copyClone()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
+      </button>
+    </div>
+
+    <div class="code-header">
+      <span>terminal</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+<pre><code><span class="tok-cmt"># Install dependencies</span>
+pip install numpy pandas scipy
+
+<span class="tok-cmt"># Navigate to the project directory</span>
+cd gps-pipeline
+
+<span class="tok-cmt"># Run the pipeline on a session folder</span>
+python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawDataExtended"</span></code></pre>
+
+    <h3>Raw Data Folder Convention</h3>
+    <p>
+      STATSports exports one folder per session. The pipeline expects folders named using the format
+      <code>YYYY-MM-DD-{Activity}-RawDataExtended</code>, where <code>{Activity}</code> is either
+      <code>Match</code> or <code>Training</code>. Inside that folder, each player's data should be in CSV files
+      following the pattern <code>YYYY-MM-DD-Initials-Surname-DrillName.csv</code>, with one file per drill.
+      A mandatory <code>Entire-Session</code> file per player provides the full-resolution data from which drill
+      windows are extracted.
+    </p>
+
+    <h3>Directory Layout</h3>
+    <div class="file-tree">
+      <span class="dir">gps-pipeline/</span><br>
+      ├── <span class="file">config.py</span>          <span class="desc">← all paths &amp; thresholds — edit this</span><br>
+      ├── <span class="file">processing.py</span>      <span class="desc">← signal processing functions</span><br>
+      ├── <span class="file">pipeline.py</span>        <span class="desc">← Stage 1 (drill_calculator) + Stage 2 (summariser)</span><br>
+      ├── <span class="file">build_absolute_data.py</span> <span class="desc">← rolling max speed/HR per player</span><br>
+      ├── <span class="file">build_benchmarks.py</span>  <span class="desc">← season benchmark builder</span><br>
+      ├── <span class="file">schedule_manager.py</span>  <span class="desc">← CLI for match/training schedule</span><br>
+      ├── <span class="file">run.py</span>             <span class="desc">← entry point</span><br>
+      │<br>
+      ├── <span class="dir">research_data/</span>     <span class="desc">← merged per-session CSVs (auto-created)</span><br>
+      ├── <span class="dir">tableau_data/</span>      <span class="desc">← final summary CSV for Tableau (auto-created)</span><br>
+      └── <span class="dir">team_schedules/</span>    <span class="desc">← schedule CSV &amp; benchmarks</span>
+    </div>
+
+
+    <!-- ── 3. ARCHITECTURE ── -->
+    <h2 id="architecture">4. Pipeline Architecture</h2>
+
+    <p>
+      The pipeline operates in two sequential stages, both orchestrated from <code>run.py</code>. Separating
+      them allows you to re-run the summariser independently (for example, after updating the absolute data
+      file with a new player's max speed) without re-processing the raw CSVs.
+    </p>
+
+    <div class="pipeline-diagram fade-in">
+      <div class="pipeline-stage">
+        <div class="stage-num">Raw Data</div>
+        <h4>STATSports Export</h4>
+        <p>Per-player CSV files at 10&nbsp;Hz, one file per drill + Entire Session</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-stage">
+        <div class="stage-num">Stage 1</div>
+        <h4>drill_calculator</h4>
+        <p>Time-window extraction, deduplication, Butterworth filtering, merge to single CSV</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-stage">
+        <div class="stage-num">Stage 2</div>
+        <h4>summariser</h4>
+        <p>All metrics computed per player × drill, appended to Tableau summary CSV</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-stage">
+        <div class="stage-num">Output</div>
+        <h4>Tableau / Dashboard</h4>
+        <p>Summary CSV ready for visualisation and weekly monitoring</p>
+      </div>
+    </div>
+
+    <h3>Stage 1: drill_calculator</h3>
+    <p>
+      Reads all CSVs from a raw session folder. For each player, the <code>Entire-Session</code> file is loaded
+      first as the master time-series. Individual drill files are then used purely to define time windows — the
+      corresponding segment is extracted from the full-resolution session data. This avoids discrepancies
+      between drill-level and session-level recordings.
+    </p>
+    <p>
+      A critical step at this stage is <strong>time-based deduplication</strong>. STATSports exports 10 speed
+      readings per 1-second timestamp (the device samples at 10&nbsp;Hz but the time column has 1&nbsp;Hz resolution).
+      Keeping all duplicates would inflate distance metrics by roughly 10×. The pipeline sorts by time and
+      retains only the first reading per timestamp, then applies a low-pass Butterworth filter to the resulting
+      speed series.
+    </p>
+
+    <h3>Stage 2: summariser</h3>
+    <p>
+      Loads the merged CSV produced by Stage&nbsp;1, resolves each player's rolling absolute-best values
+      (max speed, max HR) from the absolute data file, then computes the full suite of metrics described
+      in Section&nbsp;4 below. Results are appended (not overwritten) to a cumulative Tableau summary CSV,
+      building a longitudinal record across the season.
+    </p>
+
+
+    <!-- ── 4. METRICS ── -->
+    <h2 id="metrics">5. Metric Definitions &amp; Scientific Basis</h2>
+
+    <h3>4.1 Signal Processing</h3>
+    <p>
+      Raw speed data is smoothed using a 1st-order Butterworth low-pass filter with a 1&nbsp;Hz cutoff,
+      applied via <code>scipy.signal.filtfilt</code> for zero phase-shift. This removes high-frequency
+      noise from the GPS signal while preserving the timing and magnitude of genuine speed changes.
+      Distance is then computed by trapezoidal integration of the filtered speed series.
+    </p>
+
+    <h3>4.2 Metabolic Power &amp; High Metabolic Load Distance</h3>
+    <p>
+      The metabolic power model, originally proposed by di&nbsp;Prampero et al. <a href="#ref-1">[1]</a> and adapted
+      for team sports by Osgnach et al. <a href="#ref-2">[2]</a>, estimates instantaneous energy cost
+      from GPS-derived speed and acceleration. The model treats acceleration as equivalent to running on a gradient,
+      computing an "equivalent slope" and "equivalent mass" to derive the energy cost of each time-step. High
+      Metabolic Load (HML) distance is defined as the distance covered while metabolic power exceeds
+      25.5&nbsp;W/kg — a threshold that approximates the upper boundary of aerobic energy supply in
+      intermittent field sports <a href="#ref-2">[2]</a>. A grass-surface scaling factor of 1.29 is applied
+      to account for the greater energy cost of locomotion on natural turf compared to a treadmill <a href="#ref-1">[1]</a>.
+    </p>
+
+    <h3>4.3 High-Speed Running &amp; Sprint Detection</h3>
+    <p>
+      High-speed running (HSR) is quantified using both absolute (≥5.0&nbsp;m/s) and
+      relative (≥70% of the player's validated maximum speed) thresholds. The relative approach accounts for
+      inter-individual differences in physical capacity and is considered more physiologically meaningful for
+      monitoring purposes <a href="#ref-4">[4]</a>.
+    </p>
+    <p>
+      Sprint detection uses a hysteresis model: an effort begins when speed exceeds the entry threshold and
+      ends only when speed drops below 70% of that entry threshold. This prevents a single sustained effort
+      from being fragmented into multiple counted sprints by brief speed fluctuations around the threshold.
+    </p>
+
+    <h3>4.4 Speed-Band Exposure</h3>
+    <p>
+      The pipeline tracks the number of efforts and distance covered above 80%, 85%, 90%, and 95% of a
+      player's maximum speed. Tracking exposure at near-maximal velocities provides a more granular picture
+      than a single binary sprint threshold and aligns with evidence that regular exposure to high-percentage-of-max
+      speeds may be protective against soft-tissue injury <a href="#ref-4">[4]</a>. The "days since last hit"
+      metric for each band flags when a player has gone an extended period without reaching a given intensity,
+      which may indicate detraining risk or the need for supplementary speed work.
+    </p>
+
+    <h3>4.5 Injury-Risk Training Targets</h3>
+    <p>
+      Weekly training targets for HSR and sprint distance are derived from the work of Buchheit et al. <a href="#ref-3">[3]</a>,
+      who used machine-learning analysis across multiple elite football clubs to identify the training-dose windows
+      associated with the lowest injury rates. Their findings suggest that accumulating HSR distances of 0.6–0.9× match
+      HSR load and sprint distances of 0.6–1.1× match sprint load during a standard training week is associated with
+      reduced non-contact injury incidence.
+    </p>
+    <p>
+      The pipeline generates per-player targets by applying these multipliers to each player's match benchmark — either
+      a trimmed mean of their 2025 season match outputs (if <code>build_benchmarks.py</code> has been run) or, failing
+      that, the most recent session value as a fallback. The "Benchmark Source" column flags which method was used,
+      so practitioners can distinguish between stable season benchmarks and single-session estimates.
+    </p>
+
+    <h3>4.6 Force-Velocity Profiling</h3>
+    <p>
+      In-game force-velocity profiles are estimated from simultaneous speed and acceleration data during
+      positive-acceleration phases. The pipeline bins the speed–acceleration scatter into 0.2&nbsp;m/s windows,
+      selects the two highest acceleration values per bin, fits a linear regression, removes outliers beyond
+      1.96 standard deviations, and refits. The resulting slope and intercepts yield estimates of maximum speed
+      (S&nbsp;Max), maximum acceleration (A&nbsp;Max), peak power (P&nbsp;Max), ballistic power (P&nbsp;B — the
+      area under the F-v curve), the force-velocity slope (S&nbsp;Fv), and the perpendicular distance from the
+      origin to the F-v line (d&nbsp;Fv) <a href="#ref-4">[4]</a>.
+    </p>
+
+    <h3>4.7 Heart Rate Zones</h3>
+    <p>
+      Five heart-rate zones are defined as equal-width bands from 50% to 100% of each player's maximum HR.
+      Distance covered and time spent in each zone are reported. Max HR values are drawn from the rolling
+      absolute-data file, which tracks lifetime bests with anomaly detection — if a player's recorded max
+      speed exceeds their second-highest by more than 1.2&nbsp;m/s, the system flags it as a potential GPS
+      artefact and uses the second value for all relative calculations.
+    </p>
+
+    <h3>4.8 Acceleration &amp; Deceleration</h3>
+    <p>
+      Zone&nbsp;3+ acceleration and deceleration counts capture sustained efforts exceeding ±2&nbsp;m/s² for
+      at least 0.5&nbsp;s. The minimum-duration requirement filters out transient spikes that may reflect
+      sensor noise rather than genuine mechanical loading events.
+    </p>
+
+    <h3>Summary of Output Metrics</h3>
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Metrics</th>
+          <th>Basis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Total Load</td>
+          <td>Total Distance, Distance/min, HML Distance, HMLD/min</td>
+          <td>di Prampero [1], Osgnach [2]</td>
+        </tr>
+        <tr>
+          <td>High-Speed Running</td>
+          <td>HSR Distance (Abs &amp; Rel), HSR/min</td>
+          <td>McGleenan [4]</td>
+        </tr>
+        <tr>
+          <td>Sprint Detection</td>
+          <td>Sprint count &amp; distance (Abs &amp; Rel), hysteresis model</td>
+          <td>McGleenan [4]</td>
+        </tr>
+        <tr>
+          <td>Speed Exposure</td>
+          <td>Count &amp; distance at 80/85/90/95% max, days-since tracking</td>
+          <td>McGleenan [4]</td>
+        </tr>
+        <tr>
+          <td>Training Targets</td>
+          <td>HSR &amp; Sprint weekly targets (0.6–0.9× / 0.6–1.1× match)</td>
+          <td>Buchheit [3]</td>
+        </tr>
+        <tr>
+          <td>Force-Velocity</td>
+          <td>S Max, A Max, P Max, P B, S Fv, d Fv</td>
+          <td>McGleenan [4]</td>
+        </tr>
+        <tr>
+          <td>Heart Rate</td>
+          <td>5-zone distance &amp; time, Max HR, Avg HR</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Acceleration</td>
+          <td>Zone 3+ Accel &amp; Decel counts (≥±2 m/s², ≥0.5 s)</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!-- ── 5. PRIVACY ── -->
+    <h2 id="privacy">6. Data Privacy &amp; Ethical Use</h2>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">Important</div>
+      <p>
+        This repository contains <strong>code only</strong> — no player data, match results, schedule files,
+        or biometric information of any kind is included. All CSV data files referenced in the code
+        (session exports, summary outputs, absolute data, benchmarks) must be supplied by you from
+        your own GPS data collection.
+      </p>
+    </div>
+
+    <p>
+      GPS and heart-rate data are personal biometric information. If you are deploying this pipeline
+      with real athletes, you should ensure that informed consent has been obtained for data
+      collection and processing, that data is stored securely and access-controlled, that player
+      names and physiological data are not shared publicly or committed to public repositories, and
+      that your use complies with applicable data protection legislation (e.g.&nbsp;GDPR in the UK/EU).
+    </p>
+    <p>
+      The <code>.gitignore</code> included with the repository is pre-configured to exclude all CSV data
+      files, the <code>2025_data/</code> directory, the <code>research_data/</code> and
+      <code>tableau_data/</code> output folders, and any virtual environments. This means that
+      <code>git push</code> will not accidentally upload sensitive data — but you should still
+      verify before every commit.
+    </p>
+
+
+    <!-- ── 6. CONFIGURATION ── -->
+    <h2 id="configuration">7. Configuration &amp; Customisation</h2>
+
+    <p>
+      All tuneable parameters live in <code>config.py</code>. The file is divided into two sections: directory
+      paths (where raw data lives, where outputs go) and processing thresholds. You should not need to modify
+      any other file to adapt the pipeline to your own team.
+    </p>
+
+    <h3>Key Parameters</h3>
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>SAMPLE_RATE_HZ</code></td>
+          <td>10</td>
+          <td>Device sampling rate (after dedup, effective rate is 1&nbsp;Hz)</td>
+        </tr>
+        <tr>
+          <td><code>FILTER_CUTOFF_HZ</code></td>
+          <td>1</td>
+          <td>Butterworth low-pass cutoff frequency</td>
+        </tr>
+        <tr>
+          <td><code>HML_POWER_THRESHOLD</code></td>
+          <td>25.5 W/kg</td>
+          <td>Metabolic power threshold for HML distance</td>
+        </tr>
+        <tr>
+          <td><code>HSR_ABSOLUTE_THRESHOLD</code></td>
+          <td>5.0 m/s</td>
+          <td>Absolute high-speed running threshold</td>
+        </tr>
+        <tr>
+          <td><code>REL_HSR_FRACTION</code></td>
+          <td>0.70</td>
+          <td>Relative HSR threshold (fraction of player max speed)</td>
+        </tr>
+        <tr>
+          <td><code>SPRINT_ABSOLUTE_THRESHOLD</code></td>
+          <td>7.0 m/s</td>
+          <td>Absolute sprint entry threshold</td>
+        </tr>
+        <tr>
+          <td><code>SPRINT_EXIT_FRACTION</code></td>
+          <td>0.70</td>
+          <td>Hysteresis exit as fraction of entry threshold</td>
+        </tr>
+        <tr>
+          <td><code>ACCEL_ZONE3_THRESHOLD</code></td>
+          <td>±2.0 m/s²</td>
+          <td>Minimum acceleration magnitude for Zone 3+</td>
+        </tr>
+        <tr>
+          <td><code>ACCEL_MIN_DURATION_S</code></td>
+          <td>0.5 s</td>
+          <td>Minimum sustained duration above threshold</td>
+        </tr>
+        <tr>
+          <td><code>GRASS_SURFACE_SCALING</code></td>
+          <td>1.29</td>
+          <td>Metabolic cost multiplier for grass surface</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Adapting for Your Team</h3>
+    <p>
+      To use this pipeline with your own team, you will need to: update the directory paths in
+      <code>config.py</code> to point to your raw data location; create a
+      <code>team_schedules/schedule.csv</code> with columns
+      <code>Date, Activity, Competition, Opposition, Venue, Score For, Score Against, Result</code>;
+      and populate the absolute data file with your players' validated maximum speeds and heart rates.
+      The <code>schedule_manager.py</code> tool provides an interactive CLI for managing the schedule
+      without editing CSVs by hand.
+    </p>
+
+
+    <!-- ── 7. EXTENDING ── -->
+    <h2 id="extending">8. Extending the Pipeline</h2>
+
+    <p>
+      The code is deliberately modular. All signal processing functions in <code>processing.py</code>
+      are pure (no side-effects, no global state) and operate on pandas DataFrames or NumPy arrays,
+      making them straightforward to test or reuse independently. To add a new metric, write the
+      function in <code>processing.py</code>, call it from the summariser loop in <code>pipeline.py</code>,
+      and add the column name to the output record dictionary. The metric will then appear automatically
+      in the Tableau summary CSV.
+    </p>
+    <p>
+      Potential extensions might include: acute-to-chronic workload ratio (ACWR) calculations by
+      joining across multiple sessions; GPS-derived player heatmaps using the Lat/Lon columns
+      preserved in the Stage&nbsp;1 output; or integration with the Tableau Hyper API for direct
+      dashboard refresh.
+    </p>
+
+
+    <!-- ── 8. REFERENCES ── -->
+    <h2 id="references">9. References</h2>
+
+    <ol class="ref-list">
+      <li id="ref-1">
+        di Prampero, P.E. &amp; Osgnach, C. (2018).
+        Metabolic Power in Team Sports — Part 1: An Update.
+        <em>International Journal of Sports Medicine</em>, 39(08), 581–587.
+        <a href="https://doi.org/10.1055/a-0592-7660" target="_blank">doi:10.1055/a-0592-7660</a>
+      </li>
+      <li id="ref-2">
+        Osgnach, C., Poser, S., Bernardini, R., Rinaldo, R. &amp; di Prampero, P.E. (2010).
+        Energy Cost and Metabolic Power in Elite Soccer: A New Match Analysis Approach.
+        <em>Medicine &amp; Science in Sports &amp; Exercise</em>, 42(1), 170–178.
+        <a href="https://doi.org/10.1249/MSS.0b013e3181ae5cfd" target="_blank">doi:10.1249/MSS.0b013e3181ae5cfd</a>
+      </li>
+      <li id="ref-3">
+        Buchheit, M., Settembre, M., Hader, K. &amp; McHugh, D. (2023).
+        From High-Speed Running to Hobbling on Crutches: A Machine Learning Perspective on the
+        Relationships Between Training Doses and Match Injury Trends.
+        <em>Biology of Sport</em>, 40(4), 1057–1067.
+        <a href="https://doi.org/10.5114/biolsport.2023.125346" target="_blank">doi:10.5114/biolsport.2023.125346</a>
+      </li>
+      <li id="ref-4">
+        McGleenan, E., Grant, S., McFetridge, L.M., Brown, J.C.J., Shaw, J.W.,
+        de Melo Malaquias, T., Montgomery, R. &amp; Jess, D.B. (2026).
+        Ballistic power: GPS-derived measurements suitable for the real-time monitoring of
+        neuromuscular fatigue during repeated sprints.
+        <em>International Journal of Sports Science &amp; Coaching</em>.
+        <a href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank">doi:10.1177/17479541251413077</a>
+      </li>
+      <li id="ref-5">
+        Malone, S., Roe, M., Doran, D.A., Gabbett, T.J. &amp; Collins, K. (2017).
+        High chronic training loads and exposure to bouts of maximal velocity running reduce
+        injury risk in elite Gaelic football.
+        <em>Journal of Science and Medicine in Sport</em>, 20(3), 250–254.
+        <a href="https://doi.org/10.1016/j.jsams.2016.08.005" target="_blank">doi:10.1016/j.jsams.2016.08.005</a>
+      </li>
+    </ol>
+
+  </div>
+</article>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>&copy; 2026 Eamon McGleenan</span>
+  <span>Built with <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></span>
+</footer>
+
+<script>
+function copyClone() {
+  const text = document.getElementById('clone-url').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.clone-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => {
+      btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+    }, 2000);
+  });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-header').nextElementSibling;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+
+</body>
+</html>
