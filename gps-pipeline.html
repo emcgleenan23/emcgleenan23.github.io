@@ -680,8 +680,6 @@
     <p>
       The 10-minute period breakdown shows how each player's total distance output changes across the
       match, with separate bars for each half (1h&nbsp;FTD = first-half ten-minute block, 2h&nbsp;FTD = second-half).
-      This helps identify fatigue patterns — a steep drop-off in the second half may indicate fitness
-      issues or the need for tactical substitution.
     </p>
     <figure class="screenshot fade-in">
       <img src="screenshot-tableau-periods.jpg" alt="Tableau 10-minute period breakdown chart" loading="lazy">
@@ -821,7 +819,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     <!-- ── 4. METRICS ── -->
     <h2 id="metrics">5. Metric Definitions &amp; Scientific Basis</h2>
 
-    <h3>4.1 Signal Processing</h3>
+    <h3>5.1 Signal Processing</h3>
     <p>
       Raw speed data is smoothed using a 1st-order Butterworth low-pass filter with a 1&nbsp;Hz cutoff,
       applied via <code>scipy.signal.filtfilt</code> for zero phase-shift. This removes high-frequency
@@ -829,7 +827,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       Distance is then computed by trapezoidal integration of the filtered speed series.
     </p>
 
-    <h3>4.2 Metabolic Power &amp; High Metabolic Load Distance</h3>
+    <h3>5.2 Metabolic Power &amp; High Metabolic Load Distance</h3>
     <p>
       The metabolic power model, originally proposed by di&nbsp;Prampero et al. <a href="#ref-1">[1]</a> and adapted
       for team sports by Osgnach et al. <a href="#ref-2">[2]</a>, estimates instantaneous energy cost
@@ -841,7 +839,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       to account for the greater energy cost of locomotion on natural turf compared to a treadmill <a href="#ref-1">[1]</a>.
     </p>
 
-    <h3>4.3 High-Speed Running &amp; Sprint Detection</h3>
+    <h3>5.3 High-Speed Running &amp; Sprint Detection</h3>
     <p>
       High-speed running (HSR) is quantified using both absolute (≥5.0&nbsp;m/s) and
       relative (≥70% of the player's validated maximum speed) thresholds. The relative approach accounts for
@@ -854,7 +852,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       from being fragmented into multiple counted sprints by brief speed fluctuations around the threshold.
     </p>
 
-    <h3>4.4 Speed-Band Exposure</h3>
+    <h3>5.4 Speed-Band Exposure</h3>
     <p>
       The pipeline tracks the number of efforts and distance covered above 80%, 85%, 90%, and 95% of a
       player's maximum speed. Tracking exposure at near-maximal velocities provides a more granular picture
@@ -864,7 +862,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       which may indicate detraining risk or the need for supplementary speed work.
     </p>
 
-    <h3>4.5 Injury-Risk Training Targets</h3>
+    <h3>5.5 Injury-Risk Training Targets</h3>
     <p>
       Weekly training targets for HSR and sprint distance are derived from the work of Buchheit et al. <a href="#ref-3">[3]</a>,
       who used machine-learning analysis across multiple elite football clubs to identify the training-dose windows
@@ -879,7 +877,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       so practitioners can distinguish between stable season benchmarks and single-session estimates.
     </p>
 
-    <h3>4.6 Force-Velocity Profiling</h3>
+    <h3>5.6 Force-Velocity Profiling</h3>
     <p>
       In-game force-velocity profiles are estimated from simultaneous speed and acceleration data during
       positive-acceleration phases. The pipeline bins the speed–acceleration scatter into 0.2&nbsp;m/s windows,
@@ -890,7 +888,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       origin to the F-v line (d&nbsp;Fv) <a href="#ref-4">[4]</a>.
     </p>
 
-    <h3>4.7 Heart Rate Zones</h3>
+    <h3>5.7 Heart Rate Zones</h3>
     <p>
       Five heart-rate zones are defined as equal-width bands from 50% to 100% of each player's maximum HR.
       Distance covered and time spent in each zone are reported. Max HR values are drawn from the rolling
@@ -899,7 +897,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       artefact and uses the second value for all relative calculations.
     </p>
 
-    <h3>4.8 Acceleration &amp; Deceleration</h3>
+    <h3>5.8 Acceleration &amp; Deceleration</h3>
     <p>
       Zone&nbsp;3+ acceleration and deceleration counts capture sustained efforts exceeding ±2&nbsp;m/s² for
       at least 0.5&nbsp;s. The minimum-duration requirement filters out transient spikes that may reflect
@@ -959,9 +957,94 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       </tbody>
     </table>
 
+    <!-- ── LIMITATIONS ── -->
+    <h2 id="limitations">6. Limitations &amp; Considerations</h2>
 
-    <!-- ── 5. PRIVACY ── -->
-    <h2 id="privacy">6. Data Privacy &amp; Ethical Use</h2>
+    <p>
+      The dashboards and metrics produced by this pipeline are practical tools for informing training
+      decisions, not ground-truth measurements. The following limitations should be kept in mind when
+      interpreting the data.
+    </p>
+
+    <h3>6.1 GPS Signal Accuracy</h3>
+    <p>
+      Consumer-grade 10&nbsp;Hz GPS has inherent positional error, typically ±1–2&nbsp;m per sample,
+      which propagates into speed, acceleration, and all derived metrics. The Butterworth low-pass
+      filter reduces high-frequency noise but does not eliminate systematic error. Signal quality
+      degrades further in covered or enclosed venues, near tall structures, and in poor weather
+      conditions. However, STATSports Apex Pro series units have been validated for data reliability 
+      and accuracy independently through the FIFA Quality Programme, 
+      against the industry gold standard Vicon motion capture system.
+    </p>
+
+    <h3>6.2 What Is Max Speed</h3>
+    <p>
+      A players maximal potential speed output will vary over the course of the season. Various factors
+      may affect this including but not limited to, injury and recovery status, playing surface (artifical vs natural grass, and firm vs soft ground), 
+      time of year, pitch dimensions, tactical set up, position or role etc. etc. It's important to
+      consider how an isolated maximal speed effort in isolation can be interpreted throughput the year.
+      One potential way to address this is using the max speed a player has reached on three seperate occasions,
+      although this is not a definite answer. 
+    </p>
+
+    <h3>6.3 Metabolic Power Model Assumptions</h3>
+    <p>
+      The di&nbsp;Prampero &amp; Osgnach metabolic power model assumes flat-ground locomotion and
+      applies a fixed grass-surface scaling factor of 1.29. It does not account for pitch gradient,
+      wind resistance, fatigue-related gait changes, or the energy cost of physical contact and
+      collisions — all of which are common in Gaelic games. HML distance should therefore be treated
+      as a relative training-load indicator rather than a precise measure of energy expenditure.
+    </p>
+
+    <h3>6.4 Relative Threshold Dependence on Max Speed Quality</h3>
+    <p>
+      All relative metrics — HSR at 70% of max speed, sprint detection, and speed-band exposures
+      at 80/85/90/95% — are only as reliable as the validated maximum speed for each player. If a
+      player has not produced a genuine maximal effort during a tracked session, every relative
+      metric for that player will be systematically inflated. The anomaly-detection logic (flagging
+      values &gt;1.2&nbsp;m/s above the second-highest recorded speed) mitigates obvious GPS artefacts
+      but cannot identify sub-maximal ceiling effects.
+    </p>
+
+    <h3>6.5 Training Targets Extrapolated from Soccer</h3>
+    <p>
+      The weekly HSR and sprint distance targets are derived from Buchheit et al. (2023), whose
+      machine-learning analysis was conducted across elite professional soccer clubs. Gaelic football
+      differs in pitch dimensions, positional demands, game duration, and the physical nature of
+      contest situations. The 0.6–0.9× (HSR) and 0.6–1.1× (sprint) multipliers should therefore be
+      treated as an evidence-informed starting point rather than validated thresholds for GAA
+      populations.
+    </p>
+
+    <h3>6.6 In-Game Force-Velocity Profiling</h3>
+    <p>
+      Force-velocity profiles estimated from GPS data are derived from noisy, non-maximal,
+      game-context efforts rather than controlled maximal sprint testing. The regression-based
+      approach is useful for tracking longitudinal trends within a player across a season, but the
+      absolute values (S&nbsp;Max, A&nbsp;Max, P&nbsp;Max, etc.) should not be compared directly to
+      lab-derived or sprint-test-derived profiles.
+    </p>
+
+    <h3>6.7 Heart Rate Data Completeness</h3>
+    <p>
+      Heart rate strap connectivity is inconsistent across sessions — signal dropout, poor skin
+      contact, and battery issues all contribute to missing data. The pipeline computes HR zone
+      metrics from whatever data is available within a session but does not impute gaps. Sessions
+      with significant HR dropout should be interpreted with caution, and the Max HR field in the
+      absolute data file should be verified manually rather than assumed accurate.
+    </p>
+
+    <h3>6.8 Single-Club, Single-Season Context</h3>
+    <p>
+      All benchmarks, rolling averages, and "days since" tracking are built from one club's data
+      across a single competitive season. They reflect that squad's physical characteristics,
+      competition level, and training philosophy — not population-level norms. Practitioners
+      adopting this pipeline for a different team should expect to recalibrate benchmarks from
+      their own data rather than transferring values directly.
+    </p>
+    
+    <!-- ── 7. PRIVACY ── -->
+    <h2 id="privacy">7. Data Privacy &amp; Ethical Use</h2>
 
     <div class="callout callout-warn">
       <div class="callout-title">Important</div>
@@ -989,8 +1072,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     </p>
 
 
-    <!-- ── 6. CONFIGURATION ── -->
-    <h2 id="configuration">7. Configuration &amp; Customisation</h2>
+    <!-- ── 8. CONFIGURATION ── -->
+    <h2 id="configuration">8. Configuration &amp; Customisation</h2>
 
     <p>
       All tuneable parameters live in <code>config.py</code>. The file is divided into two sections: directory
@@ -1073,8 +1156,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     </p>
 
 
-    <!-- ── 7. EXTENDING ── -->
-    <h2 id="extending">8. Extending the Pipeline</h2>
+    <!-- ── 9. EXTENDING ── -->
+    <h2 id="extending">9. Extending the Pipeline</h2>
 
     <p>
       The code is deliberately modular. All signal processing functions in <code>processing.py</code>
@@ -1092,8 +1175,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     </p>
 
 
-    <!-- ── 8. REFERENCES ── -->
-    <h2 id="references">9. References</h2>
+    <!-- ── 10. REFERENCES ── -->
+    <h2 id="references">10. References</h2>
 
     <ol class="ref-list">
       <li id="ref-1">
