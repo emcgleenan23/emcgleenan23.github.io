@@ -584,7 +584,7 @@
       </span>
       <span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Python · NumPy · SciPy · Pandas
+        Python · NumPy · SciPy · Pandas · GPS · STATSports 
       </span>
     </div>
   </div>
@@ -623,11 +623,11 @@
       The project originated from applied work with a GAA club, where GPS tracking was used across
       an entire competitive season to individualise training loads and inform match preparation.
       Research in elite Gaelic football has established that GPS-derived metrics can capture meaningful
-      positional and temporal variation in match demands <a href="#ref-7">[7]</a>, and that running performance
-      is a contributing factor to match outcome <a href="#ref-9">[9]</a>. The underlying signal processing
+      positional and temporal variation in match demands <a href="#ref-1">[1]</a>, and that running performance
+      is a contributing factor to match outcome <a href="#ref-2">[2]</a>. The underlying signal processing
       methods and threshold choices are grounded in the peer-reviewed literature, drawing principally on the metabolic power
-      model of di&nbsp;Prampero&nbsp;&amp;&nbsp;Osgnach <a href="#ref-1">[1,&nbsp;2]</a>, and the injury-risk training targets
-      proposed by Buchheit <a href="#ref-3">[3]</a>.
+      model of di&nbsp;Prampero&nbsp;&amp;&nbsp;Osgnach <a href="#ref-3">[3,&nbsp;4]</a>, and the injury-risk training targets
+      proposed by Buchheit <a href="#ref-5">[5]</a>.
     </p>
 
     <div class="callout">
@@ -984,14 +984,14 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
 
     <h3>6.2 Metabolic Power &amp; High Metabolic Load Distance</h3>
     <p>
-      The metabolic power model, originally proposed by di&nbsp;Prampero et al. <a href="#ref-1">[1]</a> and adapted
-      for team sports by Osgnach et al. <a href="#ref-2">[2]</a>, estimates instantaneous energy cost
+      The metabolic power model, originally proposed by di&nbsp;Prampero et al. <a href="#ref-3">[3]</a> and adapted
+      for team sports by Osgnach et al. <a href="#ref-4">[4]</a>, estimates instantaneous energy cost
       from GPS-derived speed and acceleration. The model treats acceleration as equivalent to running on a gradient,
       computing an "equivalent slope" and "equivalent mass" to derive the energy cost of each time-step. High
       Metabolic Load (HML) distance is defined as the distance covered while metabolic power exceeds
       25.5&nbsp;W/kg — a threshold that approximates the upper boundary of aerobic energy supply in
-      intermittent field sports <a href="#ref-2">[2]</a>. A grass-surface scaling factor of 1.29 is applied
-      to account for the greater energy cost of locomotion on natural turf compared to a treadmill <a href="#ref-1">[1]</a>.
+      intermittent field sports <a href="#ref-4">[4]</a>. A grass-surface scaling factor of 1.29 is applied
+      to account for the greater energy cost of locomotion on natural turf compared to a treadmill <a href="#ref-3">[3]</a>.
     </p>
 
     <h3>6.3 High-Speed Running &amp; Sprint Detection</h3>
@@ -999,9 +999,9 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       High-speed running (HSR) is quantified using both absolute (≥5.0&nbsp;m/s) and
       relative (≥70% of the player's validated maximum speed) thresholds. The relative approach accounts for
       inter-individual differences in physical capacity and is considered more physiologically meaningful for
-      monitoring purposes <a href="#ref-4">[4]</a>. Research in elite Gaelic football has shown that total distance
+      monitoring purposes <a href="#ref-7">[7]</a>. Research in elite Gaelic football has shown that total distance
       and high-speed running vary significantly by playing position, with half-backs, midfielders, and
-      half-forwards typically covering the greatest distances <a href="#ref-7">[7,&nbsp;11]</a>.
+      half-forwards typically covering the greatest distances <a href="#ref-1">[1,&nbsp;8]</a>.
     </p>
     <p>
       Sprint detection uses a hysteresis model: an effort begins when speed exceeds the entry threshold and
@@ -1014,14 +1014,14 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       The pipeline tracks the number of efforts and distance covered above 80%, 85%, 90%, and 95% of a
       player's maximum speed. Tracking exposure at near-maximal velocities provides a more granular picture
       than a single binary sprint threshold and aligns with evidence that regular exposure to high-percentage-of-max
-      speeds may be protective against soft-tissue injury <a href="#ref-4">[4]</a>. The "days since last hit"
+      speeds may be protective against soft-tissue injury <a href="#ref-7">[7]</a>. The "days since last hit"
       metric for each band flags when a player has gone an extended period without reaching a given intensity,
       which may indicate detraining risk or the need for supplementary speed work.
     </p>
 
     <h3>6.5 Injury-Risk Training Targets</h3>
     <p>
-      Weekly training targets for HSR and sprint distance are derived from the work of Buchheit et al. <a href="#ref-3">[3]</a>,
+      Weekly training targets for HSR and sprint distance are derived from the work of Buchheit et al. <a href="#ref-5">[5]</a>,
       who used machine-learning analysis across multiple elite football clubs to identify the training-dose windows
       associated with the lowest injury rates. Their findings suggest that accumulating HSR distances of 0.6–0.9× match
       HSR load and sprint distances of 0.6–1.1× match sprint load during a standard training week is associated with
@@ -1042,7 +1042,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       1.96 standard deviations, and refits. The resulting slope and intercepts yield estimates of maximum speed
       (S&nbsp;Max), maximum acceleration (A&nbsp;Max), peak power (P&nbsp;Max), ballistic power (P&nbsp;B — the
       area under the F-v curve), the force-velocity slope (S&nbsp;Fv), and the perpendicular distance from the
-      origin to the F-v line (d&nbsp;Fv) <a href="#ref-4">[4]</a>.
+      origin to the F-v line (d&nbsp;Fv) <a href="#ref-7">[7]</a>.
     </p>
 
     <h3>6.7 Heart Rate Zones</h3>
@@ -1061,7 +1061,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       sensor noise rather than genuine mechanical loading events. Research in elite soccer has demonstrated
       that accelerations and decelerations contribute 7–10% and 5–7% of total player load respectively,
       highlighting that traditional distance-only metrics may underestimate the mechanical demands of
-      match-play <a href="#ref-13">[13]</a>.
+      match-play <a href="#ref-9">[9]</a>.
     </p>
 
      <h3>Summary of Output Metrics</h3>
@@ -1077,42 +1077,42 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
         <tr>
           <td>Total Load</td>
           <td>Total Distance, Distance/min</td>
-          <td>Malone [14]</td>
+          <td>Malone [10]</td>
         </tr>
         <tr>
           <td>High-Speed Running</td>
           <td>HSR Distance (Abs &amp; Rel), HSR/min</td>
-          <td>Gabbett [15]</td>
+          <td>Gabbett [11]</td>
         </tr>
         <tr>
           <td>Sprint Detection</td>
           <td>Sprint count &amp; distance (Abs &amp; Rel), hysteresis model</td>
-          <td>Silva [16]</td>
+          <td>Silva [12]</td>
         </tr>
         <tr>
           <td>Speed Exposure</td>
           <td>Count &amp; distance at 80/85/90/95% max, days-since tracking</td>
-          <td>Silva [16]</td>
+          <td>Silva [12]</td>
         </tr>
         <tr>
           <td>Training Targets</td>
           <td>HSR &amp; Sprint weekly targets (0.6–0.9× / 0.6–1.1× match)</td>
-          <td>Buchheit [3]</td>
+          <td>Buchheit [5]</td>
         </tr>
         <tr>
           <td>Force-Velocity</td>
           <td>S Max, A Max, P Max, P B, S Fv, d Fv</td>
-          <td>McGleenan [4]</td>
+          <td>McGleenan [7]</td>
         </tr>
         <tr>
           <td>Heart Rate</td>
           <td>5-zone distance &amp; time, Max HR, Avg HR</td>
-          <td>Sampaio [18], Florida-James &amp; Reilly [19]</td>
+          <td>Sampaio [13], Florida-James &amp; Reilly [14]</td>
         </tr>
         <tr>
           <td>Acceleration</td>
           <td>Zone 3+ Accel &amp; Decel counts (≥±2 m/s², ≥0.5 s)</td>
-          <td>Ryan [17]</td>
+          <td>Ryan [15]</td>
         </tr>
       </tbody>
     </table>
@@ -1172,15 +1172,15 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
 
     <h3>7.5 Training Targets Extrapolated from Soccer</h3>
     <p>
-      The weekly HSR and sprint distance targets are derived from Buchheit et al. (2023) <a href="#ref-3">[3]</a>,
+      The weekly HSR and sprint distance targets are derived from Buchheit et al. (2023) <a href="#ref-5">[5]</a>,
       whose machine-learning analysis was conducted across elite professional soccer clubs. Gaelic football
       differs in pitch dimensions, positional demands, game duration, and the physical nature of
-      contest situations. Research by Malone et al. <a href="#ref-7">[7]</a> has shown that training and
+      contest situations. Research by Malone et al. <a href="#ref-1">[1]</a> has shown that training and
       match-play loads in elite Gaelic football have distinct positional and phase-of-season profiles that
       differ from soccer periodisation models. The 0.6–0.9× (HSR) and 0.6–1.1× (sprint) multipliers
       should therefore be treated as an evidence-informed starting point rather than validated thresholds
       for GAA populations. Mathematical optimisation approaches to training-load prescription, as explored
-      by Carey et al. <a href="#ref-10">[10]</a> in Australian football, offer a promising direction for
+      by Carey et al. <a href="#ref-16">[16]</a> in Australian football, offer a promising direction for
       future development of sport-specific targets.
     </p>
 
@@ -1207,9 +1207,9 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       Running metrics are influenced by contextual factors beyond fitness and fatigue. Research in
       elite Gaelic football has shown that match outcome significantly affects high-speed running
       output, with players covering less high-speed distance in heavy defeats, particularly in the
-      second half <a href="#ref-9">[9]</a>. Similarly, technical actions such as kick-out strategy,
+      second half <a href="#ref-2">[2]</a>. Similarly, technical actions such as kick-out strategy,
       passing patterns, and defensive pressing approach have been shown to influence running demands
-      independently of physical capacity <a href="#ref-8">[8]</a>. Practitioners should consider these
+      independently of physical capacity <a href="#ref-17">[17]</a>. Practitioners should consider these
       tactical and situational variables when comparing sessions or benchmarking players.
     </p>
 
@@ -1359,38 +1359,35 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
 
     <ol class="ref-list">
       <li id="ref-1">
+        Malone, S., Collins, K., McRobert, A. &amp; Doran, D. (2021).
+        Quantifying the Training and Match-Play External and Internal Load of Elite Gaelic Football Players.
+        <em>Applied Sciences</em>, 11(4), 1756.
+        <a href="https://doi.org/10.3390/app11041756" target="_blank">doi:10.3390/app11041756</a>
+      </li>
+      <li id="ref-2">
+        Mangan, S., Malone, S., Ryan, M., McGahan, J., O'Neill, C., Burns, C., Warne, J., Martin, D. &amp; Collins, K. (2017).
+        The influence of match outcome on running performance in elite Gaelic football.
+        <em>Science and Medicine in Football</em>, 1(3), 272–279.
+        <a href="https://doi.org/10.1080/24733938.2017.1363907" target="_blank">doi:10.1080/24733938.2017.1363907</a>
+      </li>
+      <li id="ref-3">
         di Prampero, P.E. &amp; Osgnach, C. (2018).
         Metabolic Power in Team Sports — Part 1: An Update.
         <em>International Journal of Sports Medicine</em>, 39(08), 581–587.
         <a href="https://doi.org/10.1055/a-0592-7660" target="_blank">doi:10.1055/a-0592-7660</a>
       </li>
-      <li id="ref-2">
+      <li id="ref-4">
         Osgnach, C., Poser, S., Bernardini, R., Rinaldo, R. &amp; di Prampero, P.E. (2010).
         Energy Cost and Metabolic Power in Elite Soccer: A New Match Analysis Approach.
         <em>Medicine &amp; Science in Sports &amp; Exercise</em>, 42(1), 170–178.
         <a href="https://doi.org/10.1249/MSS.0b013e3181ae5cfd" target="_blank">doi:10.1249/MSS.0b013e3181ae5cfd</a>
       </li>
-      <li id="ref-3">
+      <li id="ref-5">
         Buchheit, M., Settembre, M., Hader, K. &amp; McHugh, D. (2023).
         From High-Speed Running to Hobbling on Crutches: A Machine Learning Perspective on the
         Relationships Between Training Doses and Match Injury Trends.
         <em>Biology of Sport</em>, 40(4), 1057–1067.
         <a href="https://doi.org/10.5114/biolsport.2023.125346" target="_blank">doi:10.5114/biolsport.2023.125346</a>
-      </li>
-      <li id="ref-4">
-        McGleenan, E., Grant, S., McFetridge, L.M., Brown, J.C.J., Shaw, J.W.,
-        de Melo Malaquias, T., Montgomery, R. &amp; Jess, D.B. (2026).
-        Ballistic power: GPS-derived measurements suitable for the real-time monitoring of
-        neuromuscular fatigue during repeated sprints.
-        <em>International Journal of Sports Science &amp; Coaching</em>.
-        <a href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank">doi:10.1177/17479541251413077</a>
-      </li>
-      <li id="ref-5">
-        Malone, S., Roe, M., Doran, D.A., Gabbett, T.J. &amp; Collins, K. (2017).
-        High chronic training loads and exposure to bouts of maximal velocity running reduce
-        injury risk in elite Gaelic football.
-        <em>Journal of Science and Medicine in Sport</em>, 20(3), 250–254.
-        <a href="https://doi.org/10.1016/j.jsams.2016.08.005" target="_blank">doi:10.1016/j.jsams.2016.08.005</a>
       </li>
       <li id="ref-6">
         Malone, J.J., Lovell, R., Varley, M.C. &amp; Coutts, A.J. (2017).
@@ -1399,83 +1396,86 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
         <a href="https://doi.org/10.1123/ijspp.2016-0236" target="_blank">doi:10.1123/ijspp.2016-0236</a>
       </li>
       <li id="ref-7">
-        Malone, S., Collins, K., McRobert, A. &amp; Doran, D. (2021).
-        Quantifying the Training and Match-Play External and Internal Load of Elite Gaelic Football Players.
-        <em>Applied Sciences</em>, 11(4), 1756.
-        <a href="https://doi.org/10.3390/app11041756" target="_blank">doi:10.3390/app11041756</a>
+        McGleenan, E., Grant, S., McFetridge, L.M., Brown, J.C.J., Shaw, J.W.,
+        de Melo Malaquias, T., Montgomery, R. &amp; Jess, D.B. (2026).
+        Ballistic power: GPS-derived measurements suitable for the real-time monitoring of
+        neuromuscular fatigue during repeated sprints.
+        <em>International Journal of Sports Science &amp; Coaching</em>.
+        <a href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank">doi:10.1177/17479541251413077</a>
       </li>
       <li id="ref-8">
-        Mangan, S., Ryan, M., Devenney, S., Shovlin, A., McGahan, J., Malone, S., O'Neill, C., Burns, C. &amp; Collins, K. (2017).
-        The relationship between technical performance indicators and running performance in elite Gaelic football.
-        <em>International Journal of Performance Analysis in Sport</em>, 17(5), 706–720.
-        <a href="https://doi.org/10.1080/24748668.2017.1387409" target="_blank">doi:10.1080/24748668.2017.1387409</a>
-      </li>
-      <li id="ref-9">
-        Mangan, S., Malone, S., Ryan, M., McGahan, J., O'Neill, C., Burns, C., Warne, J., Martin, D. &amp; Collins, K. (2017).
-        The influence of match outcome on running performance in elite Gaelic football.
-        <em>Science and Medicine in Football</em>, 1(3), 272–279.
-        <a href="https://doi.org/10.1080/24733938.2017.1363907" target="_blank">doi:10.1080/24733938.2017.1363907</a>
-      </li>
-      <li id="ref-10">
-        Carey, D.L., Crow, J., Ong, K.-L., Blanch, P., Morris, M.E., Dascombe, B.J. &amp; Crossley, K.M. (2018).
-        Optimizing Preseason Training Loads in Australian Football.
-        <em>International Journal of Sports Physiology and Performance</em>, 13, 194–199.
-        <a href="https://doi.org/10.1123/ijspp.2016-0695" target="_blank">doi:10.1123/ijspp.2016-0695</a>
-      </li>
-      <li id="ref-11">
         Malone, S., McGuinness, A., Duggan, J.D., Murphy, A., Collins, K. &amp; O'Connor, C. (2023).
         The running performance of elite ladies Gaelic football with respect to position and halves of play.
         <em>Sport Sciences for Health</em>, 19, 959–967.
         <a href="https://doi.org/10.1007/s11332-022-00991-4" target="_blank">doi:10.1007/s11332-022-00991-4</a>
       </li>
-      <li id="ref-12">
-        Zadeh, A., Taylor, D., Bertsos, M., Tillman, T., Nosoudi, N. &amp; Bruce, S. (2021).
-        Predicting Sports Injuries with Wearable Technology and Data Analysis.
-        <em>Information Systems Frontiers</em>, 23, 1023–1037.
-        <a href="https://doi.org/10.1007/s10796-020-10018-3" target="_blank">doi:10.1007/s10796-020-10018-3</a>
-      </li>
-      <li id="ref-13">
+      <li id="ref-9">
         Dalen, T., Jørgen, I., Gertjan, E., Geir Havard, H. &amp; Ulrik, W. (2016).
         Player Load, Acceleration, and Deceleration During Forty-Five Competitive Matches of Elite Soccer.
         <em>Journal of Strength and Conditioning Research</em>, 30(2), 351–359.
         <a href="https://doi.org/10.1519/JSC.0000000000001063" target="_blank">doi:10.1519/JSC.0000000000001063</a>
       </li>
-       <li id="ref-14">
+      <li id="ref-10">
         Malone, S., Solan, B., Collins, K.D. &amp; Doran, D.A. (2016).
         Positional Match Running Performance in Elite Gaelic Football.
         <em>Journal of Strength and Conditioning Research</em>, 30(8), 2292–2298.
         <a href="https://doi.org/10.1519/JSC.0000000000001309" target="_blank">doi:10.1519/JSC.0000000000001309</a>
       </li>
-      <li id="ref-15">
+      <li id="ref-11">
         Gabbett, T.J. (2015).
         Use of Relative Speed Zones Increases the High-Speed Running Performed in Team Sport Match Play.
         <em>Journal of Strength and Conditioning Research</em>, 29(12), 3353–3359.
         <a href="https://doi.org/10.1519/JSC.0000000000001016" target="_blank">doi:10.1519/JSC.0000000000001016</a>
       </li>
-      <li id="ref-16">
+      <li id="ref-12">
         Silva, H., Nakamura, F.Y., Loturco, I., Ribeiro, J. &amp; Marcelino, R. (2024).
         Analyzing Soccer Match Sprint Distances: A Comparison of GPS-Based Absolute and Relative Thresholds.
         <em>Biology of Sport</em>, 41(3), 223–230.
         <a href="https://doi.org/10.5114/biolsport.2024.133666" target="_blank">doi:10.5114/biolsport.2024.133666</a>
       </li>
-      <li id="ref-17">
-        Ryan, M., Malone, S. &amp; Collins, K. (2018).
-        Acceleration Profile of Elite Gaelic Football Match Play.
-        <em>Journal of Strength and Conditioning Research</em>, 32(3), 812–820.
-        <a href="https://doi.org/10.1519/JSC.0000000000002367" target="_blank">doi:10.1519/JSC.0000000000002367</a>
-      </li>
-      <li id="ref-18">
+      <li id="ref-13">
         Sampaio, J.E., Lago, C., Gonçalves, B., Maçãs, V.M. &amp; Leite, N. (2014).
         Effects of Pacing, Status and Unbalance in Time Motion Variables, Heart Rate and Tactical
         Behaviour When Playing 5-a-Side Football Small-Sided Games.
         <em>Journal of Science and Medicine in Sport</em>, 17(2), 229–233.
         <a href="https://doi.org/10.1016/j.jsams.2013.04.005" target="_blank">doi:10.1016/j.jsams.2013.04.005</a>
       </li>
-      <li id="ref-19">
+      <li id="ref-14">
         Florida-James, G. &amp; Reilly, T. (1995).
         The Physiological Demands of Gaelic Football.
         <em>British Journal of Sports Medicine</em>, 29(1), 41–45.
         <a href="https://doi.org/10.1136/bjsm.29.1.41" target="_blank">doi:10.1136/bjsm.29.1.41</a>
+      </li>
+      <li id="ref-15">
+        Ryan, M., Malone, S. &amp; Collins, K. (2018).
+        Acceleration Profile of Elite Gaelic Football Match Play.
+        <em>Journal of Strength and Conditioning Research</em>, 32(3), 812–820.
+        <a href="https://doi.org/10.1519/JSC.0000000000002367" target="_blank">doi:10.1519/JSC.0000000000002367</a>
+      </li>
+      <li id="ref-16">
+        Carey, D.L., Crow, J., Ong, K.-L., Blanch, P., Morris, M.E., Dascombe, B.J. &amp; Crossley, K.M. (2018).
+        Optimizing Preseason Training Loads in Australian Football.
+        <em>International Journal of Sports Physiology and Performance</em>, 13, 194–199.
+        <a href="https://doi.org/10.1123/ijspp.2016-0695" target="_blank">doi:10.1123/ijspp.2016-0695</a>
+      </li>
+      <li id="ref-17">
+        Mangan, S., Ryan, M., Devenney, S., Shovlin, A., McGahan, J., Malone, S., O'Neill, C., Burns, C. &amp; Collins, K. (2017).
+        The relationship between technical performance indicators and running performance in elite Gaelic football.
+        <em>International Journal of Performance Analysis in Sport</em>, 17(5), 706–720.
+        <a href="https://doi.org/10.1080/24748668.2017.1387409" target="_blank">doi:10.1080/24748668.2017.1387409</a>
+      </li>
+      <li id="ref-18">
+        Malone, S., Roe, M., Doran, D.A., Gabbett, T.J. &amp; Collins, K. (2017).
+        High chronic training loads and exposure to bouts of maximal velocity running reduce
+        injury risk in elite Gaelic football.
+        <em>Journal of Science and Medicine in Sport</em>, 20(3), 250–254.
+        <a href="https://doi.org/10.1016/j.jsams.2016.08.005" target="_blank">doi:10.1016/j.jsams.2016.08.005</a>
+      </li>
+      <li id="ref-19">
+        Zadeh, A., Taylor, D., Bertsos, M., Tillman, T., Nosoudi, N. &amp; Bruce, S. (2021).
+        Predicting Sports Injuries with Wearable Technology and Data Analysis.
+        <em>Information Systems Frontiers</em>, 23, 1023–1037.
+        <a href="https://doi.org/10.1007/s10796-020-10018-3" target="_blank">doi:10.1007/s10796-020-10018-3</a>
       </li>
     </ol>
 
