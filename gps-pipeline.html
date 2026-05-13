@@ -704,11 +704,156 @@
       <figcaption>Weekly HSR and sprint distance against Buchheit (2023) training targets — green bands show the recommended range.</figcaption>
     </figure>
 
+    <!-- ── WORKFLOW & TROUBLESHOOTING ── -->
+    <h2 id="workflow">3. Workflow &amp; Troubleshooting</h2>
+
+    <p>
+      This section walks through the end-to-end workflow I followed when deploying this pipeline
+      with a GAA club. You may wish to replicate it directly or adjust it to suit your own setup.
+    </p>
+
+    <h3>3.1 Download &amp; Pre-processing</h3>
+
+    <p>
+      Players wear the STATSports units for every training and match session, including the warmup
+      and during half time. After each session, I download the data using a Single Dock (which holds
+      up to 16 units) into the Sonra software. The first thing I check is whether any anomalous max
+      speeds have been recorded — typically anything above 10&nbsp;m/s. This usually indicates a GPS
+      error, which you can verify quickly in the Activity Graph view in Sonra. Alternatively, it
+      might just mean someone drove home with the unit still switched on.
+    </p>
+    <p>
+      To keep the data clean, I crop all individual sessions to the same length using Edit Session
+      in the Calendar view — from the start of the warmup to the end of the cool down.
+    </p>
+
+    <h3>3.2 Creating Drills</h3>
+
+    <p>
+      In Sonra, drills are created in the Activity Graph view. For matches, it is straightforward
+      to see where the warmup, first half, and second half begin and end. For training sessions it
+      can be trickier, but the Session Replay function is useful for refreshing your memory of what
+      happened when.
+    </p>
+    <p>
+      There is also a function under Calculations &gt; Segment Drills &gt; Fixed Time Drills which
+      divides each drill into fixed-length periods. This is useful for examining the ebb and flow of
+      games — I use it to split each half into three or four ten-minute blocks. You can also adjust
+      the pipeline code to do this automatically without manually creating drills for every match,
+      which is detailed in the code itself.
+    </p>
+
+    <h3>3.3 Exporting from Sonra</h3>
+    <p>
+      I name sessions consistently: trainings are simply <code>Training</code> and matches
+      <code>Match</code>. Export through Export Data &gt; Raw Data &gt; Raw Data Extended. You may
+      wish to use just Raw Data instead, but you will need to adjust the sampling frequency in
+      <code>config.py</code> accordingly. Exported sessions are saved in folders following the
+      naming convention <code>YYYY-MM-DD-Match-RawDataExtended</code> or
+      <code>YYYY-MM-DD-Training-RawDataExtended</code>, with individual files named
+      <code>YYYY-MM-DD-J-Doe-Drill-Title.csv</code>.
+    </p>
+
+    <h3>3.4 Player Naming Conventions</h3>
+
+    <p>
+      I keep player names in the format (first initial)-(surname), e.g.
+      <code>E-McGleenan</code>. For players who share the same first initial and surname, add a
+      distinguishing element — e.g. <code>Jo-Doe</code> and <code>Ja-Doe</code> for John and
+      James Doe. Consistency here matters because the pipeline uses the player name from the
+      filename to match against the absolute data and benchmark files.
+    </p>
+
+    <h3>3.5 Updating the Schedule</h3>
+
+    <p>
+      For training sessions the schedule does not need updating. For matches, if you want to record
+      the result, score, opposition, venue, and competition, run
+      <code>python3 schedule_manager.py</code> before processing the session. The schedule file
+      feeds into the Tableau summary so that dashboard filters (by opposition, venue, competition)
+      work correctly.
+    </p>
+
+    <h3>3.6 Tableau Integration</h3>
+
+    <p>
+      In the current setup, Tableau needs to be manually refreshed when new data is appended to the
+      summary CSV. Anyone comfortable with Tableau will find ways to streamline this — for example,
+      using Tableau's extract refresh scheduling or the Hyper API for automated updates.
+    </p>
+
+    <h3>3.7 Common Issues</h3>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">Troubleshooting</div>
+      <p>
+        Below are the most common issues encountered when running the pipeline and working with the
+        Tableau dashboards.
+      </p>
+    </div>
+
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Symptom</th>
+          <th>Likely Cause</th>
+          <th>Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Max speed &gt;10&nbsp;m/s for a player</td>
+          <td>GPS artefact, or the unit was left on during a car journey</td>
+          <td>Check the Activity Graph in Sonra — if the spike is clearly an error, crop the session to exclude it before exporting. The anomaly detection in <code>build_absolute_data.py</code> will also flag values &gt;1.2&nbsp;m/s above the second-highest recording.</td>
+        </tr>
+        <tr>
+          <td>Distance metrics are inflated (~10× expected)</td>
+          <td>Time-based deduplication did not run, or the wrong export type was used</td>
+          <td>Ensure you exported as Raw Data Extended (not summary data). The pipeline deduplicates 10&nbsp;Hz readings down to 1&nbsp;Hz — if this step is skipped, every metric is inflated by the sampling factor.</td>
+        </tr>
+        <tr>
+          <td>A player is missing from the output</td>
+          <td>No <code>Entire-Session</code> file exists for that player</td>
+          <td>The pipeline requires an Entire-Session CSV per player as the master time-series. If only drill-level files exist, that player will be silently skipped. Re-export the session including the Entire Session drill.</td>
+        </tr>
+        <tr>
+          <td>Relative metrics (HSR, sprint, speed bands) look wrong</td>
+          <td>The player's max speed in the absolute data file is missing, outdated, or artificially high</td>
+          <td>Run <code>python3 build_absolute_data.py</code> to refresh rolling maximums. Check the anomaly flag column — if a player's top speed has been flagged, the pipeline uses their second-highest value instead.</td>
+        </tr>
+        <tr>
+          <td>Tableau charts are empty or partially populated</td>
+          <td>A dashboard filter is excluding the new data</td>
+          <td>Check your date, opposition, venue, and player filters in Tableau. Newly added sessions or players may be filtered out by default if the filter is set to show only previously loaded values.</td>
+        </tr>
+        <tr>
+          <td>Training targets are missing or show as zero</td>
+          <td>No match benchmark exists for the player</td>
+          <td>The training target calculation requires a match benchmark (either from <code>build_benchmarks.py</code> or a recent match session). If a player has only trained and never been tracked in a match, targets cannot be computed.</td>
+        </tr>
+        <tr>
+          <td>Heart rate zones show all zeros</td>
+          <td>HR strap was not worn, had poor contact, or lost connectivity</td>
+          <td>Check the raw CSV for HR data. If the column is empty or all zeros, no HR metrics can be computed. The pipeline does not impute missing heart rate data.</td>
+        </tr>
+        <tr>
+          <td>Session date does not match the schedule</td>
+          <td>Folder naming does not follow the expected convention</td>
+          <td>Ensure the folder is named <code>YYYY-MM-DD-Match-RawDataExtended</code> or <code>YYYY-MM-DD-Training-RawDataExtended</code>. The pipeline extracts the date and activity type from this folder name.</td>
+        </tr>
+        <tr>
+          <td>Force-velocity profile looks unrealistic</td>
+          <td>Not enough high-speed, positive-acceleration data points in the session</td>
+          <td>The F-v regression requires sufficient data in the speed–acceleration scatter. Short or low-intensity sessions (e.g. a technical drill) may not produce enough valid data points for a reliable fit. Check the <code>Benchmark Source</code> column to confirm which method was used.</td>
+        </tr>
+      </tbody>
+    </table>
+
 
 
 
     <!-- ── 3. QUICK START ── -->
-    <h2 id="quickstart">3. Quick Start</h2>
+    <h2 id="quickstart">4. Quick Start</h2>
 
     <p>
       The code requires Python 3.9+ and three dependencies. Clone the repository, install requirements, point the
@@ -763,8 +908,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     </div>
 
 
-    <!-- ── 3. ARCHITECTURE ── -->
-    <h2 id="architecture">4. Pipeline Architecture</h2>
+    <!-- ── 5. ARCHITECTURE ── -->
+    <h2 id="architecture">5. Pipeline Architecture</h2>
 
     <p>
       The pipeline operates in two sequential stages, both orchestrated from <code>run.py</code>. Separating
@@ -822,10 +967,10 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     </p>
 
 
-    <!-- ── 4. METRICS ── -->
-    <h2 id="metrics">5. Metric Definitions &amp; Scientific Basis</h2>
+    <!-- ── 6. METRICS ── -->
+    <h2 id="metrics">6. Metric Definitions &amp; Scientific Basis</h2>
 
-    <h3>5.1 Signal Processing</h3>
+    <h3>6.1 Signal Processing</h3>
     <p>
       Raw speed data is smoothed using a 1st-order Butterworth low-pass filter with a 1&nbsp;Hz cutoff,
       applied via <code>scipy.signal.filtfilt</code> for zero phase-shift. This removes high-frequency
@@ -836,7 +981,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       be aware of these factors when interpreting outputs.
     </p>
 
-    <h3>5.2 Metabolic Power &amp; High Metabolic Load Distance</h3>
+    <h3>6.2 Metabolic Power &amp; High Metabolic Load Distance</h3>
     <p>
       The metabolic power model, originally proposed by di&nbsp;Prampero et al. <a href="#ref-1">[1]</a> and adapted
       for team sports by Osgnach et al. <a href="#ref-2">[2]</a>, estimates instantaneous energy cost
@@ -848,7 +993,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       to account for the greater energy cost of locomotion on natural turf compared to a treadmill <a href="#ref-1">[1]</a>.
     </p>
 
-    <h3>5.3 High-Speed Running &amp; Sprint Detection</h3>
+    <h3>6.3 High-Speed Running &amp; Sprint Detection</h3>
     <p>
       High-speed running (HSR) is quantified using both absolute (≥5.0&nbsp;m/s) and
       relative (≥70% of the player's validated maximum speed) thresholds. The relative approach accounts for
@@ -863,7 +1008,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       from being fragmented into multiple counted sprints by brief speed fluctuations around the threshold.
     </p>
 
-    <h3>5.4 Speed-Band Exposure</h3>
+    <h3>6.4 Speed-Band Exposure</h3>
     <p>
       The pipeline tracks the number of efforts and distance covered above 80%, 85%, 90%, and 95% of a
       player's maximum speed. Tracking exposure at near-maximal velocities provides a more granular picture
@@ -873,7 +1018,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       which may indicate detraining risk or the need for supplementary speed work.
     </p>
 
-    <h3>5.5 Injury-Risk Training Targets</h3>
+    <h3>6.5 Injury-Risk Training Targets</h3>
     <p>
       Weekly training targets for HSR and sprint distance are derived from the work of Buchheit et al. <a href="#ref-3">[3]</a>,
       who used machine-learning analysis across multiple elite football clubs to identify the training-dose windows
@@ -888,7 +1033,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       so practitioners can distinguish between stable season benchmarks and single-session estimates.
     </p>
 
-    <h3>5.6 Force-Velocity Profiling</h3>
+    <h3>6.6 Force-Velocity Profiling</h3>
     <p>
       In-game force-velocity profiles are estimated from simultaneous speed and acceleration data during
       positive-acceleration phases. The pipeline bins the speed–acceleration scatter into 0.2&nbsp;m/s windows,
@@ -899,7 +1044,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       origin to the F-v line (d&nbsp;Fv) <a href="#ref-4">[4]</a>.
     </p>
 
-    <h3>5.7 Heart Rate Zones</h3>
+    <h3>6.7 Heart Rate Zones</h3>
     <p>
       Five heart-rate zones are defined as equal-width bands from 50% to 100% of each player's maximum HR.
       Distance covered and time spent in each zone are reported. Max HR values are drawn from the rolling
@@ -908,7 +1053,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       artefact and uses the second value for all relative calculations.
     </p>
 
-    <h3>5.8 Acceleration &amp; Deceleration</h3>
+    <h3>6.8 Acceleration &amp; Deceleration</h3>
     <p>
       Zone&nbsp;3+ acceleration and deceleration counts capture sustained efforts exceeding ±2&nbsp;m/s² for
       at least 0.5&nbsp;s. The minimum-duration requirement filters out transient spikes that may reflect
@@ -972,8 +1117,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     </table>
 
 
-    <!-- ── 5. LIMITATIONS ── -->
-    <h2 id="limitations">6. Limitations &amp; Considerations</h2>
+    <!-- ── 7. LIMITATIONS ── -->
+    <h2 id="limitations">7. Limitations &amp; Considerations</h2>
 
     <p>
       The dashboards and metrics produced by this pipeline are practical tools for informing training
@@ -981,7 +1126,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       interpreting the data.
     </p>
 
-    <h3>6.1 GPS Signal Accuracy</h3>
+    <h3>7.1 GPS Signal Accuracy</h3>
     <p>
       Consumer-grade 10&nbsp;Hz GPS has inherent positional error, typically ±1–2&nbsp;m per sample,
       which propagates into speed, acceleration, and all derived metrics. The Butterworth low-pass
@@ -995,7 +1140,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       gold standard Vicon motion capture system.
     </p>
 
-    <h3>6.2 What Is Max Speed?</h3>
+    <h3>7.2 What Is Max Speed?</h3>
     <p>
       A player's maximal potential speed output will vary over the course of a season. Various factors
       may affect this, including but not limited to: injury and recovery status, playing surface
@@ -1005,7 +1150,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       reached on three separate occasions, although this is not a definitive answer.
     </p>
 
-    <h3>6.3 Metabolic Power Model Assumptions</h3>
+    <h3>7.3 Metabolic Power Model Assumptions</h3>
     <p>
       The di&nbsp;Prampero &amp; Osgnach metabolic power model assumes flat-ground locomotion and
       applies a fixed grass-surface scaling factor of 1.29. It does not account for pitch gradient,
@@ -1014,7 +1159,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       as a relative training-load indicator rather than a precise measure of energy expenditure.
     </p>
 
-    <h3>6.4 Relative Threshold Dependence on Max Speed Quality</h3>
+    <h3>7.4 Relative Threshold Dependence on Max Speed Quality</h3>
     <p>
       All relative metrics — HSR at 70% of max speed, sprint detection, and speed-band exposures
       at 80/85/90/95% — are only as reliable as the validated maximum speed for each player. If a
@@ -1024,7 +1169,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       but cannot identify sub-maximal ceiling effects.
     </p>
 
-    <h3>6.5 Training Targets Extrapolated from Soccer</h3>
+    <h3>7.5 Training Targets Extrapolated from Soccer</h3>
     <p>
       The weekly HSR and sprint distance targets are derived from Buchheit et al. (2023) <a href="#ref-3">[3]</a>,
       whose machine-learning analysis was conducted across elite professional soccer clubs. Gaelic football
@@ -1038,7 +1183,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       future development of sport-specific targets.
     </p>
 
-    <h3>6.6 In-Game Force-Velocity Profiling</h3>
+    <h3>7.6 In-Game Force-Velocity Profiling</h3>
     <p>
       Force-velocity profiles estimated from GPS data are derived from noisy, non-maximal,
       game-context efforts rather than controlled maximal sprint testing. The regression-based
@@ -1047,7 +1192,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       lab-derived or sprint-test-derived profiles.
     </p>
 
-    <h3>6.7 Heart Rate Data Completeness</h3>
+    <h3>7.7 Heart Rate Data Completeness</h3>
     <p>
       Heart rate strap connectivity is inconsistent across sessions — signal dropout, poor skin
       contact, and battery issues all contribute to missing data. The pipeline computes HR zone
@@ -1056,7 +1201,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       absolute data file should be verified manually rather than assumed accurate.
     </p>
 
-    <h3>6.8 Contextual Factors Affecting Running Performance</h3>
+    <h3>7.8 Contextual Factors Affecting Running Performance</h3>
     <p>
       Running metrics are influenced by contextual factors beyond fitness and fatigue. Research in
       elite Gaelic football has shown that match outcome significantly affects high-speed running
@@ -1067,7 +1212,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       tactical and situational variables when comparing sessions or benchmarking players.
     </p>
 
-    <h3>6.9 Single-Club, Single-Season Context</h3>
+    <h3>7.9 Single-Club, Single-Season Context</h3>
     <p>
       All benchmarks, rolling averages, and "days since" tracking are built from one club's data
       across a single competitive season. They reflect that squad's physical characteristics,
@@ -1076,8 +1221,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       their own data rather than transferring values directly.
     </p>
 
-    <!-- ── 7. PRIVACY ── -->
-    <h2 id="privacy">7. Data Privacy &amp; Ethical Use</h2>
+    <!-- ── 8. PRIVACY ── -->
+    <h2 id="privacy">8. Data Privacy &amp; Ethical Use</h2>
 
     <div class="callout callout-warn">
       <div class="callout-title">Important</div>
@@ -1105,8 +1250,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     </p>
 
 
-    <!-- ── 8. CONFIGURATION ── -->
-    <h2 id="configuration">8. Configuration &amp; Customisation</h2>
+    <!-- ── 9. CONFIGURATION ── -->
+    <h2 id="configuration">9. Configuration &amp; Customisation</h2>
 
     <p>
       All tuneable parameters live in <code>config.py</code>. The file is divided into two sections: directory
@@ -1189,8 +1334,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     </p>
 
 
-    <!-- ── 9. EXTENDING ── -->
-    <h2 id="extending">9. Extending the Pipeline</h2>
+    <!-- ── 10. EXTENDING ── -->
+    <h2 id="extending">10. Extending the Pipeline</h2>
 
     <p>
       The code is deliberately modular. All signal processing functions in <code>processing.py</code>
@@ -1208,8 +1353,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     </p>
 
 
-    <!-- ── 10. REFERENCES ── -->
-    <h2 id="references">10. References</h2>
+    <!-- ── 11. REFERENCES ── -->
+    <h2 id="references">11. References</h2>
 
     <ol class="ref-list">
       <li id="ref-1">
@@ -1302,7 +1447,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
 <!-- ── FOOTER ── -->
 <footer>
   <span>&copy; 2026 Eamon McGleenan</span>
-  <span>Built with <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></span>
+  <span>Built with <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> &amp; <a href="ttps://claude.ai/" target="_blank">Claude AI</a></span>
 </footer>
 
 <script>
