@@ -412,6 +412,1554 @@
       Every time a player accelerates on the pitch, their body is producing force at a given velocity. Plot these two against each other across many efforts and you get a <strong>force-velocity (FV) profile</strong> <a href="#ref-1">[1]</a> — a straight line that describes the trade-off between how hard a player can push (force) and how fast they're moving (velocity) while doing it.
     </p>
     <p>
+      From that single line, you can extract several useful numbers: how explosive a player is from a standing start (<strong>A₀</strong>), their top-end speed capacity (<strong>S₀</strong>), their peak power output (<strong>P<sub>max</sub></strong>), and a newer metric called <strong>ballistic power (P<sub>B</sub>)</strong> which captures the total area under the curve — essentially the full picture of a player's sprint-related output <a href="#ref-2">[2]</a>.
+    </p>
+    <p>
+      Traditionally, getting these numbers meant running a dedicated sprint test — timing gates <a href="#ref-3">[3]</a>, radar guns <a href="#ref-4">[4]</a>, or a treadmill <a href="#ref-5">[5]</a>. The breakthrough described in this study is that <strong>you can extract the same profile passively from the GPS data you're already collecting</strong> during regular training and matches <a href="#ref-6">[6]</a>. No extra sessions, no disruption to the schedule, no additional equipment.
+    </p>
+
+    <div class="callout">
+      <div class="callout-title">Why this matters for your day-to-day</div>
+      <p>
+        If you're already using GPS units in training and matches, you have everything you need. The method described here turns that data into force-velocity profiles that update automatically — giving you a new lens on player readiness, fatigue, and development without adding a single drill to your programme.
+      </p>
+    </div>
+
+
+    <!-- ── 2. KEY FINDINGS ── -->
+    <h2 id="key-findings">2. Key findings</h2>
+
+    <p>
+      The study tracked 34 sub-elite Gaelic footballers across a full season (70 training sessions and 18 competitive matches) using 10 Hz STATSports GPS units <a href="#ref-7">[7,&nbsp;17]</a>.
+    </p>
+
+    <div class="findings">
+      <div class="finding-card">
+        <div class="stat">R² ≥ 0.93</div>
+        <h4>Strong linearity</h4>
+        <p>In-situ profiles were highly linear — comparable with existing studies using elite soccer players <a href="#ref-6">[6,&nbsp;8]</a>. Match R² = 0.929, training R² = 0.949.</p>
+      </div>
+      <div class="finding-card">
+        <div class="stat">7–12 min</div>
+        <h4>Minimum data needed</h4>
+        <p>Just 12 minutes of match data reaches R² of 0.9. The geometric "knee" is at 7 minutes — fast enough for in-game monitoring.</p>
+      </div>
+      <div class="finding-card">
+        <div class="stat">−6.4%</div>
+        <h4>In-match power decline</h4>
+        <p>Ballistic power (P<sub>B</sub>) dropped by an average of 6.4% across a full game — consistent with neuromuscular fatigue <a href="#ref-2">[2]</a>.</p>
+      </div>
+      <div class="finding-card">
+        <div class="stat">Not interchangeable</div>
+        <h4>In-situ ≠ isolated sprints</h4>
+        <p>Systematic differences exist. In-situ A₀ is higher, P<sub>max</sub> is lower. Pick one method and stick with it for tracking changes.</p>
+      </div>
+    </div>
+
+
+    <!-- ── 3. HOW IT WORKS ── -->
+    <h2 id="how-it-works">3. How the method works</h2>
+
+    <h3>Step 1 — Filter the raw speed</h3>
+    <p>
+      GPS speed data is noisy. The first step is applying a <strong>second-order Butterworth low-pass filter</strong> with a 1 Hz cut-off <a href="#ref-8">[8]</a> to smooth out the high-frequency noise while preserving genuine speed changes.
+    </p>
+
+    <h3>Step 2 — Derive acceleration</h3>
+    <p>
+      From the filtered speed, acceleration is calculated using central differences <a href="#ref-9">[9]</a>. Only data above <strong>3 m/s</strong> is kept <a href="#ref-6">[6,&nbsp;18]</a> — below that, players are jogging or walking and the acceleration data isn't meaningful for profiling.
+    </p>
+
+    <h3>Step 3 — Extract the envelope</h3>
+    <p>
+      The speed range above 3 m/s is divided into 0.2 m/s windows. Within each window, the <strong>top two acceleration values</strong> are extracted — the "envelope" of what the player can produce <a href="#ref-6">[6]</a>.
+    </p>
+
+    <h3>Step 4 — Fit and clean</h3>
+    <p>
+      A linear regression is fitted to these peak points. Any points outside the 95% confidence interval are flagged as outliers and removed. A second regression is fitted to the cleaned data — this is the final acceleration-speed profile.
+    </p>
+
+    <h3>Step 5 — Extract metrics</h3>
+
+    <table class="metric-table">
+      <thead><tr><th>Metric</th><th>What it is</th><th>Unit</th></tr></thead>
+      <tbody>
+        <tr><td><strong>S₀</strong></td><td>Maximum hypothetical speed (x-intercept)</td><td class="mono">m/s</td></tr>
+        <tr><td><strong>A₀</strong></td><td>Maximum force / acceleration (y-intercept)</td><td class="mono">m/s²</td></tr>
+        <tr><td><strong>P<sub>max</sub></strong></td><td>Peak power (maximum of speed × acceleration)</td><td class="mono">W/kg</td></tr>
+        <tr><td><strong>P<sub>B</sub></strong></td><td>Ballistic power (area under the FV curve)</td><td class="mono">W/kg</td></tr>
+        <tr><td><strong>S<sub>Fv</sub></strong></td><td>Slope of the FV line</td><td class="mono">s⁻¹</td></tr>
+        <tr><td><strong>d<sub>Fv</sub></strong></td><td>Perpendicular distance from origin to FV line</td><td class="mono">—</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="callout-title">P_B vs P_max</div>
+      <p>
+        P<sub>max</sub> is the single highest point on the power curve — peak output. P<sub>B</sub> is the <em>total area</em> under the force-velocity line, capturing the full range of force-producing ability. The study found P<sub>B</sub> is the most sensitive metric for detecting neuromuscular fatigue <a href="#ref-2">[2]</a>.
+      </p>
+    </div>
+
+
+    <!-- ── 4. PIPELINE ── -->
+    <h2 id="pipeline">4. Setting up the pipeline</h2>
+
+    <p>
+      There are two complementary codebases. The <strong>research code</strong> contains all the scripts used to generate the paper's figures and results. The <strong>practitioner pipeline</strong> is an operational tool for processing GPS data session-by-session into a Tableau-ready summary CSV.
+    </p>
+
+    <h3>Research code architecture</h3>
+    <div class="pipeline-diagram">
+      <div class="pipeline-stage">
+        <div class="stage-num">src</div>
+        <h4>utils.py</h4>
+        <p>Filter, IF selection, AS fitting, outlier rejection</p>
+      </div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-stage">
+        <div class="stage-num">src</div>
+        <h4>loading.py</h4>
+        <p>CSV parsing, time dedup, session caching</p>
+      </div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-stage">
+        <div class="stage-num">scripts</div>
+        <h4>11–24</h4>
+        <p>Profiles, group analysis, data load, fatigue</p>
+      </div>
+      <span class="pipeline-arrow">→</span>
+      <div class="pipeline-stage">
+        <div class="stage-num">output</div>
+        <h4>Figures</h4>
+        <p>Publication-ready figures &amp; processed CSVs</p>
+      </div>
+    </div>
+
+    <h3>Research code — directory structure</h3>
+    <div class="file-tree">
+<span class="dir">longitudinal-pfv/</span>
+├── <span class="file">config.py</span>              <span class="desc">← paths, filter params, window sizes</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="file">utils.py</span>           <span class="desc">← Butterworth, IF selection, AS fitting</span>
+│   ├── <span class="file">loading.py</span>         <span class="desc">← CSV loading, time dedup, caching</span>
+│   ├── <span class="file">cache.py</span>           <span class="desc">← pre-computed IF point caching</span>
+│   └── <span class="file">fig_style.py</span>       <span class="desc">← matplotlib publication styling</span>
+├── <span class="dir">scripts/</span>
+│   ├── <span class="file">11_single_game_profile.py</span>    <span class="desc">← Figure 1</span>
+│   ├── <span class="file">12_match_vs_training.py</span>      <span class="desc">← Figure 2</span>
+│   ├── <span class="file">18b_expanding_window.py</span>      <span class="desc">← Figure 3</span>
+│   ├── <span class="file">20_in_game_fatigue.py</span>        <span class="desc">← Figure 4</span>
+│   ├── <span class="file">21_insitu_vs_isolated.py</span>     <span class="desc">← Table 3</span>
+│   └── <span class="file">...</span>
+├── <span class="dir">data/</span>
+│   └── <span class="file">rsa_test_3.csv</span>     <span class="desc">← isolated sprint (RSA) results</span>
+└── <span class="dir">outputs/</span>
+    ├── <span class="dir">figures/</span>            <span class="desc">← generated publication figures</span>
+    └── <span class="dir">processed/</span>          <span class="desc">← intermediate processed data</span>
+    </div>
+
+    <h3>Key processing parameters</h3>
+    <div class="code-header">
+      <span>config.py</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><code>FS_DEFAULT = 10              # Sampling frequency (Hz)
+CUTOFF_HZ = 1               # Lowpass Butterworth cutoff
+FILTER_ORDER = 2             # Butterworth filter order
+
+MINIMUM_SPEED = 3.0          # m/s — threshold for IF selection
+BIN_WIDTH = 0.2              # m/s — speed bin width
+MAX_ACCEL_THRESHOLD = 12.0   # m/s² — hard ceiling
+OUTLIER_SD = 1.96            # 95% CI for outlier rejection
+
+HALF_DURATION_S = 1800       # 30 minutes per half
+STEP_S = 10                  # Sliding window step (seconds)</code></pre>
+
+
+    <!-- ── 5. SONRA WORKFLOW ── -->
+    <h2 id="sonra-workflow">5. Sonra workflow</h2>
+
+    <h3>Download &amp; pre-processing</h3>
+    <p>
+      After each session, download the data via a Single Dock into Sonra. First check for anomalous max speeds — anything above 10 m/s usually indicates a GPS error (verify in the Activity Graph) or someone driving home with the unit still on. Crop all sessions to the same length using <strong>Edit Session</strong> in the Calendar view, from the start of the warmup to the end of the cool down.
+    </p>
+
+    <h3>Creating drills</h3>
+    <p>
+      Drills are created in the Activity Graph view. For matches, it's usually straightforward to see where warmup, first half, and second half begin and end. For training, the <strong>Session Replay</strong> function helps. The <strong>Fixed Time Drills</strong> function (under Calculations → Segment Drills) is useful for splitting halves into equal blocks.
+    </p>
+
+    <h3>Exporting</h3>
+    <p>
+      Name sessions consistently — <code>Training</code> or <code>Match</code>. Export through <strong>Export Data → Raw Data → Raw Data Extended</strong>.
+    </p>
+
+    <div class="callout-warn callout">
+      <div class="callout-title">Deduplication</div>
+      <p>
+        The Raw Data Extended export writes 10 speed values per timestamp (10 Hz device, 1-second time column). The pipeline deduplicates by keeping the first reading per timestamp, giving an effective 1 Hz sample rate. If you're building your own processing code, handle this — otherwise distance metrics will be inflated by ~10×.
+      </p>
+    </div>
+
+
+    <!-- ── 6. TRY IT ── -->
+    <h2 id="try-it">6. Try it yourself</h2>
+
+    <p>
+      Upload a raw STATSports CSV below and the figures from the study will be generated in your browser. <strong>Nothing leaves your device</strong> — all processing happens locally using the same algorithms described in the paper.
+    </p>
+
+  </div><!-- /prose -->
+
+  <!-- Interactive tool -->
+  <div class="tool-box">
+    <h4>Upload GPS data</h4>
+    <div class="upload-zone" id="uploadZone">
+      <div class="icon">📡</div>
+      <p><strong>Drop a raw STATSports CSV here</strong>, or click to browse</p>
+      <p style="font-size:.75rem;color:var(--fg-muted);margin-top:.3rem">Expects columns: Time, Speed (m/s). All processing runs locally.</p>
+      <div class="filename" id="fileName"></div>
+      <input type="file" id="fileInput" accept=".csv">
+    </div>
+    <div class="controls-row">
+      <button class="btn btn-primary" id="btnProcess" disabled>Process data</button>
+      <button class="btn btn-outline" id="btnDemo">Load demo data</button>
+      <label>Min speed: <input type="number" class="input-field" id="minSpeed" value="3.0" step="0.5" min="1" max="6" style="width:60px"> m/s</label>
+    </div>
+    <div class="status-bar" id="statusBar">Ready. Upload a CSV or load the demo data to begin.</div>
+  </div>
+
+  <div class="tool-box" id="resultsBox" style="display:none">
+    <div class="tabs">
+      <button class="tab active" data-tab="fig1">Speed &amp; Accel</button>
+      <button class="tab" data-tab="fig2">AS Profile</button>
+      <button class="tab" data-tab="fig3">FV &amp; Power</button>
+      <button class="tab" data-tab="fig4">Metrics</button>
+    </div>
+    <div class="tab-content active" id="tab-fig1">
+      <canvas id="canvasSpeed" height="220"></canvas>
+      <p class="caption">Raw speed (blue dots) and Butterworth-filtered speed (black line) over time.</p>
+      <canvas id="canvasAccel" height="220"></canvas>
+      <p class="caption">Derived acceleration from the filtered speed signal.</p>
+    </div>
+    <div class="tab-content" id="tab-fig2">
+      <canvas id="canvasAS" height="340"></canvas>
+      <p class="caption">Acceleration–speed scatter. Grey = below threshold. Green = included in fit. Red = outliers. Black line = final regression.</p>
+    </div>
+    <div class="tab-content" id="tab-fig3">
+      <canvas id="canvasFV" height="340"></canvas>
+      <p class="caption">Force-velocity profile (solid line) and power-velocity curve (dashed). Orange shading = P<sub>B</sub>. Star = P<sub>max</sub>.</p>
+    </div>
+    <div class="tab-content" id="tab-fig4">
+      <div id="metricsOutput"></div>
+    </div>
+  </div>
+
+  <div class="prose">
+
+    <!-- ── 7. PRACTICAL APPLICATIONS ── -->
+    <h2 id="practical">7. Practical applications</h2>
+
+    <h3>In-match monitoring</h3>
+    <p>
+      With only 7–12 minutes of match data needed <a href="#ref-10">[10]</a>, it becomes possible to track PFv metrics in near real-time using a sliding window <a href="#ref-11">[11]</a>. The study showed P<sub>B</sub> declined progressively across both halves, with a partial recovery visible after half-time — consistent with neuromuscular fatigue and subsequent partial recovery <a href="#ref-2">[2]</a>.
+    </p>
+    <p>
+      If a player's P<sub>B</sub> trajectory deviates significantly from their typical pattern or drops below baseline more sharply than the rest of the squad, this could flag fatigue, under-recovery, or elevated injury risk <a href="#ref-12">[12,&nbsp;19]</a>. This doesn't replace existing load metrics but adds a richer picture of the force-velocity relationship.
+    </p>
+
+    <h3>Return-to-play</h3>
+    <p>
+      A training game of sufficient duration (15+ minutes) could provide an in-situ PFv snapshot to compare against a player's pre-injury baseline. While specific thresholds haven't been established yet, this framework provides the foundation for data-informed return-to-play criteria <a href="#ref-12">[12]</a>.
+    </p>
+
+    <h3>Training programme evaluation</h3>
+    <p>
+      By tracking PFv profiles longitudinally, you can observe how a player's force-velocity characteristics respond to different training blocks <a href="#ref-13">[13]</a>. Changes in the profile's slope can indicate whether a player is becoming more force-oriented or velocity-oriented over time.
+    </p>
+
+    <div class="callout">
+      <div class="callout-title">Important caveat</div>
+      <p>
+        These methods are currently best positioned as an additional monitoring signal alongside your existing toolkit. Individual baselines, smallest worthwhile change thresholds, and links with internal load measures need to be established before these can become decision-making tools.
+      </p>
+    </div>
+
+
+    <!-- ── 8. LIMITATIONS ── -->
+    <h2 id="limitations">8. What to watch out for</h2>
+
+    <p>
+      <strong>In-situ ≠ isolated sprints.</strong> A₀ is consistently higher in-situ (the method selects peak accelerations across many sessions), while P<sub>max</sub> is consistently lower <a href="#ref-2">[2]</a>. Pick one method and track changes within it.
+    </p>
+    <p>
+      <strong>Context matters.</strong> Match profiles produce higher S₀ values than training profiles <a href="#ref-8">[8]</a>. Training profiles converge more slowly (42 minutes vs 12 minutes for matches). The composition of training affects the quality of the profile you can extract.
+    </p>
+    <p>
+      <strong>GPS quality.</strong> Monitor satellite count and HDOP values <a href="#ref-14">[14]</a>. A 10 Hz sampling rate with 1 Hz Butterworth filter may smooth genuine high-acceleration events <a href="#ref-15">[15]</a>.
+    </p>
+    <p>
+      <strong>Sample characteristics.</strong> This study used one male amateur squad <a href="#ref-16">[16]</a>. Results may not fully extend to female athletes, elite professionals, adolescents, or other sports. Validate within your own population.
+    </p>
+
+    <!-- ── 9. REFERENCES ── -->
+    <h2 id="references">9. References</h2>
+
+        <ol class="ref-list">
+      <li id="ref-1">
+        Adrian, M.J. &amp; dos Anjos, L.A. (1986).
+        Profiling.
+        In <em>ISBS Conference Proceedings Archive</em>.
+      </li>
+      <li id="ref-2">
+        McGleenan, E., Grant, S.D., McFetridge, L.M., Brown, J.C.J., Shaw, J.W., de Melo Malaquias, T., Montgomery, R. &amp; Jess, D.B. (2026).
+        Ballistic Power: GPS-Derived Measurements Suitable for the Real-Time Monitoring of Neuromuscular Fatigue During Repeated Sprints.
+        <em>International Journal of Sports Science &amp; Coaching</em>.
+        <a href="https://doi.org/10.1177/17479541251413077" target="_blank">doi:10.1177/17479541251413077</a>
+      </li>
+      <li id="ref-3">
+        Haugen, T.A., Breitschädel, F. &amp; Samozino, P. (2020).
+        Power-Force-Velocity Profiling of Sprinting Athletes: Methodological and Practical Considerations When Using Timing Gates.
+        <em>The Journal of Strength &amp; Conditioning Research</em>, 34(6), 1769–1773.
+      </li>
+      <li id="ref-4">
+        Simperingham, K.D., Cronin, J.B., Pearson, S.N. &amp; Ross, A. (2019).
+        Reliability of Horizontal Force–Velocity–Power Profiling During Short Sprint-Running Accelerations Using Radar Technology.
+        <em>Sports Biomechanics</em>, 18(1), 88–99.
+      </li>
+      <li id="ref-5">
+        Jaskólska, A., Goossens, P., Veenstra, B., Jaskólski, A. &amp; Skinner, J. (1998).
+        Treadmill Measurement of the Force-Velocity Relationship and Power Output in Subjects with Different Maximal Running Velocities.
+        <em>Research in Sports Medicine</em>, 8(4), 347–358.
+      </li>
+      <li id="ref-6">
+        Morin, J.-B., Le Mat, Y., Osgnach, C., Barnabò, A., Pilati, A., Samozino, P. &amp; di Prampero, P.E. (2021).
+        Individual Acceleration-Speed Profile In-Situ: A Proof of Concept in Professional Football Players.
+        <em>Journal of Biomechanics</em>, 123, 110524.
+      </li>
+      <li id="ref-7">
+        Beato, M., Coratella, G., Stiff, A. &amp; Iacono, A.D. (2018).
+        The Validity and Between-Unit Variability of GNSS Units (STATSports Apex 10 and 18 Hz) for Measuring Distance and Peak Speed in Team Sports.
+        <em>Frontiers in Physiology</em>, 9, 1288.
+        <a href="https://doi.org/10.3389/fphys.2018.01288" target="_blank">doi:10.3389/fphys.2018.01288</a>
+      </li>
+      <li id="ref-8">
+        Clavel, P., Leduc, C., Morin, J.-B., Buchheit, M. &amp; Lacome, M. (2023).
+        Reliability of Individual Acceleration-Speed Profile In-Situ in Elite Youth Soccer Players.
+        <em>Journal of Biomechanics</em>, 153, 111602.
+        <a href="https://doi.org/10.1016/j.jbiomech.2023.111602" target="_blank">doi:10.1016/j.jbiomech.2023.111602</a>
+      </li>
+      <li id="ref-9">
+        Harris, C.R., Millman, K.J., van der Walt, S.J., Gommers, R., Virtanen, P., Cournapeau, D., … &amp; Oliphant, T.E. (2020).
+        Array Programming with NumPy.
+        <em>Nature</em>, 585(7825), 357–362.
+        <a href="https://doi.org/10.1038/s41586-020-2649-2" target="_blank">doi:10.1038/s41586-020-2649-2</a>
+      </li>
+      <li id="ref-10">
+        Satopaa, V., Albrecht, J., Irwin, D. &amp; Raghavan, B. (2011).
+        Finding a "Kneedle" in a Haystack: Detecting Knee Points in System Behavior.
+        In <em>2011 31st International Conference on Distributed Computing Systems Workshops</em>, 166–171.
+      </li>
+      <li id="ref-11">
+        Zivot, E. &amp; Wang, J. (2003).
+        Rolling Analysis of Time Series.
+        In <em>Modeling Financial Time Series with S-PLUS®</em>, 299–346. New York, NY: Springer.
+        <a href="https://doi.org/10.1007/978-0-387-21763-5_9" target="_blank">doi:10.1007/978-0-387-21763-5_9</a>
+      </li>
+      <li id="ref-12">
+        Kovoor, M., Durairaj, M., Karyakarte, M.S., Hussain, M.Z., Ashraf, M. &amp; Maguluri, L.P. (2024).
+        Sensor-Enhanced Wearables and Automated Analytics for Injury Prevention in Sports.
+        <em>Measurement: Sensors</em>, 32, 101054.
+      </li>
+      <li id="ref-13">
+        Samozino, P., Rabita, G., Dorel, S., Slawinski, J., Peyrot, N., Saez de Villarreal, E. &amp; Morin, J.-B. (2016).
+        A Simple Method for Measuring Power, Force, Velocity Properties, and Mechanical Effectiveness in Sprint Running.
+        <em>Scandinavian Journal of Medicine &amp; Science in Sports</em>, 26(6), 648–658.
+      </li>
+      <li id="ref-14">
+        Imano, M., Kido, M., Honsho, C., Ohta, Y., Takahashi, N., Fukuda, T., … &amp; Hino, R. (2019).
+        Assessment of Directional Accuracy of GNSS-Acoustic Measurement Using a Slackly Moored Buoy.
+        <em>Progress in Earth and Planetary Science</em>, 6(1), 56.
+        <a href="https://doi.org/10.1186/s40645-019-0302-1" target="_blank">doi:10.1186/s40645-019-0302-1</a>
+      </li>
+      <li id="ref-15">
+        Cormier, P., Tsai, M.-C., Meylan, C., Agar-Newman, D., Epp-Stobbe, A., Kalthoff, Z. &amp; Klimstra, M. (2023).
+        Concurrent Validity and Reliability of Different Technologies for Sprint-Derived Horizontal Force-Velocity-Power Profiling.
+        <em>The Journal of Strength &amp; Conditioning Research</em>, 37(6), 1298–1305.
+      </li>
+      <li id="ref-16">
+        McIntyre, M. (2005).
+        A Comparison of the Physiological Profiles of Elite Gaelic Footballers, Hurlers, and Soccer Players.
+        <em>British Journal of Sports Medicine</em>, 39(7), 437–439.
+      </li>
+      <li id="ref-17">
+        Scott, M.T., Scott, T.J. &amp; Kelly, V.G. (2016).
+        The Validity and Reliability of Global Positioning Systems in Team Sport: A Brief Review.
+        <em>The Journal of Strength &amp; Conditioning Research</em>, 30(5), 1470–1490.
+      </li>
+      <li id="ref-18">
+        Morin, J.-B., Samozino, P., Edouard, P. &amp; Tomazin, K. (2011).
+        Effect of Fatigue on Force Production and Force Application Technique During Repeated Sprints.
+        <em>Journal of Biomechanics</em>, 44(15), 2719–2723.
+      </li>
+      <li id="ref-19">
+        Zadeh, A., Taylor, D., Bertsos, M., Tillman, T., Nosoudi, N. &amp; Bruce, S. (2021).
+        Predicting Sports Injuries with Wearable Technology and Data Analysis.
+        <em>Information Systems Frontiers</em>, 23(4), 1023–1037.
+        <a href="https://doi.org/10.1007/s10796-020-10018-3" target="_blank">doi:10.1007/s10796-020-10018-3</a>
+      </li>
+      <li id="ref-20">
+        Beato, M., Jamil, M. &amp; Devereux, G. (2018).
+        Reliability of Internal and External Load Parameters in Recreational Football (Soccer) for Health.
+        <em>Research in Sports Medicine</em>, 26(2), 244–250.
+      </li>
+      <li id="ref-21">
+        Carling, C., Bloomfield, J., Nelsen, L. &amp; Reilly, T. (2008).
+        The Role of Motion Analysis in Elite Soccer: Contemporary Performance Measurement Techniques and Work Rate Data.
+        <em>Sports Medicine</em>, 38, 839–862.
+      </li>
+      <li id="ref-22">
+        Cummins, C., Orr, R., O'Connor, H. &amp; West, C. (2013).
+        Global Positioning Systems (GPS) and Microtechnology Sensors in Team Sports: A Systematic Review.
+        <em>Sports Medicine</em>, 43, 1025–1042.
+      </li>
+      <li id="ref-23">
+        Mănescu, D.C. (2025).
+        Big Data Analytics Framework for Decision-Making in Sports Performance Optimization.
+        <em>Data</em>, 10(7), 116.
+      </li>
+      <li id="ref-24">
+        McFetridge, L.M., Asar, Ö. &amp; Wallin, J. (2021).
+        Robust Joint Modelling of Longitudinal and Survival Data: Incorporating a Time-Varying Degrees-of-Freedom Parameter.
+        <em>Biometrical Journal</em>, 63(8), 1587–1606.
+        <a href="https://doi.org/10.1002/bimj.202000253" target="_blank">doi:10.1002/bimj.202000253</a>
+      </li>
+      <li id="ref-25">
+        O'Connell, M. (2017).
+        Effect of Small-Sided Games Versus High-Intensity Intermittent Running on Acceleration and Repeated Sprint Ability in Gaelic Football.
+        Unpublished doctoral dissertation, St Mary's University, Twickenham.
+      </li>
+      <li id="ref-26">
+        Samozino, P., Peyrot, N., Edouard, P., Nagahara, R., Jimenez-Reyes, P., Vanwanseele, B. &amp; Morin, J.-B. (2022).
+        Optimal Mechanical Force-Velocity Profile for Sprint Acceleration Performance.
+        <em>Scandinavian Journal of Medicine &amp; Science in Sports</em>, 32(3), 559–575.
+      </li>
+      <li id="ref-27">
+        Snyder, B.J., Maung-Maung, C. &amp; Whitacre, C. (2023).
+        Indicators of Fatigue During a Soccer Match Simulation Using GPS-Derived Workload Values: Which Metrics Are Most Useful?
+        <em>Sports</em>, 12(1), 9.
+      </li>
+      <li id="ref-28">
+        Turner, A.N., Jones, B., Stewart, P., Bishop, C., Parmar, N., Chavda, S. &amp; Read, P. (2019).
+        Total Score of Athleticism: Holistic Athlete Profiling to Enhance Decision-Making.
+        <em>Strength &amp; Conditioning Journal</em>, 41(6), 91–101.
+      </li>
+      <li id="ref-29">
+        Van Rossum, G. &amp; Drake, F.L. (2009).
+        <em>Python 3 Reference Manual</em>.
+        Scotts Valley, CA: CreateSpace.
+      </li>
+      <li id="ref-30">
+        Wbaid, S., Ahmatkhonovich, A.M., Pulatova, H. &amp; Afzal, M. (2025).
+        Artificial Intelligence-Powered Sports Analytics: Enhancing Performance Through Data Science.
+        In <em>2025 International Conference on Computational Innovations and Engineering Sustainability (ICCIES)</em>, 1–6.
+      </li>
+      <li id="ref-31">
+        Weston, N.J., Greenlees, I.A. &amp; Thelwell, R.C. (2011).
+        Athlete Perceptions of the Impacts of Performance Profiling.
+        <em>International Journal of Sport and Exercise Psychology</em>, 9(2), 173–188.
+      </li>
+    </ol>
+
+  </div><!-- /prose -->
+</article>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>Based on McGleenan et al. (2026). <em>In-Situ PFv profiling in sub-elite Gaelic football.</em></span>
+  <span>Processing runs entirely in your browser — no data is uploaded.</span>
+</footer>
+
+<script>
+// ── UTILITY ──
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const log = msg => { const b=$('#statusBar'); b.textContent+='\n'+msg; b.scrollTop=b.scrollHeight; };
+
+// ── BUTTERWORTH FILTER (2nd order, 1 Hz cut-off, filtfilt) ──
+function butterworthCoeffs(fc, fs, order) {
+  const nyq = fs / 2;
+  const w = fc / nyq;
+  const theta = Math.PI * w;
+  const d = 1 + 2 * Math.cos(Math.PI / 4) * Math.sin(theta) / Math.cos(theta) + Math.sin(theta) ** 2 / Math.cos(theta) ** 2;
+  // Simplified 2nd-order Butterworth via bilinear transform
+  const K = Math.tan(theta / 2 * Math.PI);
+  // Use a simpler approach: scipy-style butter coefficients
+  const C = 1 / Math.tan(Math.PI * fc / fs);
+  const C2 = C * C;
+  const sqrt2 = Math.SQRT2;
+  const a0 = 1 / (1 + sqrt2 * C + C2);
+  const a1 = 2 * a0;
+  const a2 = a0;
+  const b1 = 2 * (1 - C2) * a0;
+  const b2 = (1 - sqrt2 * C + C2) * a0;
+  return { b: [a0, a1, a2], a: [1, b1, b2] };
+}
+
+function applyFilter(signal, b, a) {
+  const n = signal.length;
+  const out = new Float64Array(n);
+  for (let i = 0; i < n; i++) {
+    out[i] = b[0] * signal[i];
+    if (i >= 1) out[i] += b[1] * signal[i-1] - a[1] * out[i-1];
+    if (i >= 2) out[i] += b[2] * signal[i-2] - a[2] * out[i-2];
+  }
+  return out;
+}
+
+function filtfilt(signal, b, a) {
+  const fwd = applyFilter(signal, b, a);
+  const rev = new Float64Array(fwd.length);
+  for (let i = 0; i < fwd.length; i++) rev[i] = fwd[fwd.length - 1 - i];
+  const revFilt = applyFilter(rev, b, a);
+  const result = new Float64Array(revFilt.length);
+  for (let i = 0; i < revFilt.length; i++) result[i] = revFilt[revFilt.length - 1 - i];
+  return result;
+}
+
+function butterworth(speed, fs = 10, fc = 1) {
+  const { b, a } = butterworthCoeffs(fc, fs);
+  if (speed.length < 10) return speed;
+  return filtfilt(speed, b, a);
+}
+
+// ── NUMERICAL GRADIENT (central differences) ──
+function gradient(arr, dt) {
+  const n = arr.length;
+  const g = new Float64Array(n);
+  if (n < 2) return g;
+  g[0] = (arr[1] - arr[0]) / dt;
+  g[n-1] = (arr[n-1] - arr[n-2]) / dt;
+  for (let i = 1; i < n - 1; i++) g[i] = (arr[i+1] - arr[i-1]) / (2 * dt);
+  return g;
+}
+
+// ── PFV PROFILE ──
+function computePFV(rawSpeed, fs = 10, fc = 1, minSpeed = 3.0) {
+  log('Applying Butterworth filter (fc='+fc+' Hz)...');
+  const filtered = butterworth(rawSpeed, fs, fc);
+  const dt = 1 / fs;
+
+  log('Computing acceleration (central differences)...');
+  const accel = gradient(filtered, dt);
+
+  // Extract envelope: top 2 accels per 0.2 m/s window above minSpeed
+  function arrMax(arr) { let m = -Infinity; for (let i = 0; i < arr.length; i++) if (arr[i] > m) m = arr[i]; return m; }
+  const maxSpeed = arrMax(filtered);
+  const windowSize = 0.2;
+  const ifSpeed = [], ifAccel = [];
+  const allSpeed = [], allAccel = []; // for plotting
+
+  for (let i = 0; i < filtered.length; i++) {
+    if (filtered[i] >= minSpeed && accel[i] > 0) {
+      allSpeed.push(filtered[i]);
+      allAccel.push(accel[i]);
+    }
+  }
+
+  for (let lo = minSpeed; lo < maxSpeed; lo += windowSize) {
+    const hi = lo + windowSize;
+    const pairs = [];
+    for (let i = 0; i < allSpeed.length; i++) {
+      if (allSpeed[i] >= lo && allSpeed[i] < hi) pairs.push({ s: allSpeed[i], a: allAccel[i] });
+    }
+    if (pairs.length > 1) {
+      pairs.sort((a, b) => b.a - a.a);
+      for (let k = 0; k < Math.min(2, pairs.length); k++) {
+        ifSpeed.push(pairs[k].s);
+        ifAccel.push(pairs[k].a);
+      }
+    }
+  }
+
+  if (ifSpeed.length < 5) { log('⚠ Not enough IF points for FV profile (need ≥5, got ' + ifSpeed.length + ').'); return null; }
+
+  log('Fitting initial regression (' + ifSpeed.length + ' points)...');
+  // Linear regression: accel = m * speed + b
+  const { m, b } = linReg(ifSpeed, ifAccel);
+
+  // Residuals & outlier removal (95% CI = 1.96 SD)
+  const resid = ifAccel.map((a, i) => a - (m * ifSpeed[i] + b));
+  const std = Math.sqrt(resid.reduce((s, r) => s + r * r, 0) / resid.length);
+  const thr = 1.96 * std;
+
+  const cleanSpeed = [], cleanAccel = [], outlierSpeed = [], outlierAccel = [];
+  for (let i = 0; i < ifSpeed.length; i++) {
+    if (Math.abs(resid[i]) <= thr) { cleanSpeed.push(ifSpeed[i]); cleanAccel.push(ifAccel[i]); }
+    else { outlierSpeed.push(ifSpeed[i]); outlierAccel.push(ifAccel[i]); }
+  }
+
+  log('Removed ' + outlierSpeed.length + ' outliers. Refitting with ' + cleanSpeed.length + ' points...');
+  if (cleanSpeed.length < 5) { log('⚠ Too few points after cleaning (need ≥5).'); return null; }
+
+  const { m: m2, b: b2 } = linReg(cleanSpeed, cleanAccel);
+
+  // Sanity checks matching research code
+  if (m2 >= 0) { log('⚠ Positive slope — invalid FV profile.'); return null; }
+
+  const S0 = -b2 / m2;
+  const A0 = b2;
+
+  if (A0 <= 0 || A0 >= 15 || S0 <= 0 || S0 >= 15) {
+    log('⚠ Unrealistic A₀ (' + A0.toFixed(2) + ') or S₀ (' + S0.toFixed(2) + ') — check data quality.');
+    return null;
+  }
+
+  const SFv = m2;
+
+  // R²
+  const meanA = cleanAccel.reduce((s, v) => s + v, 0) / cleanAccel.length;
+  const ssTot = cleanAccel.reduce((s, v) => s + (v - meanA) ** 2, 0);
+  const ssRes = cleanAccel.reduce((s, v, i) => s + (v - (m2 * cleanSpeed[i] + b2)) ** 2, 0);
+  const r2 = ssTot > 0 ? 1 - ssRes / ssTot : NaN;
+
+  // Power curve: P = speed * accel = speed * (m2*speed + b2)
+  // Pmax at speed = -b2/(2*m2)
+  const speedAtPmax = -b2 / (2 * m2);
+  const Pmax = speedAtPmax * (m2 * speedAtPmax + b2);
+
+  // PB = integral of (m2*s + b2) ds from 0 to S0
+  // = [m2*s²/2 + b2*s] from 0 to S0
+  const PB = m2 * S0 * S0 / 2 + b2 * S0;
+
+  // dFv = |b2| / sqrt(m2² + 1)
+  const dFv = Math.abs(b2) / Math.sqrt(m2 * m2 + 1);
+
+  log('✓ Profile complete. R²=' + r2.toFixed(3) + ', S₀=' + S0.toFixed(2) + ', A₀=' + A0.toFixed(2));
+
+  return {
+    filtered, accel, rawSpeed,
+    allSpeed, allAccel,
+    cleanSpeed, cleanAccel,
+    outlierSpeed, outlierAccel,
+    m: m2, b: b2, r2,
+    S0, A0, SFv, Pmax, PB, dFv,
+  };
+}
+
+function linReg(x, y) {
+  const n = x.length;
+  let sx = 0, sy = 0, sxy = 0, sx2 = 0;
+  for (let i = 0; i < n; i++) { sx += x[i]; sy += y[i]; sxy += x[i]*y[i]; sx2 += x[i]*x[i]; }
+  const m = (n * sxy - sx * sy) / (n * sx2 - sx * sx);
+  const b = (sy - m * sx) / n;
+  return { m, b };
+}
+
+// ── DRAWING FUNCTIONS ──
+function drawSpeedTrace(canvas, rawSpeed, filtered, fs) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth * 2;
+  const H = canvas.height = 440;
+  ctx.scale(1, 1);
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { t: 30, r: 30, b: 50, l: 60 };
+  const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+
+  const maxY = (() => { let m = 0; for (let i = 0; i < rawSpeed.length; i++) if (rawSpeed[i] > m) m = rawSpeed[i]; return m * 1.1; })();
+  const n = rawSpeed.length;
+  const dt = 1 / fs;
+
+  // Axes
+  ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + plotH); ctx.lineTo(pad.l + plotW, pad.t + plotH); ctx.stroke();
+
+  // Y-axis labels
+  ctx.fillStyle = '#666'; ctx.font = '20px "DM Sans"'; ctx.textAlign = 'right';
+  for (let v = 0; v <= maxY; v += 2) {
+    const y = pad.t + plotH - (v / maxY) * plotH;
+    ctx.fillText(v.toFixed(0), pad.l - 8, y + 5);
+    ctx.strokeStyle = '#eee'; ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + plotW, y); ctx.stroke();
+  }
+  ctx.save(); ctx.translate(16, pad.t + plotH / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#444'; ctx.textAlign = 'center'; ctx.font = '20px "DM Sans"';
+  ctx.fillText('Speed (m/s)', 0, 0); ctx.restore();
+
+  // X-axis label
+  ctx.fillStyle = '#444'; ctx.textAlign = 'center'; ctx.font = '20px "DM Sans"';
+  ctx.fillText('Time (s)', pad.l + plotW / 2, H - 8);
+
+  // Only show first 600 points (60s) for visibility
+  const showN = Math.min(n, 600);
+
+  // Raw speed dots
+  ctx.fillStyle = 'rgba(66,133,244,0.3)';
+  for (let i = 0; i < showN; i++) {
+    const x = pad.l + (i / showN) * plotW;
+    const y = pad.t + plotH - (rawSpeed[i] / maxY) * plotH;
+    ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Filtered line
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let i = 0; i < showN; i++) {
+    const x = pad.l + (i / showN) * plotW;
+    const y = pad.t + plotH - (filtered[i] / maxY) * plotH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Legend
+  ctx.font = '18px "DM Sans"';
+  const lx = pad.l + plotW - 200;
+  ctx.fillStyle = 'rgba(66,133,244,0.5)'; ctx.beginPath(); ctx.arc(lx, pad.t + 15, 4, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#666'; ctx.textAlign = 'left'; ctx.fillText('Raw', lx + 10, pad.t + 20);
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(lx - 5, pad.t + 35); ctx.lineTo(lx + 5, pad.t + 35); ctx.stroke();
+  ctx.fillText('Filtered (BW)', lx + 10, pad.t + 40);
+}
+
+function drawAccelTrace(canvas, accel, fs) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth * 2;
+  const H = canvas.height = 440;
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { t: 30, r: 30, b: 50, l: 60 };
+  const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+
+  const showN = Math.min(accel.length, 600);
+  let maxA = 0;
+  for (let i = 0; i < showN; i++) maxA = Math.max(maxA, Math.abs(accel[i]));
+  maxA = Math.ceil(maxA * 1.1);
+
+  ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + plotH); ctx.lineTo(pad.l + plotW, pad.t + plotH); ctx.stroke();
+
+  // Zero line
+  const zeroY = pad.t + plotH / 2;
+  ctx.strokeStyle = '#ddd'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(pad.l, zeroY); ctx.lineTo(pad.l + plotW, zeroY); ctx.stroke(); ctx.setLineDash([]);
+
+  // Labels
+  ctx.fillStyle = '#666'; ctx.font = '20px "DM Sans"'; ctx.textAlign = 'right';
+  for (let v = -maxA; v <= maxA; v += 2) {
+    const y = zeroY - (v / maxA) * (plotH / 2);
+    ctx.fillText(v.toFixed(0), pad.l - 8, y + 5);
+  }
+  ctx.save(); ctx.translate(16, pad.t + plotH / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#444'; ctx.textAlign = 'center'; ctx.font = '20px "DM Sans"';
+  ctx.fillText('Acceleration (m/s²)', 0, 0); ctx.restore();
+  ctx.fillStyle = '#444'; ctx.textAlign = 'center'; ctx.font = '20px "DM Sans"';
+  ctx.fillText('Time (s)', pad.l + plotW / 2, H - 8);
+
+  // Acceleration line
+  ctx.strokeStyle = '#c23616'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let i = 0; i < showN; i++) {
+    const x = pad.l + (i / showN) * plotW;
+    const y = zeroY - (accel[i] / maxA) * (plotH / 2);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+}
+
+function drawASProfile(canvas, data) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth * 2;
+  const H = canvas.height = 680;
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { t: 30, r: 30, b: 55, l: 65 };
+  const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+
+  function _amax(a){let m=-Infinity;for(let i=0;i<a.length;i++)if(a[i]>m)m=a[i];return m;}
+  const maxS = Math.max(data.S0, _amax(data.allSpeed)) * 1.1;
+  const maxA = Math.max(data.A0, _amax(data.allAccel)) * 1.15;
+
+  // Grid
+  ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+  for (let v = 0; v <= maxA; v += 1) {
+    const y = pad.t + plotH - (v / maxA) * plotH;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + plotW, y); ctx.stroke();
+  }
+  for (let s = 0; s <= maxS; s += 2) {
+    const x = pad.l + (s / maxS) * plotW;
+    ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t + plotH); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#aaa'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + plotH); ctx.lineTo(pad.l + plotW, pad.t + plotH); ctx.stroke();
+
+  ctx.fillStyle = '#666'; ctx.font = '20px "DM Sans"'; ctx.textAlign = 'right';
+  for (let v = 0; v <= maxA; v += 1) {
+    const y = pad.t + plotH - (v / maxA) * plotH;
+    ctx.fillText(v.toFixed(0), pad.l - 8, y + 5);
+  }
+  ctx.textAlign = 'center';
+  for (let s = 0; s <= maxS; s += 2) {
+    const x = pad.l + (s / maxS) * plotW;
+    ctx.fillText(s.toFixed(0), x, pad.t + plotH + 25);
+  }
+  ctx.save(); ctx.translate(18, pad.t + plotH / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#444'; ctx.font = '20px "DM Sans"'; ctx.fillText('Acceleration (m/s²)', 0, 0); ctx.restore();
+  ctx.fillStyle = '#444'; ctx.font = '20px "DM Sans"'; ctx.textAlign = 'center';
+  ctx.fillText('Speed (m/s)', pad.l + plotW / 2, H - 8);
+
+  // All scatter (grey)
+  ctx.fillStyle = 'rgba(180,180,180,0.15)';
+  for (let i = 0; i < data.allSpeed.length; i++) {
+    const x = pad.l + (data.allSpeed[i] / maxS) * plotW;
+    const y = pad.t + plotH - (data.allAccel[i] / maxA) * plotH;
+    ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Clean points (green circles)
+  for (let i = 0; i < data.cleanSpeed.length; i++) {
+    const x = pad.l + (data.cleanSpeed[i] / maxS) * plotW;
+    const y = pad.t + plotH - (data.cleanAccel[i] / maxA) * plotH;
+    ctx.strokeStyle = '#2d6a4f'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = 'rgba(45,106,79,0.2)'; ctx.fill();
+  }
+
+  // Outlier points (red circles)
+  for (let i = 0; i < data.outlierSpeed.length; i++) {
+    const x = pad.l + (data.outlierSpeed[i] / maxS) * plotW;
+    const y = pad.t + plotH - (data.outlierAccel[i] / maxA) * plotH;
+    ctx.strokeStyle = '#c23616'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = 'rgba(194,54,22,0.2)'; ctx.fill();
+  }
+
+  // Min speed vertical line
+  const minSpeedX = pad.l + (3.0 / maxS) * plotW;
+  ctx.strokeStyle = '#888'; ctx.lineWidth = 1; ctx.setLineDash([6, 4]);
+  ctx.beginPath(); ctx.moveTo(minSpeedX, pad.t); ctx.lineTo(minSpeedX, pad.t + plotH); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Regression line
+  const s1 = 0, s2 = data.S0;
+  const a1 = data.b + data.m * s1, a2 = data.b + data.m * s2;
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(pad.l + (s1 / maxS) * plotW, pad.t + plotH - (a1 / maxA) * plotH);
+  ctx.lineTo(pad.l + (s2 / maxS) * plotW, pad.t + plotH - (a2 / maxA) * plotH);
+  ctx.stroke();
+
+  // Legend
+  ctx.font = '18px "DM Sans"'; ctx.fillStyle = '#333'; ctx.textAlign = 'left';
+  const lx = pad.l + plotW - 300;
+  ctx.fillText('A₀=' + data.A0.toFixed(2) + ' m/s²   S₀=' + data.S0.toFixed(2) + ' m/s', lx, pad.t + 22);
+  ctx.fillText('S_Fv=' + data.SFv.toFixed(3) + '   R²=' + data.r2.toFixed(3), lx, pad.t + 44);
+  ctx.fillText('n=' + data.cleanSpeed.length + ' (included)  ' + data.outlierSpeed.length + ' (excluded)', lx, pad.t + 66);
+}
+
+function drawFVPower(canvas, data) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth * 2;
+  const H = canvas.height = 680;
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { t: 30, r: 70, b: 55, l: 65 };
+  const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+
+  const maxS = data.S0 * 1.1;
+  const maxA = data.A0 * 1.15;
+  const maxP = data.Pmax * 1.3;
+
+  // Grid
+  ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+  for (let v = 0; v <= maxA; v += 1) {
+    const y = pad.t + plotH - (v / maxA) * plotH;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + plotW, y); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#aaa'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + plotH); ctx.lineTo(pad.l + plotW, pad.t + plotH); ctx.stroke();
+  // Right axis
+  ctx.beginPath(); ctx.moveTo(pad.l + plotW, pad.t); ctx.lineTo(pad.l + plotW, pad.t + plotH); ctx.stroke();
+
+  // Left Y labels (Force)
+  ctx.fillStyle = '#666'; ctx.font = '20px "DM Sans"'; ctx.textAlign = 'right';
+  for (let v = 0; v <= maxA; v += 1) {
+    const y = pad.t + plotH - (v / maxA) * plotH;
+    ctx.fillText(v.toFixed(0), pad.l - 8, y + 5);
+  }
+  // Right Y labels (Power)
+  ctx.textAlign = 'left'; ctx.fillStyle = '#c23616';
+  for (let p = 0; p <= maxP; p += 5) {
+    const y = pad.t + plotH - (p / maxP) * plotH;
+    ctx.fillText(p.toFixed(0), pad.l + plotW + 8, y + 5);
+  }
+  // X labels
+  ctx.textAlign = 'center'; ctx.fillStyle = '#666';
+  for (let s = 0; s <= maxS; s += 2) {
+    const x = pad.l + (s / maxS) * plotW;
+    ctx.fillText(s.toFixed(0), x, pad.t + plotH + 25);
+  }
+
+  // Axis titles
+  ctx.save(); ctx.translate(18, pad.t + plotH / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#444'; ctx.font = '20px "DM Sans"'; ctx.textAlign = 'center';
+  ctx.fillText('Acceleration (m/s²)', 0, 0); ctx.restore();
+  ctx.save(); ctx.translate(W - 6, pad.t + plotH / 2); ctx.rotate(Math.PI / 2);
+  ctx.fillStyle = '#c23616'; ctx.font = '20px "DM Sans"'; ctx.textAlign = 'center';
+  ctx.fillText('Power (W/kg)', 0, 0); ctx.restore();
+  ctx.fillStyle = '#444'; ctx.font = '20px "DM Sans"'; ctx.textAlign = 'center';
+  ctx.fillText('Speed (m/s)', pad.l + plotW / 2, H - 8);
+
+  // PB shading (area under FV line from 0 to S0)
+  ctx.fillStyle = 'rgba(230,126,34,0.2)';
+  ctx.beginPath();
+  const nPts = 100;
+  for (let i = 0; i <= nPts; i++) {
+    const s = (i / nPts) * data.S0;
+    const a = data.m * s + data.b;
+    const x = pad.l + (s / maxS) * plotW;
+    const y = pad.t + plotH - (Math.max(0, a) / maxA) * plotH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.lineTo(pad.l + (data.S0 / maxS) * plotW, pad.t + plotH);
+  ctx.lineTo(pad.l, pad.t + plotH);
+  ctx.closePath(); ctx.fill();
+
+  // FV line (solid black)
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t + plotH - (data.A0 / maxA) * plotH);
+  ctx.lineTo(pad.l + (data.S0 / maxS) * plotW, pad.t + plotH);
+  ctx.stroke();
+
+  // Power curve (dashed red)
+  ctx.strokeStyle = '#c23616'; ctx.lineWidth = 2.5; ctx.setLineDash([8, 5]);
+  ctx.beginPath();
+  for (let i = 0; i <= nPts; i++) {
+    const s = (i / nPts) * data.S0;
+    const p = s * (data.m * s + data.b);
+    const x = pad.l + (s / maxS) * plotW;
+    const y = pad.t + plotH - (Math.max(0, p) / maxP) * plotH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Pmax star
+  const sPmax = -data.b / (2 * data.m);
+  const xPmax = pad.l + (sPmax / maxS) * plotW;
+  const yPmax = pad.t + plotH - (data.Pmax / maxP) * plotH;
+  ctx.fillStyle = '#c23616';
+  drawStar(ctx, xPmax, yPmax, 5, 10, 5);
+
+  // Legend
+  const lx = pad.l + 20, ly = pad.t + 22;
+  ctx.font = '18px "DM Sans"'; ctx.textAlign = 'left';
+  ctx.fillStyle = '#1a1a1a'; ctx.fillText('— FV profile', lx, ly);
+  ctx.fillStyle = '#c23616'; ctx.fillText('- - Power curve', lx, ly + 22);
+  ctx.fillStyle = 'rgba(230,126,34,0.5)'; ctx.fillRect(lx, ly + 30, 14, 14);
+  ctx.fillStyle = '#666'; ctx.fillText('P_B = ' + data.PB.toFixed(2) + ' W/kg', lx + 20, ly + 42);
+  ctx.fillStyle = '#c23616'; ctx.fillText('★ P_max = ' + data.Pmax.toFixed(2) + ' W/kg', lx, ly + 64);
+}
+
+function drawStar(ctx, cx, cy, spikes, outerR, innerR) {
+  let rot = Math.PI / 2 * 3, step = Math.PI / spikes;
+  ctx.beginPath(); ctx.moveTo(cx, cy - outerR);
+  for (let i = 0; i < spikes; i++) {
+    ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR); rot += step;
+    ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR); rot += step;
+  }
+  ctx.closePath(); ctx.fill();
+}
+
+function showMetrics(data) {
+  const html = `
+    <table class="metric-table">
+      <thead><tr><th>Metric</th><th>Value</th><th>Unit</th></tr></thead>
+      <tbody>
+        <tr><td><strong>S₀</strong> (max hypothetical speed)</td><td class="mono">${data.S0.toFixed(2)}</td><td>m/s</td></tr>
+        <tr><td><strong>A₀</strong> (max acceleration / force)</td><td class="mono">${data.A0.toFixed(2)}</td><td>m/s²</td></tr>
+        <tr><td><strong>P<sub>max</sub></strong> (peak power)</td><td class="mono">${data.Pmax.toFixed(2)}</td><td>W/kg</td></tr>
+        <tr><td><strong>P<sub>B</sub></strong> (ballistic power)</td><td class="mono">${data.PB.toFixed(2)}</td><td>W/kg</td></tr>
+        <tr><td><strong>S<sub>Fv</sub></strong> (FV slope)</td><td class="mono">${data.SFv.toFixed(3)}</td><td>s⁻¹</td></tr>
+        <tr><td><strong>d<sub>Fv</sub></strong> (FV offset)</td><td class="mono">${data.dFv.toFixed(2)}</td><td>—</td></tr>
+        <tr><td><strong>R²</strong> (fit quality)</td><td class="mono">${data.r2.toFixed(3)}</td><td>—</td></tr>
+        <tr><td>Points fitted</td><td class="mono">${data.cleanSpeed.length}</td><td>—</td></tr>
+        <tr><td>Outliers removed</td><td class="mono">${data.outlierSpeed.length}</td><td>—</td></tr>
+      </tbody>
+    </table>
+  `;
+  $('#metricsOutput').innerHTML = html;
+}
+
+// ── DEMO DATA GENERATOR ──
+function generateDemoData() {
+  // Simulate ~30 min of match-like GPS data at 10 Hz
+  // Designed to produce realistic intermittent field-sport patterns
+  const fs = 10;
+  const duration = 30 * 60;
+  const n = duration * fs;
+  const speed = new Float64Array(n);
+  const rng = () => Math.random();
+
+  // State machine: stand, walk, jog, run, sprint
+  // Each state has a target speed range and typical duration
+  const states = [
+    { name:'stand', vLo:0,   vHi:0.5, durLo:3,  durHi:15 },
+    { name:'walk',  vLo:1.0, vHi:2.0, durLo:5,  durHi:30 },
+    { name:'jog',   vLo:2.5, vHi:4.0, durLo:3,  durHi:20 },
+    { name:'run',   vLo:4.5, vHi:6.5, durLo:2,  durHi:8  },
+    { name:'sprint',vLo:6.5, vHi:8.8, durLo:1.5,durHi:5  },
+  ];
+  // Transition probabilities (roughly: lots of walking/jogging, occasional sprints)
+  const transitions = [
+    [0.2, 0.4, 0.3, 0.08, 0.02],  // from stand
+    [0.15, 0.25, 0.4, 0.15, 0.05], // from walk
+    [0.1, 0.2, 0.3, 0.3, 0.1],     // from jog
+    [0.05, 0.1, 0.4, 0.3, 0.15],   // from run
+    [0.1, 0.15, 0.35, 0.3, 0.1],   // from sprint
+  ];
+
+  function pickNext(fromIdx) {
+    const row = transitions[fromIdx];
+    let r = rng(), cum = 0;
+    for (let j = 0; j < row.length; j++) { cum += row[j]; if (r < cum) return j; }
+    return row.length - 1;
+  }
+
+  let stateIdx = 0, v = 0, i = 0;
+  while (i < n) {
+    const st = states[stateIdx];
+    const dur = st.durLo + rng() * (st.durHi - st.durLo); // seconds
+    const samples = Math.round(dur * fs);
+    const target = st.vLo + rng() * (st.vHi - st.vLo);
+    // Accel/decel rate depends on whether speeding up or slowing
+    const rate = target > v ? 0.03 + rng() * 0.02 : 0.02 + rng() * 0.03;
+
+    for (let j = 0; j < samples && i < n; j++, i++) {
+      v += (target - v) * rate + (rng() - 0.5) * 0.15;
+      v = Math.max(0, v);
+      speed[i] = v;
+    }
+    stateIdx = pickNext(stateIdx);
+  }
+
+  // Add GPS-like noise (small, high-frequency)
+  for (let k = 0; k < n; k++) {
+    speed[k] += (rng() - 0.5) * 0.25;
+    speed[k] = Math.max(0, speed[k]);
+  }
+
+  return speed;
+}
+
+// ── CSV PARSER ──
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return null;
+  const headers = lines[0].split(',').map(h => h.trim());
+
+  const speedIdx = headers.findIndex(h => h.toLowerCase().includes('speed') && h.includes('m/s'));
+  const timeIdx = headers.findIndex(h => h.toLowerCase() === 'time');
+
+  if (speedIdx === -1) { log('⚠ Could not find "Speed (m/s)" column.'); return null; }
+
+  // Parse all rows
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(',');
+    const v = parseFloat(cols[speedIdx]);
+    if (isNaN(v)) continue;
+    const t = timeIdx >= 0 ? cols[timeIdx]?.trim() : null;
+    rows.push({ time: t, speed: v });
+  }
+
+  // Deduplicate on timestamp if Time column exists
+  // STATSports Raw Data Extended exports 10 speed rows per timestamp
+  if (timeIdx >= 0 && rows.length > 0 && rows[0].time) {
+    const seen = new Set();
+    const deduped = [];
+    for (const row of rows) {
+      if (!seen.has(row.time)) { seen.add(row.time); deduped.push(row.speed); }
+    }
+    if (deduped.length < rows.length) {
+      log('Deduplicated: ' + rows.length + ' → ' + deduped.length + ' rows (1 per timestamp).');
+      log('Note: effective sample rate is now ~1 Hz. Adjust filter if needed.');
+    }
+    return new Float64Array(deduped);
+  }
+
+  const speeds = rows.map(r => r.speed);
+  log('Parsed ' + speeds.length + ' speed samples from CSV.');
+  return new Float64Array(speeds);
+}
+
+// ── EVENT HANDLERS ──
+let uploadedData = null;
+
+$('#fileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  $('#fileName').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    uploadedData = parseCSV(ev.target.result);
+    if (uploadedData) { log('CSV loaded: ' + uploadedData.length + ' samples.'); $('#btnProcess').disabled = false; }
+  };
+  reader.readAsText(file);
+});
+
+// Drag and drop
+const uz = $('#uploadZone');
+uz.addEventListener('dragover', e => { e.preventDefault(); uz.classList.add('dragover'); });
+uz.addEventListener('dragleave', () => uz.classList.remove('dragover'));
+uz.addEventListener('drop', e => { e.preventDefault(); uz.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) { $('#fileInput').files = e.dataTransfer.files; $('#fileInput').dispatchEvent(new Event('change')); }
+});
+
+$('#btnDemo').addEventListener('click', () => {
+  log('Generating synthetic demo data (30 min @ 10 Hz)...');
+  uploadedData = generateDemoData();
+  $('#fileName').textContent = 'demo_match_data.csv (synthetic)';
+  log('Demo data ready: ' + uploadedData.length + ' samples.');
+  $('#btnProcess').disabled = false;
+});
+
+$('#btnProcess').addEventListener('click', () => {
+  if (!uploadedData) return;
+  const minSpeed = parseFloat($('#minSpeed').value) || 3.0;
+  let fs = 10, fc = 1;
+
+  // If data was deduped to 1 Hz (small sample count relative to expected), adjust
+  // Heuristic: 30 min at 10 Hz = 18000, at 1 Hz = 1800
+  if (uploadedData.length < 5000 && uploadedData.length > 100) {
+    // Likely 1 Hz data (deduped or Raw Data export)
+    fs = 1;
+    fc = 0.4; // adjust filter for lower sample rate
+    log('Detected low sample count — assuming ~1 Hz effective rate.');
+  }
+
+  $('#statusBar').textContent = 'Processing...';
+  log('Sample rate: ' + fs + ' Hz, filter cut-off: ' + fc + ' Hz, min speed: ' + minSpeed + ' m/s');
+
+  // Run async to allow UI update
+  setTimeout(() => {
+    const result = computePFV(uploadedData, fs, fc, minSpeed);
+    if (!result) { log('⚠ Processing failed — check data quality.'); return; }
+
+    // Show results
+    $('#resultsBox').style.display = 'block';
+    drawSpeedTrace($('#canvasSpeed'), result.rawSpeed, result.filtered, fs);
+    drawAccelTrace($('#canvasAccel'), result.accel, fs);
+    drawASProfile($('#canvasAS'), result);
+    drawFVPower($('#canvasFV'), result);
+    showMetrics(result);
+
+    log('✓ All figures rendered.');
+    $('#resultsBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+});
+
+// Tabs
+$$('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    $$('.tab').forEach(t => t.classList.remove('active'));
+    $$('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    $('#tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-header').nextElementSibling;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+
+</body>
+</html>
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(250,250,248,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .inner {
+      max-width: var(--max-w); margin: 0 auto;
+      padding: .85rem var(--space);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    nav .name {
+      font-family: var(--serif); font-weight: 500; font-size: 1.05rem;
+      color: var(--fg); text-decoration: none; letter-spacing: -.01em;
+    }
+    nav ul { list-style: none; display: flex; gap: 1.75rem; }
+    nav a {
+      text-decoration: none; color: var(--fg-secondary);
+      font-size: .85rem; font-weight: 500; letter-spacing: .02em; transition: color .2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* ── ARTICLE ── */
+    .article {
+      max-width: var(--max-w); margin: 0 auto;
+      padding: 3.5rem var(--space) 2rem;
+    }
+    .article-header {
+      margin-bottom: 2.5rem; padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .breadcrumb {
+      font-size: .78rem; color: var(--fg-muted);
+      margin-bottom: 1rem; display: flex; align-items: center; gap: .4rem;
+    }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article-header h1 {
+      font-family: var(--serif); font-weight: 300;
+      font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+      line-height: 1.25; letter-spacing: -.02em; margin-bottom: .6rem;
+    }
+    .article-header .subtitle {
+      font-size: .92rem; color: var(--fg-secondary); line-height: 1.6;
+    }
+    .article-meta {
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+      margin-top: 1rem; font-size: .8rem; color: var(--fg-muted);
+    }
+    .article-meta span { display: inline-flex; align-items: center; gap: .3rem; }
+    .article-meta svg { width: 13px; height: 13px; }
+
+    /* ── TABLE OF CONTENTS ── */
+    .toc {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1.25rem 1.5rem; margin-bottom: 2.5rem;
+    }
+    .toc-title {
+      font-family: var(--sans); font-size: .8rem; font-weight: 500;
+      color: var(--fg-muted); letter-spacing: .06em;
+      text-transform: uppercase; margin-bottom: .75rem;
+    }
+    .toc ol { list-style: none; counter-reset: toc-counter; }
+    .toc ol li { counter-increment: toc-counter; margin-bottom: .35rem; }
+    .toc ol li::before {
+      content: counter(toc-counter) ".";
+      font-family: var(--mono); font-size: .75rem;
+      color: var(--accent); margin-right: .5rem; font-weight: 500;
+    }
+    .toc a { font-size: .88rem; color: var(--fg-secondary); text-decoration: none; transition: color .2s; }
+    .toc a:hover { color: var(--accent); }
+
+    /* ── PROSE ── */
+    .prose h2 {
+      font-family: var(--serif); font-weight: 500; font-size: 1.3rem;
+      letter-spacing: -.01em; margin: 2.5rem 0 1rem;
+      padding-bottom: .55rem; border-bottom: 1px solid var(--border);
+    }
+    .prose h3 {
+      font-family: var(--serif); font-weight: 500; font-size: 1.05rem;
+      margin: 1.8rem 0 .7rem;
+    }
+    .prose p { margin-bottom: 1.1rem; color: var(--fg-secondary); line-height: 1.75; }
+    .prose a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+    .prose a:hover { border-bottom-color: var(--accent); }
+    .prose strong { color: var(--fg); }
+
+    /* ── CALLOUT BOX ── */
+    .callout {
+      background: var(--accent-light); border-left: 3px solid var(--accent);
+      padding: 1rem 1.25rem; border-radius: 0 6px 6px 0; margin: 1.5rem 0;
+    }
+    .callout p { color: var(--fg); margin: 0; font-size: .9rem; }
+    .callout-title {
+      font-weight: 500; font-size: .82rem; color: var(--accent);
+      text-transform: uppercase; letter-spacing: .04em; margin-bottom: .35rem;
+    }
+    .callout-warn { background: #fef7ec; border-left-color: #c4820a; }
+    .callout-warn .callout-title { color: #a06c05; }
+
+    /* ── CODE ── */
+    code {
+      font-family: var(--mono); font-size: .82rem;
+      background: #f0f0ec; padding: .15rem .4rem; border-radius: 3px; color: var(--fg);
+    }
+    pre {
+      background: #1e1e1e; color: #d4d4d4; border-radius: 6px;
+      padding: 1.2rem 1.4rem; overflow-x: auto; margin: 1.2rem 0 1.5rem;
+      line-height: 1.6; font-size: .82rem; border: 1px solid #333;
+    }
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+    .code-header {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #2d2d2d; padding: .5rem 1rem;
+      border-radius: 6px 6px 0 0; border: 1px solid #333; border-bottom: none; margin-top: 1.2rem;
+    }
+    .code-header + pre { margin-top: 0; border-radius: 0 0 6px 6px; }
+    .code-header span { font-family: var(--mono); font-size: .72rem; color: #888; font-weight: 500; }
+    .code-header .copy-btn {
+      background: none; border: 1px solid #555; color: #aaa;
+      padding: .2rem .5rem; border-radius: 3px; font-size: .68rem;
+      cursor: pointer; font-family: var(--sans); transition: all .2s;
+    }
+    .code-header .copy-btn:hover { border-color: #888; color: #ddd; }
+
+    /* ── KEY FINDINGS ── */
+    .findings {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem; margin: 1.5rem 0 2rem;
+    }
+    .finding-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      padding: 1.2rem 1.3rem; transition: box-shadow .2s;
+    }
+    .finding-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.04); }
+    .finding-card .stat {
+      font-family: var(--mono); font-size: 1.4rem; color: var(--accent);
+      font-weight: 500; margin-bottom: .25rem;
+    }
+    .finding-card h4 { font-family: var(--serif); font-size: .95rem; font-weight: 500; margin-bottom: .3rem; }
+    .finding-card p { font-size: .84rem; color: var(--fg-muted); margin: 0; line-height: 1.55; }
+
+    /* ── PIPELINE DIAGRAM ── */
+    .pipeline-diagram {
+      display: flex; align-items: stretch; gap: 0;
+      margin: 2rem 0; overflow-x: auto; padding: .5rem 0;
+    }
+    .pipeline-stage {
+      flex: 1; min-width: 150px; padding: 1.1rem 1rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 6px; text-align: center;
+    }
+    .pipeline-stage .stage-num {
+      font-family: var(--mono); font-size: .65rem; font-weight: 500;
+      color: var(--accent); letter-spacing: .06em; text-transform: uppercase; margin-bottom: .35rem;
+    }
+    .pipeline-stage h4 { font-family: var(--serif); font-size: .9rem; font-weight: 500; margin-bottom: .3rem; }
+    .pipeline-stage p { font-size: .75rem; color: var(--fg-muted); line-height: 1.5; }
+    .pipeline-arrow {
+      display: flex; align-items: center; padding: 0 .3rem;
+      color: var(--accent); font-size: 1.2rem; flex-shrink: 0;
+    }
+
+    /* ── METRIC TABLE ── */
+    .metric-table {
+      width: 100%; border-collapse: collapse; margin: 1.2rem 0 1.5rem; font-size: .84rem;
+    }
+    .metric-table th {
+      font-family: var(--sans); font-weight: 500; text-align: left;
+      padding: .65rem .8rem; background: var(--accent-light); color: var(--accent);
+      border-bottom: 2px solid var(--accent); font-size: .78rem; letter-spacing: .03em;
+    }
+    .metric-table td {
+      padding: .6rem .8rem; border-bottom: 1px solid var(--border);
+      color: var(--fg-secondary); line-height: 1.5;
+    }
+    .metric-table tr:hover td { background: rgba(42,90,76,.03); }
+    .mono { font-family: var(--mono); }
+
+    /* ── FILE TREE ── */
+    .file-tree {
+      background: #1e1e1e; color: #d4d4d4; border-radius: 6px;
+      padding: 1.2rem 1.4rem; margin: 1.2rem 0 1.5rem;
+      font-family: var(--mono); font-size: .8rem; line-height: 1.9;
+      border: 1px solid #333; overflow-x: auto;
+    }
+    .file-tree .dir  { color: #9cdcfe; }
+    .file-tree .file { color: #d4d4d4; }
+    .file-tree .desc { color: #6a9955; }
+
+    /* ── INTERACTIVE TOOL ── */
+    .tool-box {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1.5rem; margin: 1.5rem 0;
+    }
+    .tool-box h4 { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; margin-bottom: .8rem; }
+    .tool-box canvas { width: 100%; height: auto; display: block; border-radius: 4px; margin: .5rem 0; }
+    .tool-box .caption { font-size: .78rem; color: var(--fg-muted); font-style: italic; margin-top: .5rem; }
+
+    .upload-zone {
+      border: 2px dashed var(--border); border-radius: 6px; padding: 2rem;
+      text-align: center; cursor: pointer; transition: all .2s; margin: 1rem 0; position: relative;
+    }
+    .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: var(--accent-light); }
+    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .upload-zone .icon { font-size: 2rem; margin-bottom: .5rem; opacity: .4; }
+    .upload-zone p { font-size: .88rem; color: var(--fg-muted); margin: 0; }
+    .upload-zone .filename { font-family: var(--mono); font-size: .82rem; color: var(--accent); margin-top: .4rem; }
+
+    .btn {
+      display: inline-block; padding: .5rem 1.1rem; border: none; border-radius: 4px;
+      font-family: var(--sans); font-size: .85rem; font-weight: 500; cursor: pointer; transition: all .15s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #1e4a3d; }
+    .btn-outline { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+    .btn-outline:hover { background: var(--accent); color: #fff; }
+    .btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    select, .input-field {
+      font-family: var(--sans); font-size: .85rem; padding: .4rem .65rem;
+      border: 1.5px solid var(--border); border-radius: 4px; background: var(--bg-card);
+    }
+    .controls-row { display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; margin: .8rem 0; }
+    .controls-row label { font-size: .82rem; font-weight: 500; color: var(--fg-muted); }
+
+    .status-bar {
+      font-family: var(--mono); font-size: .75rem; background: #1e1e1e; color: #a6e3a1;
+      padding: .6rem 1rem; border-radius: 4px; margin: .8rem 0;
+      max-height: 130px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #333;
+    }
+
+    /* ── TABS ── */
+    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+    .tab {
+      padding: .5rem 1.1rem; font-size: .85rem; font-weight: 500; cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--fg-muted);
+      transition: all .15s; background: none; border-top: none; border-left: none; border-right: none;
+      font-family: var(--sans);
+    }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab:hover { color: var(--accent); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      max-width: var(--max-w); margin: 0 auto;
+      padding: 2.5rem var(--space); border-top: 1px solid var(--border);
+      font-size: .8rem; color: var(--fg-muted);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+    }
+    footer a { color: var(--fg-secondary); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── REFERENCES ── */
+    .ref-list {
+      list-style: none;
+      counter-reset: ref-counter;
+      margin: 1rem 0;
+    }
+    .ref-list li {
+      counter-increment: ref-counter;
+      padding: .6rem 0 .6rem 2.2rem;
+      position: relative;
+      font-size: .84rem;
+      color: var(--fg-secondary);
+      line-height: 1.6;
+      border-bottom: 1px solid var(--border);
+    }
+    .ref-list li:last-child { border-bottom: none; }
+    .ref-list li::before {
+      content: "[" counter(ref-counter) "]";
+      position: absolute;
+      left: 0;
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .ref-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .ref-list a:hover { text-decoration: underline; }
+
+    /* ── ANIMATIONS ── */
+    .fade-in { opacity: 0; transform: translateY(12px); animation: fadeUp .6s ease forwards; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    .fade-in:nth-child(1) { animation-delay: .05s; }
+    .fade-in:nth-child(2) { animation-delay: .12s; }
+    .fade-in:nth-child(3) { animation-delay: .19s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav ul { gap: 1rem; font-size: .75rem; }
+      .pipeline-diagram { flex-direction: column; }
+      .pipeline-arrow { transform: rotate(90deg); justify-content: center; padding: .3rem 0; }
+      .findings { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="inner">
+    <a href="index.html" class="name">Eamon McGleenan</a>
+    <ul>
+      <li><a href="index.html#publications">Publications</a></li>
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="index.html#media">Media</a></li>
+      <li><a href="index.html#talks">Talks</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── ARTICLE ── -->
+<article class="article">
+
+  <div class="article-header fade-in">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <a href="index.html#publications">Publications</a>
+      <span>›</span>
+      <span>In-Situ PFv Profiling</span>
+    </div>
+    <h1>In-Situ PFv Profiling for Team Sports</h1>
+    <p class="subtitle">
+      A practitioner's guide to tracking force-velocity profiles from GPS data you're
+      already collecting — no extra testing required.
+    </p>
+    <div class="article-meta">
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        12 min read
+      </span>
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        May 2026
+      </span>
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Python · GPS · STATSports · Force-Velocity
+      </span>
+    </div>
+  </div>
+
+  <!-- ── TABLE OF CONTENTS ── -->
+  <div class="toc fade-in">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#what-is-pfv">What is a PFv profile?</a></li>
+      <li><a href="#key-findings">Key findings from the study</a></li>
+      <li><a href="#how-it-works">How the method works</a></li>
+      <li><a href="#pipeline">Setting up the pipeline</a></li>
+      <li><a href="#sonra-workflow">Sonra workflow</a></li>
+      <li><a href="#try-it">Try it yourself — interactive figures</a></li>
+      <li><a href="#practical">Practical applications</a></li>
+      <li><a href="#limitations">What to watch out for</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </div>
+
+  <div class="prose">
+
+
+    <!-- ── 1. WHAT IS PFV ── -->
+    <h2 id="what-is-pfv">1. What is a PFv profile?</h2>
+
+    <p>
+      Every time a player accelerates on the pitch, their body is producing force at a given velocity. Plot these two against each other across many efforts and you get a <strong>force-velocity (FV) profile</strong> <a href="#ref-1">[1]</a> — a straight line that describes the trade-off between how hard a player can push (force) and how fast they're moving (velocity) while doing it.
+    </p>
+    <p>
       From that single line, you can extract several useful numbers: how explosive a player is from a standing start (<strong>A₀</strong>), their top-end speed capacity (<strong>S₀</strong>), their peak power output (<strong>P<sub>max</sub></strong>), and a newer metric called <strong>ballistic power (P<sub>B</sub>)</strong> which captures the total area under the curve — essentially the full picture of a player's sprint-related output <a href="#ref-15">[15]</a>.
     </p>
     <p>
