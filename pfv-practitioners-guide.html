@@ -409,13 +409,13 @@
     <h2 id="what-is-pfv">1. What is a PFv profile?</h2>
 
     <p>
-      Every time a player accelerates on the pitch, their body is producing force at a given velocity. Plot these two against each other across many efforts and you get a <strong>force-velocity (FV) profile</strong> — a straight line that describes the trade-off between how hard a player can push (force) and how fast they're moving (velocity) while doing it.
+      Every time a player accelerates on the pitch, their body is producing force at a given velocity. Plot these two against each other across many efforts and you get a <strong>force-velocity (FV) profile</strong> <a href="#ref-1">[1]</a> — a straight line that describes the trade-off between how hard a player can push (force) and how fast they're moving (velocity) while doing it.
     </p>
     <p>
-      From that single line, you can extract several useful numbers: how explosive a player is from a standing start (<strong>A₀</strong>), their top-end speed capacity (<strong>S₀</strong>), their peak power output (<strong>P<sub>max</sub></strong>), and a newer metric called <strong>ballistic power (P<sub>B</sub>)</strong> which captures the total area under the curve — essentially the full picture of a player's sprint-related output.
+      From that single line, you can extract several useful numbers: how explosive a player is from a standing start (<strong>A₀</strong>), their top-end speed capacity (<strong>S₀</strong>), their peak power output (<strong>P<sub>max</sub></strong>), and a newer metric called <strong>ballistic power (P<sub>B</sub>)</strong> which captures the total area under the curve — essentially the full picture of a player's sprint-related output <a href="#ref-15">[15]</a>.
     </p>
     <p>
-      Traditionally, getting these numbers meant running a dedicated sprint test — timing gates, radar guns, or a treadmill. The breakthrough described in this study is that <strong>you can extract the same profile passively from the GPS data you're already collecting</strong> during regular training and matches. No extra sessions, no disruption to the schedule, no additional equipment.
+      Traditionally, getting these numbers meant running a dedicated sprint test — timing gates <a href="#ref-9">[9]</a>, radar guns <a href="#ref-24">[24]</a>, or a treadmill <a href="#ref-11">[11]</a>. The breakthrough described in this study is that <strong>you can extract the same profile passively from the GPS data you're already collecting</strong> during regular training and matches <a href="#ref-17">[17]</a>. No extra sessions, no disruption to the schedule, no additional equipment.
     </p>
 
     <div class="callout">
@@ -430,14 +430,14 @@
     <h2 id="key-findings">2. Key findings</h2>
 
     <p>
-      The study tracked 34 sub-elite Gaelic footballers across a full season (70 training sessions and 18 competitive matches) using 10 Hz STATSports GPS units.
+      The study tracked 34 sub-elite Gaelic footballers across a full season (70 training sessions and 18 competitive matches) using 10 Hz STATSports GPS units <a href="#ref-2">[2,&nbsp;23]</a>.
     </p>
 
     <div class="findings">
       <div class="finding-card">
         <div class="stat">R² ≥ 0.93</div>
         <h4>Strong linearity</h4>
-        <p>In-situ profiles were highly linear — comparable with existing studies using elite soccer players. Match R² = 0.929, training R² = 0.949.</p>
+        <p>In-situ profiles were highly linear — comparable with existing studies using elite soccer players <a href="#ref-17">[17,&nbsp;5]</a>. Match R² = 0.929, training R² = 0.949.</p>
       </div>
       <div class="finding-card">
         <div class="stat">7–12 min</div>
@@ -447,7 +447,7 @@
       <div class="finding-card">
         <div class="stat">−6.4%</div>
         <h4>In-match power decline</h4>
-        <p>Ballistic power (P<sub>B</sub>) dropped by an average of 6.4% across a full game — consistent with neuromuscular fatigue.</p>
+        <p>Ballistic power (P<sub>B</sub>) dropped by an average of 6.4% across a full game — consistent with neuromuscular fatigue <a href="#ref-15">[15]</a>.</p>
       </div>
       <div class="finding-card">
         <div class="stat">Not interchangeable</div>
@@ -462,17 +462,17 @@
 
     <h3>Step 1 — Filter the raw speed</h3>
     <p>
-      GPS speed data is noisy. The first step is applying a <strong>second-order Butterworth low-pass filter</strong> with a 1 Hz cut-off to smooth out the high-frequency noise while preserving genuine speed changes.
+      GPS speed data is noisy. The first step is applying a <strong>second-order Butterworth low-pass filter</strong> with a 1 Hz cut-off <a href="#ref-5">[5]</a> to smooth out the high-frequency noise while preserving genuine speed changes.
     </p>
 
     <h3>Step 2 — Derive acceleration</h3>
     <p>
-      From the filtered speed, acceleration is calculated using central differences. Only data above <strong>3 m/s</strong> is kept — below that, players are jogging or walking and the acceleration data isn't meaningful for profiling.
+      From the filtered speed, acceleration is calculated using central differences <a href="#ref-8">[8]</a>. Only data above <strong>3 m/s</strong> is kept <a href="#ref-17">[17,&nbsp;18]</a> — below that, players are jogging or walking and the acceleration data isn't meaningful for profiling.
     </p>
 
     <h3>Step 3 — Extract the envelope</h3>
     <p>
-      The speed range above 3 m/s is divided into 0.2 m/s windows. Within each window, the <strong>top two acceleration values</strong> are extracted — the "envelope" of what the player can produce.
+      The speed range above 3 m/s is divided into 0.2 m/s windows. Within each window, the <strong>top two acceleration values</strong> are extracted — the "envelope" of what the player can produce <a href="#ref-17">[17]</a>.
     </p>
 
     <h3>Step 4 — Fit and clean</h3>
@@ -497,7 +497,7 @@
     <div class="callout">
       <div class="callout-title">P_B vs P_max</div>
       <p>
-        P<sub>max</sub> is the single highest point on the power curve — peak output. P<sub>B</sub> is the <em>total area</em> under the force-velocity line, capturing the full range of force-producing ability. The study found P<sub>B</sub> is the most sensitive metric for detecting neuromuscular fatigue.
+        P<sub>max</sub> is the single highest point on the power curve — peak output. P<sub>B</sub> is the <em>total area</em> under the force-velocity line, capturing the full range of force-producing ability. The study found P<sub>B</sub> is the most sensitive metric for detecting neuromuscular fatigue <a href="#ref-15">[15]</a>.
       </p>
     </div>
 
@@ -663,20 +663,20 @@ STEP_S = 10                  # Sliding window step (seconds)</code></pre>
 
     <h3>In-match monitoring</h3>
     <p>
-      With only 7–12 minutes of match data needed, it becomes possible to track PFv metrics in near real-time using a sliding window. The study showed P<sub>B</sub> declined progressively across both halves, with a partial recovery visible after half-time — consistent with neuromuscular fatigue and subsequent partial recovery.
+      With only 7–12 minutes of match data needed <a href="#ref-22">[22]</a>, it becomes possible to track PFv metrics in near real-time using a sliding window <a href="#ref-31">[31]</a>. The study showed P<sub>B</sub> declined progressively across both halves, with a partial recovery visible after half-time — consistent with neuromuscular fatigue and subsequent partial recovery <a href="#ref-15">[15]</a>.
     </p>
     <p>
-      If a player's P<sub>B</sub> trajectory deviates significantly from their typical pattern or drops below baseline more sharply than the rest of the squad, this could flag fatigue, under-recovery, or elevated injury risk. This doesn't replace existing load metrics but adds a richer picture of the force-velocity relationship.
+      If a player's P<sub>B</sub> trajectory deviates significantly from their typical pattern or drops below baseline more sharply than the rest of the squad, this could flag fatigue, under-recovery, or elevated injury risk <a href="#ref-12">[12,&nbsp;30]</a>. This doesn't replace existing load metrics but adds a richer picture of the force-velocity relationship.
     </p>
 
     <h3>Return-to-play</h3>
     <p>
-      A training game of sufficient duration (15+ minutes) could provide an in-situ PFv snapshot to compare against a player's pre-injury baseline. While specific thresholds haven't been established yet, this framework provides the foundation for data-informed return-to-play criteria.
+      A training game of sufficient duration (15+ minutes) could provide an in-situ PFv snapshot to compare against a player's pre-injury baseline. While specific thresholds haven't been established yet, this framework provides the foundation for data-informed return-to-play criteria <a href="#ref-12">[12]</a>.
     </p>
 
     <h3>Training programme evaluation</h3>
     <p>
-      By tracking PFv profiles longitudinally, you can observe how a player's force-velocity characteristics respond to different training blocks. Changes in the profile's slope can indicate whether a player is becoming more force-oriented or velocity-oriented over time.
+      By tracking PFv profiles longitudinally, you can observe how a player's force-velocity characteristics respond to different training blocks <a href="#ref-21">[21]</a>. Changes in the profile's slope can indicate whether a player is becoming more force-oriented or velocity-oriented over time.
     </p>
 
     <div class="callout">
@@ -691,16 +691,16 @@ STEP_S = 10                  # Sliding window step (seconds)</code></pre>
     <h2 id="limitations">8. What to watch out for</h2>
 
     <p>
-      <strong>In-situ ≠ isolated sprints.</strong> A₀ is consistently higher in-situ (the method selects peak accelerations across many sessions), while P<sub>max</sub> is consistently lower. Pick one method and track changes within it.
+      <strong>In-situ ≠ isolated sprints.</strong> A₀ is consistently higher in-situ (the method selects peak accelerations across many sessions), while P<sub>max</sub> is consistently lower <a href="#ref-15">[15]</a>. Pick one method and track changes within it.
     </p>
     <p>
-      <strong>Context matters.</strong> Match profiles produce higher S₀ values than training profiles. Training profiles converge more slowly (42 minutes vs 12 minutes for matches). The composition of training affects the quality of the profile you can extract.
+      <strong>Context matters.</strong> Match profiles produce higher S₀ values than training profiles <a href="#ref-5">[5]</a>. Training profiles converge more slowly (42 minutes vs 12 minutes for matches). The composition of training affects the quality of the profile you can extract.
     </p>
     <p>
-      <strong>GPS quality.</strong> Monitor satellite count and HDOP values. A 10 Hz sampling rate with 1 Hz Butterworth filter may smooth genuine high-acceleration events.
+      <strong>GPS quality.</strong> Monitor satellite count and HDOP values <a href="#ref-10">[10]</a>. A 10 Hz sampling rate with 1 Hz Butterworth filter may smooth genuine high-acceleration events <a href="#ref-6">[6]</a>.
     </p>
     <p>
-      <strong>Sample characteristics.</strong> This study used one male amateur squad. Results may not fully extend to female athletes, elite professionals, adolescents, or other sports. Validate within your own population.
+      <strong>Sample characteristics.</strong> This study used one male amateur squad <a href="#ref-16">[16]</a>. Results may not fully extend to female athletes, elite professionals, adolescents, or other sports. Validate within your own population.
     </p>
 
     <!-- ── 9. REFERENCES ── -->
