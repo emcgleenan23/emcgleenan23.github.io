@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shot Profile — Player Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Spline+Sans+Mono:wght@400;500&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#161b22; --panel-2:#1c232d; --line:#2a323d;
+    --ink:#e7edf3; --muted:#8b97a6; --accent:#ff5430; --accent-2:#36c2ce;
+    --good:#3fd68b; --grid:rgba(255,255,255,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(255,84,48,.12), transparent 60%),
+      radial-gradient(700px 500px at 0% 110%, rgba(54,194,206,.10), transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:'Spline Sans',sans-serif; line-height:1.5;
+    min-height:100vh; padding:0 clamp(16px,4vw,56px) 80px;
+  }
+  header{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:24px; flex-wrap:wrap; padding:42px 0 28px; border-bottom:1px solid var(--line);
+  }
+  .brand h1{
+    font-family:'Archivo',sans-serif; font-weight:900; font-size:clamp(28px,5vw,52px);
+    letter-spacing:-.02em; line-height:.95; text-transform:uppercase;
+  }
+  .brand h1 span{color:var(--accent)}
+  .brand p{color:var(--muted); font-size:14px; margin-top:6px; font-family:'Spline Sans Mono',monospace}
+  .selectwrap{display:flex; flex-direction:column; gap:6px}
+  .selectwrap label{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted)}
+  select{
+    background:var(--panel-2); color:var(--ink); border:1px solid var(--line);
+    border-radius:10px; padding:12px 16px; font-size:16px; font-family:'Archivo',sans-serif;
+    font-weight:700; min-width:240px; cursor:pointer; appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23ff5430' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 16px center;
+  }
+  select:focus{outline:none; border-color:var(--accent)}
+
+  .profile{
+    display:grid; grid-template-columns:1.1fr 2fr; gap:18px; margin-top:28px;
+  }
+  @media(max-width:860px){.profile{grid-template-columns:1fr}}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px;
+    padding:22px 24px; position:relative; overflow:hidden;
+  }
+  .card h2{
+    font-family:'Spline Sans Mono',monospace; font-size:11px; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:16px; font-weight:500;
+  }
+  .idcard .name{font-family:'Archivo',sans-serif; font-weight:900; font-size:34px; letter-spacing:-.02em; line-height:1}
+  .idcard .team{color:var(--accent-2); font-weight:600; margin-top:8px; font-size:15px}
+  .idcard .yos{color:var(--muted); font-size:13px; font-family:'Spline Sans Mono',monospace; margin-top:2px}
+  .career{display:flex; gap:24px; margin-top:22px; padding-top:18px; border-top:1px solid var(--line)}
+  .stat .v{font-family:'Archivo',sans-serif; font-weight:900; font-size:30px; line-height:1}
+  .stat .v.accent{color:var(--accent)}
+  .stat .l{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-top:4px}
+
+  .anthro-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  @media(max-width:520px){.anthro-grid{grid-template-columns:repeat(2,1fr)}}
+  .metric{background:var(--panel-2); border:1px solid var(--line); border-radius:12px; padding:14px 16px}
+  .metric .v{font-family:'Archivo',sans-serif; font-weight:700; font-size:24px}
+  .metric .v small{font-size:13px; color:var(--muted); font-weight:500}
+  .metric .l{font-size:11px; color:var(--muted); margin-top:3px; letter-spacing:.04em}
+
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+  .chartbox{position:relative; height:300px; margin-top:6px}
+  .full{grid-column:1/-1}
+  .controls{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:4px}
+  .chip{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--muted);
+    padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer; font-family:'Spline Sans Mono',monospace;
+    transition:.15s;
+  }
+  .chip.active{background:var(--accent); color:#0e1116; border-color:var(--accent); font-weight:500}
+  .hint{color:var(--muted); font-size:12px; margin-top:10px; font-family:'Spline Sans Mono',monospace}
+  footer{margin-top:50px; color:var(--muted); font-size:12px; text-align:center; font-family:'Spline Sans Mono',monospace}
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>Shot <span>Profile</span></h1>
+      <p id="meta">loading…</p>
+    </div>
+    <div class="selectwrap">
+      <label for="playerSelect">Select player</label>
+      <select id="playerSelect"></select>
+    </div>
+  </header>
+
+  <!-- a, b, c: identity, team, anthro -->
+  <section class="profile">
+    <div class="card idcard">
+      <h2>Player · Team · Career</h2>
+      <div class="name" id="pName">—</div>
+      <div class="team" id="pTeam">—</div>
+      <div class="yos" id="pYos">—</div>
+      <div class="career">
+        <div class="stat"><div class="v" id="cAtt">—</div><div class="l">Career FGA</div></div>
+        <div class="stat"><div class="v" id="cMakes">—</div><div class="l">Makes</div></div>
+        <div class="stat"><div class="v accent" id="cEfg">—</div><div class="l">Career eFG%</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Anthropometric Measurements</h2>
+      <div class="anthro-grid" id="anthroGrid"></div>
+    </div>
+  </section>
+
+  <!-- d, e: per-season shots + eFG -->
+  <div class="grid">
+    <div class="card">
+      <h2>Total Shots Taken — by Season (d)</h2>
+      <div class="chartbox"><canvas id="shotsChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Effective FG% — by Season (e)</h2>
+      <div class="chartbox"><canvas id="efgChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- f: relationship anthro vs shooting (all players) -->
+  <div class="grid">
+    <div class="card full">
+      <h2>Anthro vs Shooting — League-wide Relationship (f)</h2>
+      <div class="controls" id="scatterControls"></div>
+      <div class="chartbox"><canvas id="scatterChart"></canvas></div>
+      <div class="hint">Each point = one player (career). X = chosen measurement, Y = career eFG%. Selected player highlighted.</div>
+    </div>
+  </div>
+
+  <!-- g: distribution of anthro measurements -->
+  <div class="grid">
+    <div class="card full">
+      <h2>Distribution of Anthro Measurements — All Players (g)</h2>
+      <div class="controls" id="distControls"></div>
+      <div class="chartbox"><canvas id="distChart"></canvas></div>
+      <div class="hint">Histogram across all 10 players. Bar containing the selected player is highlighted.</div>
+    </div>
+  </div>
+
+  <footer id="foot"></footer>
+
+<script>
+const C = {ink:'#e7edf3', muted:'#8b97a6', accent:'#ff5430', accent2:'#36c2ce', good:'#3fd68b', grid:'rgba(255,255,255,.06)', line:'#2a323d'};
+Chart.defaults.color = C.muted;
+Chart.defaults.font.family = "'Spline Sans Mono', monospace";
+Chart.defaults.font.size = 11;
+
+let DATA, current, charts = {};
+let scatterField = 'height', distField = 'height';
+
+function fmtAnthro(p){
+  return [
+    ['height', p.height, 'in'], ['weight', p.weight, 'lb'],
+    ['vertical', p.vertical, 'in'], ['reach', p.reach, 'in'],
+    ['wingspan', p.wingspan, 'in'], ['maxSpeed', p.maxSpeed, 'mph'],
+  ];
+}
+const LABELS = {height:'Height', weight:'Weight', vertical:'Vertical Jump',
+  reach:'Standing Reach', wingspan:'Wingspan', maxSpeed:'Max Speed'};
+
+async function init(){
+  DATA = await (await fetch('data.json')).json();
+  document.getElementById('meta').textContent =
+    `${DATA.meta.playerCount} players · seasons ${DATA.meta.seasons.join('–')} · ${DATA.meta.source}`;
+  document.getElementById('foot').textContent =
+    `Generated from ${DATA.meta.source} · eFG% = (FGM + 0.5·3PM) / FGA`;
+
+  const sel = document.getElementById('playerSelect');
+  DATA.players.forEach(p=>{
+    const o=document.createElement('option'); o.value=p.playerId; o.textContent=p.fullName; sel.appendChild(o);
+  });
+  sel.addEventListener('change', e=>{ select(+e.target.value); });
+
+  buildChips('scatterControls', f=>{scatterField=f; drawScatter();}, ()=>scatterField);
+  buildChips('distControls', f=>{distField=f; drawDist();}, ()=>distField);
+
+  select(DATA.players[0].playerId);
+}
+
+function buildChips(id, onPick, getActive){
+  const wrap=document.getElementById(id); wrap.innerHTML='';
+  DATA.meta.anthroFields.forEach(f=>{
+    const b=document.createElement('button'); b.className='chip'; b.textContent=f.label;
+    if(f.key===getActive()) b.classList.add('active');
+    b.onclick=()=>{ onPick(f.key); [...wrap.children].forEach(c=>c.classList.remove('active')); b.classList.add('active'); };
+    wrap.appendChild(b);
+  });
+}
+
+function select(id){
+  current = DATA.players.find(p=>p.playerId===id);
+  document.getElementById('playerSelect').value = id;
+
+  // a, c
+  document.getElementById('pName').textContent = current.fullName;
+  document.getElementById('pTeam').textContent = `${current.teamName} (${current.teamAbbr})`;
+  document.getElementById('pYos').textContent = `${current.yearsOfService} yr service`;
+  document.getElementById('cAtt').textContent = current.careerAttempts;
+  document.getElementById('cMakes').textContent = current.careerMakes;
+  document.getElementById('cEfg').textContent = current.careerEfg + '%';
+
+  // b
+  const grid=document.getElementById('anthroGrid'); grid.innerHTML='';
+  fmtAnthro(current).forEach(([key,val,unit])=>{
+    const d=document.createElement('div'); d.className='metric';
+    d.innerHTML=`<div class="v">${val}<small> ${unit}</small></div><div class="l">${LABELS[key]}</div>`;
+    grid.appendChild(d);
+  });
+
+  drawSeason(); drawScatter(); drawDist();
+}
+
+function seasonRows(id){
+  return DATA.meta.seasons.map(s=>
+    DATA.perSeason.find(r=>r.playerId===id && r.season===s) || {season:s, attempts:0, efg:0});
+}
+
+function drawSeason(){
+  const rows=seasonRows(current.playerId);
+  const labels=rows.map(r=>r.season);
+
+  charts.shots?.destroy();
+  charts.shots = new Chart(document.getElementById('shotsChart'),{
+    type:'bar',
+    data:{labels, datasets:[{label:'Shots (FGA)', data:rows.map(r=>r.attempts),
+      backgroundColor:C.accent, borderRadius:6, maxBarThickness:64}]},
+    options:baseOpts({yTitle:'Attempts'})
+  });
+
+  charts.efg?.destroy();
+  charts.efg = new Chart(document.getElementById('efgChart'),{
+    type:'line',
+    data:{labels, datasets:[{label:'eFG%', data:rows.map(r=>r.efg),
+      borderColor:C.good, backgroundColor:'rgba(63,214,139,.12)', fill:true, tension:.3,
+      pointRadius:5, pointBackgroundColor:C.good}]},
+    options:baseOpts({yTitle:'eFG %', suggestedMax:80})
+  });
+}
+
+function drawScatter(){
+  charts.scatter?.destroy();
+  const pts = DATA.players.map(p=>({x:p[scatterField], y:p.careerEfg, id:p.playerId, name:p.fullName}));
+  const isCur = id => id===current.playerId;
+  charts.scatter = new Chart(document.getElementById('scatterChart'),{
+    type:'scatter',
+    data:{datasets:[{
+      data:pts,
+      pointRadius:pts.map(p=>isCur(p.id)?9:5),
+      pointBackgroundColor:pts.map(p=>isCur(p.id)?C.accent:C.accent2),
+      pointBorderColor:pts.map(p=>isCur(p.id)?'#fff':'transparent'),
+      pointBorderWidth:2,
+    }]},
+    options:{
+      ...baseOpts({yTitle:'Career eFG %', xTitle:LABELS[scatterField]}),
+      plugins:{legend:{display:false}, tooltip:{callbacks:{
+        label:c=>`${c.raw.name}: ${c.raw.x} → ${c.raw.y}% eFG`}}}
+    }
+  });
+}
+
+function drawDist(){
+  charts.dist?.destroy();
+  const vals = DATA.players.map(p=>p[distField]);
+  const min=Math.min(...vals), max=Math.max(...vals);
+  const bins=6, width=(max-min)/bins || 1;
+  const edges=Array.from({length:bins},(_, i)=>min+i*width);
+  const counts=new Array(bins).fill(0);
+  const curBin = Math.min(bins-1, Math.floor((current[distField]-min)/width));
+  vals.forEach(v=>{ const b=Math.min(bins-1, Math.floor((v-min)/width)); counts[b]++; });
+  const labels=edges.map((e,i)=>`${e.toFixed(distField==='maxSpeed'?1:0)}–${(e+width).toFixed(distField==='maxSpeed'?1:0)}`);
+  charts.dist = new Chart(document.getElementById('distChart'),{
+    type:'bar',
+    data:{labels, datasets:[{label:'Players', data:counts,
+      backgroundColor:counts.map((_,i)=>i===curBin?C.accent:C.accent2),
+      borderRadius:6, maxBarThickness:90}]},
+    options:{...baseOpts({yTitle:'# Players', xTitle:LABELS[distField], integerY:true}),
+      plugins:{legend:{display:false}}}
+  });
+}
+
+function baseOpts({yTitle, xTitle, suggestedMax, integerY}={}){
+  return {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:C.muted}}},
+    scales:{
+      x:{grid:{color:C.grid}, title:{display:!!xTitle, text:xTitle, color:C.muted}},
+      y:{grid:{color:C.grid}, suggestedMax, beginAtZero:true,
+         ticks:{precision:integerY?0:undefined},
+         title:{display:!!yTitle, text:yTitle, color:C.muted}}
+    }
+  };
+}
+
+init();
+</script>
+</body>
+</html>
