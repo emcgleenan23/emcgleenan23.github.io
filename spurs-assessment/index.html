@@ -74,6 +74,12 @@
   .grid{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px}
   @media(max-width:860px){.grid{grid-template-columns:1fr}}
   .chartbox{position:relative; height:300px; margin-top:6px}
+  .distgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:6px}
+  @media(max-width:860px){.distgrid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.distgrid{grid-template-columns:1fr}}
+  .distcell{display:flex; flex-direction:column}
+  .distcell .t{font-family:'Spline Sans Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:4px}
+  .distcell .box{position:relative; height:170px}
   .full{grid-column:1/-1}
   .controls{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:4px}
   .chip{
@@ -143,9 +149,8 @@
   <div class="grid">
     <div class="card full">
       <h2>Distribution of Anthro Measurements — All Players (g)</h2>
-      <div class="controls" id="distControls"></div>
-      <div class="chartbox"><canvas id="distChart"></canvas></div>
-      <div class="hint">Histogram across all 10 players. Bar containing the selected player is highlighted.</div>
+      <div class="distgrid" id="distGrid"></div>
+      <div class="hint">Histogram across all 10 players for each measure. The orange bar holds the selected player.</div>
     </div>
   </div>
 
@@ -158,7 +163,7 @@ Chart.defaults.font.family = "'Spline Sans Mono', monospace";
 Chart.defaults.font.size = 11;
 
 let DATA, current, charts = {};
-let scatterField = 'height', distField = 'height';
+let scatterField = 'height';
 
 function fmtAnthro(p){
   return [
@@ -184,9 +189,18 @@ async function init(){
   sel.addEventListener('change', e=>{ select(+e.target.value); });
 
   buildChips('scatterControls', f=>{scatterField=f; drawScatter();}, ()=>scatterField);
-  buildChips('distControls', f=>{distField=f; drawDist();}, ()=>distField);
+  buildDistCells();
 
   select(DATA.players[0].playerId);
+}
+
+function buildDistCells(){
+  const wrap=document.getElementById('distGrid'); wrap.innerHTML='';
+  DATA.meta.anthroFields.forEach(f=>{
+    const cell=document.createElement('div'); cell.className='distcell';
+    cell.innerHTML=`<div class="t">${f.label}</div><div class="box"><canvas id="dist_${f.key}"></canvas></div>`;
+    wrap.appendChild(cell);
+  });
 }
 
 function buildChips(id, onPick, getActive){
@@ -234,9 +248,20 @@ function drawSeason(){
   charts.shots?.destroy();
   charts.shots = new Chart(document.getElementById('shotsChart'),{
     type:'bar',
-    data:{labels, datasets:[{label:'Shots (FGA)', data:rows.map(r=>r.attempts),
-      backgroundColor:C.accent, borderRadius:6, maxBarThickness:64}]},
-    options:baseOpts({yTitle:'Attempts'})
+    data:{labels, datasets:[
+      {label:'Made', data:rows.map(r=>r.makes),
+        backgroundColor:C.good, borderRadius:{topLeft:0,topRight:0,bottomLeft:6,bottomRight:6}, maxBarThickness:64, stack:'s'},
+      {label:'Missed', data:rows.map(r=>r.attempts - r.makes),
+        backgroundColor:'rgba(255,84,48,.85)', borderRadius:{topLeft:6,topRight:6,bottomLeft:0,bottomRight:0}, maxBarThickness:64, stack:'s'},
+    ]},
+    options:{...baseOpts({yTitle:'Shots (FGA)'}),
+      scales:{
+        x:{grid:{color:C.grid}, stacked:true},
+        y:{grid:{color:C.grid}, stacked:true, beginAtZero:true, title:{display:true, text:'Shots (FGA)', color:C.muted}}
+      },
+      plugins:{legend:{labels:{color:C.muted}}, tooltip:{callbacks:{
+        footer:items=>{const t=items.reduce((a,b)=>a+b.raw,0); return 'Total: '+t+' FGA';}}}}
+    }
   });
 
   charts.efg?.destroy();
@@ -271,22 +296,36 @@ function drawScatter(){
 }
 
 function drawDist(){
-  charts.dist?.destroy();
-  const vals = DATA.players.map(p=>p[distField]);
+  DATA.meta.anthroFields.forEach(f=>drawOneDist(f.key));
+}
+
+function drawOneDist(field){
+  charts['dist_'+field]?.destroy();
+  const vals = DATA.players.map(p=>p[field]);
   const min=Math.min(...vals), max=Math.max(...vals);
   const bins=6, width=(max-min)/bins || 1;
   const edges=Array.from({length:bins},(_, i)=>min+i*width);
   const counts=new Array(bins).fill(0);
-  const curBin = Math.min(bins-1, Math.floor((current[distField]-min)/width));
+  const dec = field==='maxSpeed' ? 1 : 0;
+  const curBin = Math.min(bins-1, Math.floor((current[field]-min)/width));
   vals.forEach(v=>{ const b=Math.min(bins-1, Math.floor((v-min)/width)); counts[b]++; });
-  const labels=edges.map((e,i)=>`${e.toFixed(distField==='maxSpeed'?1:0)}–${(e+width).toFixed(distField==='maxSpeed'?1:0)}`);
-  charts.dist = new Chart(document.getElementById('distChart'),{
+  const labels=edges.map(e=>`${e.toFixed(dec)}`);
+  charts['dist_'+field] = new Chart(document.getElementById('dist_'+field),{
     type:'bar',
-    data:{labels, datasets:[{label:'Players', data:counts,
-      backgroundColor:counts.map((_,i)=>i===curBin?C.accent:C.accent2),
-      borderRadius:6, maxBarThickness:90}]},
-    options:{...baseOpts({yTitle:'# Players', xTitle:LABELS[distField], integerY:true}),
-      plugins:{legend:{display:false}}}
+    data:{labels, datasets:[{data:counts,
+      backgroundColor:counts.map((_,i)=>i===curBin?C.accent:'rgba(54,194,206,.55)'),
+      borderColor:counts.map((_,i)=>i===curBin?'#fff':'transparent'), borderWidth:1.5,
+      borderRadius:4, maxBarThickness:48}]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{
+        title:items=>{const i=items[0].dataIndex; return `${edges[i].toFixed(dec)}–${(edges[i]+width).toFixed(dec)}`;},
+        label:c=>`${c.raw} player${c.raw===1?'':'s'}`}}},
+      scales:{
+        x:{grid:{display:false}, ticks:{maxRotation:0, font:{size:9}}},
+        y:{grid:{color:C.grid}, beginAtZero:true, ticks:{precision:0, font:{size:9}}}
+      }
+    }
   });
 }
 
