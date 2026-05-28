@@ -10,39 +10,42 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <style>
   :root{
-    --bg:#0e1116; --panel:#161b22; --panel-2:#1c232d; --line:#2a323d;
-    --ink:#e7edf3; --muted:#8b97a6; --accent:#ff5430; --accent-2:#36c2ce;
-    --good:#3fd68b; --grid:rgba(255,255,255,.06);
+    /* San Antonio Spurs official palette: silver #C4CED4, black #000000 */
+    --bg:#000000; --panel:#0d0f12; --panel-2:#15181d; --line:#2b2f36;
+    --ink:#f2f4f6; --muted:#9aa3ad; --silver:#C4CED4; --silver-dim:#7d868f;
+    --accent:#C4CED4; --accent-2:#6c757d; --good:#C4CED4; --grid:rgba(196,206,212,.08);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     background:
-      radial-gradient(900px 500px at 85% -10%, rgba(255,84,48,.12), transparent 60%),
-      radial-gradient(700px 500px at 0% 110%, rgba(54,194,206,.10), transparent 55%),
+      radial-gradient(900px 500px at 85% -10%, rgba(196,206,212,.10), transparent 60%),
+      radial-gradient(700px 500px at 0% 110%, rgba(196,206,212,.06), transparent 55%),
       var(--bg);
     color:var(--ink); font-family:'Spline Sans',sans-serif; line-height:1.5;
     min-height:100vh; padding:0 clamp(16px,4vw,56px) 80px;
   }
   header{
-    display:flex; align-items:flex-end; justify-content:space-between;
-    gap:24px; flex-wrap:wrap; padding:42px 0 28px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px; flex-wrap:wrap; padding:34px 0 28px; border-bottom:1px solid var(--line);
   }
+  .brandrow{display:flex; align-items:center; gap:20px}
+  .brandrow img{height:64px; width:auto; display:block}
   .brand h1{
-    font-family:'Archivo',sans-serif; font-weight:900; font-size:clamp(28px,5vw,52px);
+    font-family:'Archivo',sans-serif; font-weight:900; font-size:clamp(26px,4.5vw,46px);
     letter-spacing:-.02em; line-height:.95; text-transform:uppercase;
   }
-  .brand h1 span{color:var(--accent)}
-  .brand p{color:var(--muted); font-size:14px; margin-top:6px; font-family:'Spline Sans Mono',monospace}
+  .brand h1 span{color:var(--silver)}
+  .brand p{color:var(--muted); font-size:13px; margin-top:6px; font-family:'Spline Sans Mono',monospace}
   .selectwrap{display:flex; flex-direction:column; gap:6px}
   .selectwrap label{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted)}
   select{
     background:var(--panel-2); color:var(--ink); border:1px solid var(--line);
     border-radius:10px; padding:12px 16px; font-size:16px; font-family:'Archivo',sans-serif;
     font-weight:700; min-width:240px; cursor:pointer; appearance:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23ff5430' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23C4CED4' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
     background-repeat:no-repeat; background-position:right 16px center;
   }
-  select:focus{outline:none; border-color:var(--accent)}
+  select:focus{outline:none; border-color:var(--silver)}
 
   .profile{
     display:grid; grid-template-columns:1.1fr 2fr; gap:18px; margin-top:28px;
@@ -57,11 +60,11 @@
     text-transform:uppercase; color:var(--muted); margin-bottom:16px; font-weight:500;
   }
   .idcard .name{font-family:'Archivo',sans-serif; font-weight:900; font-size:34px; letter-spacing:-.02em; line-height:1}
-  .idcard .team{color:var(--accent-2); font-weight:600; margin-top:8px; font-size:15px}
+  .idcard .team{color:var(--silver); font-weight:600; margin-top:8px; font-size:15px}
   .idcard .yos{color:var(--muted); font-size:13px; font-family:'Spline Sans Mono',monospace; margin-top:2px}
   .career{display:flex; gap:24px; margin-top:22px; padding-top:18px; border-top:1px solid var(--line)}
   .stat .v{font-family:'Archivo',sans-serif; font-weight:900; font-size:30px; line-height:1}
-  .stat .v.accent{color:var(--accent)}
+  .stat .v.accent{color:var(--silver)}
   .stat .l{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-top:4px}
 
   .anthro-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
@@ -87,16 +90,50 @@
     padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer; font-family:'Spline Sans Mono',monospace;
     transition:.15s;
   }
-  .chip.active{background:var(--accent); color:#0e1116; border-color:var(--accent); font-weight:500}
+  .chip.active{background:var(--silver); color:#000; border-color:var(--silver); font-weight:500}
   .hint{color:var(--muted); font-size:12px; margin-top:10px; font-family:'Spline Sans Mono',monospace}
   footer{margin-top:50px; color:var(--muted); font-size:12px; text-align:center; font-family:'Spline Sans Mono',monospace}
+  #gate{
+    position:fixed; inset:0; z-index:100; background:#000;
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:22px;
+    background-image:radial-gradient(700px 400px at 50% 30%, rgba(196,206,212,.10), transparent 60%);
+  }
+  #gate img{height:120px; width:auto; margin-bottom:4px}
+  #gate h2{font-family:'Archivo',sans-serif; font-weight:900; text-transform:uppercase; letter-spacing:.04em; font-size:22px}
+  #gate .row{display:flex; gap:10px}
+  #gate input{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--ink);
+    padding:13px 16px; border-radius:10px; font-size:16px; font-family:'Spline Sans Mono',monospace; width:220px; letter-spacing:.15em;
+  }
+  #gate input:focus{outline:none; border-color:var(--silver)}
+  #gate button{
+    background:var(--silver); color:#000; border:none; padding:13px 22px; border-radius:10px;
+    font-family:'Archivo',sans-serif; font-weight:700; font-size:15px; cursor:pointer;
+  }
+  #gate .err{color:#e57373; font-size:13px; font-family:'Spline Sans Mono',monospace; height:16px; opacity:0; transition:.2s}
+  #gate .err.show{opacity:1}
+  #app{display:none}
 </style>
 </head>
 <body>
+  <div id="gate">
+    <img src="spurs-logo.png" alt="San Antonio Spurs logo">
+    <h2>Shot Profile</h2>
+    <div class="row">
+      <input id="gatePw" type="password" placeholder="Password" autocomplete="off" autofocus>
+      <button id="gateBtn">Enter</button>
+    </div>
+    <div class="err" id="gateErr">Incorrect password</div>
+  </div>
+
+  <div id="app">
   <header>
-    <div class="brand">
-      <h1>Shot <span>Profile</span></h1>
-      <p id="meta">loading…</p>
+    <div class="brandrow">
+      <img src="spurs-logo.png" alt="San Antonio Spurs logo">
+      <div class="brand">
+        <h1>Shot <span>Profile</span></h1>
+        <p id="meta">loading…</p>
+      </div>
     </div>
     <div class="selectwrap">
       <label for="playerSelect">Select player</label>
@@ -150,14 +187,18 @@
     <div class="card full">
       <h2>Distribution of Anthro Measurements — All Players (g)</h2>
       <div class="distgrid" id="distGrid"></div>
-      <div class="hint">Histogram across all 10 players for each measure. The orange bar holds the selected player.</div>
+      <div class="hint">Histogram across all 10 players for each measure. The highlighted bar holds the selected player.</div>
     </div>
   </div>
 
-  <footer id="foot"></footer>
+  <footer>
+    <div id="foot"></div>
+    <div style="margin-top:10px">Dashboard developed by Eamon McGleenan &amp; Claude (Anthropic).</div>
+  </footer>
+  </div><!-- /#app -->
 
 <script>
-const C = {ink:'#e7edf3', muted:'#8b97a6', accent:'#ff5430', accent2:'#36c2ce', good:'#3fd68b', grid:'rgba(255,255,255,.06)', line:'#2a323d'};
+const C = {ink:'#f2f4f6', muted:'#9aa3ad', accent:'#C4CED4', accent2:'#6c757d', good:'#C4CED4', silver:'#C4CED4', silverDim:'#7d868f', grid:'rgba(196,206,212,.08)', line:'#2b2f36'};
 Chart.defaults.color = C.muted;
 Chart.defaults.font.family = "'Spline Sans Mono', monospace";
 Chart.defaults.font.size = 11;
@@ -250,9 +291,9 @@ function drawSeason(){
     type:'bar',
     data:{labels, datasets:[
       {label:'Made', data:rows.map(r=>r.makes),
-        backgroundColor:C.good, borderRadius:{topLeft:0,topRight:0,bottomLeft:6,bottomRight:6}, maxBarThickness:64, stack:'s'},
+        backgroundColor:C.silver, borderRadius:{topLeft:0,topRight:0,bottomLeft:6,bottomRight:6}, maxBarThickness:64, stack:'s'},
       {label:'Missed', data:rows.map(r=>r.attempts - r.makes),
-        backgroundColor:'rgba(255,84,48,.85)', borderRadius:{topLeft:6,topRight:6,bottomLeft:0,bottomRight:0}, maxBarThickness:64, stack:'s'},
+        backgroundColor:'#3a4047', borderRadius:{topLeft:6,topRight:6,bottomLeft:0,bottomRight:0}, maxBarThickness:64, stack:'s'},
     ]},
     options:{...baseOpts({yTitle:'Shots (FGA)'}),
       scales:{
@@ -268,8 +309,8 @@ function drawSeason(){
   charts.efg = new Chart(document.getElementById('efgChart'),{
     type:'line',
     data:{labels, datasets:[{label:'eFG%', data:rows.map(r=>r.efg),
-      borderColor:C.good, backgroundColor:'rgba(63,214,139,.12)', fill:true, tension:.3,
-      pointRadius:5, pointBackgroundColor:C.good}]},
+      borderColor:C.silver, backgroundColor:'rgba(196,206,212,.12)', fill:true, tension:.3,
+      pointRadius:5, pointBackgroundColor:C.silver}]},
     options:baseOpts({yTitle:'eFG %', suggestedMax:80})
   });
 }
@@ -283,7 +324,7 @@ function drawScatter(){
     data:{datasets:[{
       data:pts,
       pointRadius:pts.map(p=>isCur(p.id)?9:5),
-      pointBackgroundColor:pts.map(p=>isCur(p.id)?C.accent:C.accent2),
+      pointBackgroundColor:pts.map(p=>isCur(p.id)?C.silver:'#5a6169'),
       pointBorderColor:pts.map(p=>isCur(p.id)?'#fff':'transparent'),
       pointBorderWidth:2,
     }]},
@@ -313,7 +354,7 @@ function drawOneDist(field){
   charts['dist_'+field] = new Chart(document.getElementById('dist_'+field),{
     type:'bar',
     data:{labels, datasets:[{data:counts,
-      backgroundColor:counts.map((_,i)=>i===curBin?C.accent:'rgba(54,194,206,.55)'),
+      backgroundColor:counts.map((_,i)=>i===curBin?C.silver:'#3a4047'),
       borderColor:counts.map((_,i)=>i===curBin?'#fff':'transparent'), borderWidth:1.5,
       borderRadius:4, maxBarThickness:48}]},
     options:{
@@ -342,7 +383,33 @@ function baseOpts({yTitle, xTitle, suggestedMax, integerY}={}){
   };
 }
 
-init();
+// ---- Password gate ----
+// NOTE: client-side only. This deters casual access but is NOT real security —
+// the password is visible in the page source. For genuine protection, host
+// behind Cloudflare Access (see README).
+const PASSWORD = "SAS1973";
+let started = false;
+function tryUnlock(){
+  const pw = document.getElementById('gatePw').value;
+  if(pw === PASSWORD){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    if(!started){
+      started = true;
+      if(typeof Chart === 'undefined'){
+        alert('Charts failed to load — check your internet connection (Chart.js is loaded from a CDN).');
+      }
+      init();
+    }
+  } else {
+    const e = document.getElementById('gateErr');
+    e.classList.add('show');
+    document.getElementById('gatePw').value = '';
+    document.getElementById('gatePw').focus();
+  }
+}
+document.getElementById('gateBtn').addEventListener('click', tryUnlock);
+document.getElementById('gatePw').addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
 </script>
 </body>
 </html>
