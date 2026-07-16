@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Löyly | Wood-Fired Sauna &amp; Cold Plunge near Armagh, Northern Ireland</title>
+<meta name="description" content="Wood-fired sauna &amp; cold plunge near Armagh. Social sauna £8, private sessions £60 for up to 8. Open Tue, Thu &amp; weekends — book online.">
+<link rel="canonical" href="https://loyly.live/">
+<meta property="og:title" content="Live Löyly — Wood-Fired Sauna &amp; Cold Plunge, Northern Ireland">
+<meta property="og:description" content="Social sauna from £8 · Private sessions £60 · 2 cold plunges · 10 minutes from Armagh. Book online.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://loyly.live/">
+<meta property="og:image" content="images/hero-sauna.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HealthAndBeautyBusiness",
+  "name": "Live Löyly",
+  "description": "Wood-fired sauna and cold plunge experiences near Armagh, Northern Ireland. Social sauna sessions, private group bookings and mobile sauna hire.",
+  "url": "https://loyly.live",
+  "email": "info@loyly.live",
+  "image": "https://loyly.live/images/hero-sauna.jpg",
+  "priceRange": "£8-£60",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "13 Tullysaran Road",
+    "addressLocality": "Dungannon",
+    "addressRegion": "Northern Ireland",
+    "postalCode": "BT71 7LU",
+    "addressCountry": "GB"
+  },
+  "geo": { "@type": "GeoCoordinates", "latitude": 54.3928, "longitude": -6.689 },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Thursday"], "opens": "18:00", "closes": "22:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday","Sunday"], "opens": "09:00", "closes": "14:00" }
+  ],
+  "sameAs": [
+    "https://www.instagram.com/liveloyly/",
+    "https://maps.app.goo.gl/M1wvYfXLygibh9YUA"
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mansalva&family=Space+Mono:wght@400;700&family=Archivo:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  /* Bristol — hand-painted display font (SIL Open Font License, free to embed).
+     Files live in the /fonts folder next to this file. Mansalva is the fallback. */
+  @font-face{
+    font-family:'Bristol';
+    src:url('fonts/Bristol.woff2') format('woff2'),
+        url('fonts/Bristol.otf') format('opentype');
+    font-weight:400;font-style:normal;font-display:swap;
+  }
+  :root{
+    --forest:#1c2f23;
+    --forest-2:#24392c;
+    --sage:#8fa96b;
+    --sage-tint:#e9ecdc;     /* pale sage wash for alternating bands */
+    --cream:#f5f0e4;
+    --paper:#f7f3e8;
+    --peach:#ecbd98;
+    --clay:#a4693c;          /* darker peach/terracotta for text accents */
+    --ink:#22301f;
+    --max:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Archivo',Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.65;
+    position:relative;
+  }
+  /* Paper grain over everything — the textured, printed feel of the inspiration */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  section{padding:84px 0;position:relative}
+
+  /* Type system: Bristol hand-painted display, typewriter labels */
+  :root{--display:'Bristol','Mansalva',cursive}
+  .hand,h1,h2{font-family:var(--display);font-weight:400}
+  h2{font-size:clamp(2.4rem,5vw,3.6rem);line-height:1.05;margin-bottom:.9rem;color:var(--forest)}
+  h3{font-weight:800;font-size:1.1rem;margin-bottom:.4rem;letter-spacing:.01em}
+  .eyebrow{
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--clay);margin-bottom:.9rem;display:flex;align-items:center;gap:12px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--clay);display:inline-block}
+  .mono{font-family:'Space Mono',monospace}
+
+  .btn{display:inline-block;padding:14px 30px;border-radius:999px;font-weight:700;text-decoration:none;font-size:.95rem;transition:transform .15s,opacity .15s}
+  .btn:hover{transform:translateY(-2px);opacity:.92}
+  .btn-forest{background:var(--forest);color:var(--cream)}
+  .btn-peach{background:var(--peach);color:var(--ink)}
+  .btn-line{border:1.5px solid var(--forest);color:var(--forest)}
+
+  /* Hand-drawn wavy divider between sections */
+  .squiggle{display:block;margin:0 auto;max-width:220px;opacity:.85}
+
+  /* Organic Matisse-ish blobs, absolutely placed */
+  .blob{position:absolute;z-index:0;pointer-events:none;opacity:.16}
+
+  /* ---------- Header ---------- */
+  .infobar{background:var(--forest);color:var(--cream);font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.04em;text-align:center;padding:8px 12px}
+  .infobar a{color:var(--peach)}
+  header{position:sticky;top:0;z-index:50;background:rgba(247,243,232,.93);backdrop-filter:blur(8px);border-bottom:1px solid rgba(34,48,31,.12)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:var(--max);margin:0 auto}
+  .logo{font-weight:800;font-size:1.3rem;line-height:.9;text-decoration:none;letter-spacing:.01em;color:var(--forest)}
+  .logo span{display:block}
+  nav ul{display:flex;gap:24px;list-style:none;align-items:center}
+  nav a{text-decoration:none;font-weight:500;font-size:.92rem}
+  nav a:hover{color:var(--clay)}
+  .nav-book{background:var(--forest);color:var(--cream);padding:10px 22px;border-radius:999px;font-weight:700}
+  .nav-book:hover{color:var(--cream)}
+  .menu-toggle{display:none;background:none;border:none;color:var(--forest);font-size:1.6rem;cursor:pointer}
+  @media(max-width:880px){
+    .menu-toggle{display:block}
+    nav{position:absolute;top:100%;left:0;right:0;background:var(--paper);display:none;padding:18px 24px;border-bottom:1px solid rgba(34,48,31,.12)}
+    nav.open{display:block}
+    nav ul{flex-direction:column;align-items:flex-start;gap:16px}
+  }
+
+  /* ---------- Hero: full-bleed photo, editorial ---------- */
+  .hero{
+    position:relative;min-height:88vh;display:flex;align-items:flex-end;padding:0;
+    background:linear-gradient(180deg, rgba(28,47,35,.25) 0%, rgba(28,47,35,.78) 88%),
+      url('images/hero-sauna.jpg') center/cover;
+    color:var(--cream);
+  }
+  .hero-inner{max-width:var(--max);margin:0 auto;padding:120px 24px 72px;width:100%}
+  .hero .eyebrow{color:var(--peach)}
+  .hero .eyebrow::before{background:var(--peach)}
+  .hero h1{font-size:clamp(3.2rem,8vw,5.4rem);line-height:1;margin-bottom:1rem;color:var(--cream)}
+  .hero p.sub{font-size:1.12rem;max-width:36rem;margin-bottom:1.8rem;opacity:.95}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:2rem}
+  .hero-facts{display:flex;gap:10px 26px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase}
+  .hero-facts div{display:flex;gap:9px;align-items:center}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--peach);flex:none}
+
+  /* ---------- Photo treatment: ALYN-style offset frame ---------- */
+  .framed{position:relative;display:inline-block;width:100%}
+  .framed img{border-radius:4px;width:100%;object-fit:cover;filter:saturate(.92) contrast(.98)}
+  .framed::after{
+    content:"";position:absolute;inset:-12px 12px 12px -12px;border:1.5px solid var(--clay);
+    border-radius:6px;opacity:.55;pointer-events:none;
+  }
+
+  /* ---------- Booking cards ---------- */
+  .band-sage{background:var(--sage-tint)}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:2.4rem;position:relative;z-index:1}
+  @media(max-width:880px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--paper);border:1px solid rgba(34,48,31,.14);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+  .card img{height:210px;width:100%;object-fit:cover;filter:saturate(.92)}
+  .card-body{padding:26px;display:flex;flex-direction:column;flex:1}
+  .price{font-family:var(--display);font-weight:700;font-size:2.3rem;color:var(--clay);line-height:1;margin:.2rem 0 .7rem}
+  .price small{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);opacity:.7}
+  .card ul{list-style:none;margin:.7rem 0 1.4rem;font-size:.93rem}
+  .card li{padding:4px 0 4px 20px;position:relative}
+  .card li::before{content:"";position:absolute;left:0;top:13px;width:7px;height:7px;border-radius:50%;background:var(--sage)}
+  .card .btn{margin-top:auto;text-align:center}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;position:relative;z-index:1}
+  @media(max-width:880px){.split{grid-template-columns:1fr}}
+
+  .steps{counter-reset:step;list-style:none;margin-top:1.2rem}
+  .steps li{counter-increment:step;display:flex;gap:16px;padding:9px 0;align-items:baseline}
+  .steps li::before{
+    content:counter(step);font-family:var(--display);font-weight:700;font-size:1.25rem;
+    background:var(--peach);color:var(--ink);width:34px;height:34px;border-radius:50% 46% 52% 48%;
+    flex:none;display:flex;align-items:center;justify-content:center;
+  }
+
+  .bring{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:1.4rem}
+  .bring div{background:var(--sage-tint);border:1px solid rgba(34,48,31,.1);border-radius:6px;padding:18px;font-weight:600;text-align:center;font-size:.95rem}
+  .bring small{font-weight:400;opacity:.75}
+
+  .benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:1.8rem;position:relative;z-index:1}
+  @media(max-width:880px){.benefit-grid{grid-template-columns:1fr}}
+  .benefit{border-top:2px solid var(--forest);padding-top:18px}
+  .benefit .hand{font-size:1.7rem;color:var(--clay);display:block;margin-bottom:.2rem}
+  .smallprint{font-size:.8rem;opacity:.7;margin-top:1.6rem;max-width:46rem}
+
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:1.8rem}
+  @media(max-width:880px){.quotes{grid-template-columns:1fr}}
+  blockquote{background:var(--paper);border:1px solid rgba(34,48,31,.14);border-radius:6px;padding:26px;font-style:italic;font-size:.97rem}
+  blockquote footer{margin-top:.9rem;font-style:normal;font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+
+  details{border-bottom:1px solid rgba(34,48,31,.16);padding:2px 0}
+  summary{cursor:pointer;font-weight:700;padding:15px 0;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-family:var(--display);font-size:1.5rem;color:var(--clay);flex:none}
+  details[open] summary::after{content:"–"}
+  details p{padding:0 0 16px;opacity:.88;max-width:52rem}
+
+  .hours-table{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.95rem}
+  .hours-table td{padding:9px 0;border-bottom:1px solid rgba(34,48,31,.14)}
+  .hours-table td:last-child{text-align:right;font-family:'Space Mono',monospace;font-size:.85rem}
+  .map-frame{border:0;width:100%;height:340px;border-radius:6px;margin-top:1.4rem;filter:saturate(.85)}
+
+  .ig-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:1.8rem}
+  @media(max-width:880px){.ig-grid{grid-template-columns:repeat(2,1fr)}}
+  .ig-grid a{aspect-ratio:1;border-radius:4px;overflow:hidden;display:block}
+  .ig-grid img{width:100%;height:100%;object-fit:cover;filter:saturate(.92);transition:transform .3s}
+  .ig-grid a:hover img{transform:scale(1.04)}
+
+  footer.site{background:var(--forest);color:var(--cream);padding:60px 0 32px;font-size:.92rem}
+  .foot-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:36px}
+  @media(max-width:880px){.foot-grid{grid-template-columns:1fr 1fr}}
+  footer.site .logo{color:var(--cream)}
+  footer.site h4{font-family:'Space Mono',monospace;font-weight:700;margin-bottom:.8rem;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--peach)}
+  footer.site ul{list-style:none}
+  footer.site li{padding:3px 0}
+  footer.site a{text-decoration:none;opacity:.85}
+  footer.site a:hover{opacity:1;color:var(--peach)}
+  .legal{margin-top:36px;padding-top:18px;border-top:1px solid rgba(245,240,228,.15);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;opacity:.6;font-size:.78rem;font-family:'Space Mono',monospace}
+
+  .notice{background:rgba(236,189,152,.18);border:1px dashed var(--clay);border-radius:6px;padding:10px 14px;font-size:.8rem;margin-top:1.2rem}
+</style>
+</head>
+<body>
+
+<div class="infobar">
+  13 Tullysaran Rd, BT71 7LU · Tue &amp; Thu 6–10pm · Sat &amp; Sun 9am–2pm · <a href="#book">Book from £8</a>
+</div>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="#top" aria-label="Live Löyly home"><span>live</span><span>löyly</span></a>
+    <button class="menu-toggle" aria-label="Menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+    <nav>
+      <ul>
+        <li><a href="#book">Book</a></li>
+        <li><a href="#social">Social Sauna</a></li>
+        <li><a href="#private">Private Sauna</a></li>
+        <li><a href="#hire">Sauna Hire</a></li>
+        <li><a href="#about">Our Story</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#find-us">Find Us</a></li>
+        <li><a class="nav-book" href="#book">Book Now</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <p class="eyebrow">Wood-fired sauna · Cold plunge · Co. Armagh</p>
+    <h1>Melt away,<br>ten minutes from Armagh.</h1>
+    <p class="sub">
+      A wood-fired sauna and two cold plunges at 13 Tullysaran Road.
+      Drop into a <strong>Social Sauna from £8</strong>, or take the whole
+      bench with a <strong>Private Session for £60</strong>.
+    </p>
+    <div class="hero-ctas">
+      <a class="btn btn-peach" href="#book">Book a Session</a>
+      <a class="btn" style="border:1.5px solid var(--cream);color:var(--cream)" href="#find-us">Find Us + Hours</a>
+    </div>
+    <div class="hero-facts">
+      <div><span class="dot"></span>45-min slots</div>
+      <div><span class="dot"></span>80–90°C sauna</div>
+      <div><span class="dot"></span>2 cold plunges</div>
+      <div><span class="dot"></span>Changing rooms</div>
+      <div><span class="dot"></span>18+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOK ============ -->
+<section id="book" class="band-sage">
+  <!-- organic blob decoration -->
+  <svg class="blob" style="top:-40px;right:-60px;width:280px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#8fa96b" d="M46.9,-64.3C59.4,-55.2,67.3,-39.9,71.6,-23.9C75.9,-7.9,76.6,8.8,70.7,22.6C64.8,36.4,52.3,47.3,38.6,55.8C24.9,64.3,9.9,70.4,-5.4,71.1C-20.7,71.8,-36.3,67.1,-48.7,57.4C-61.1,47.7,-70.3,33,-73.6,17C-76.9,1,-74.3,-16.3,-65.9,-29.6C-57.5,-42.9,-43.3,-52.2,-29.2,-60.6C-15.1,-69,-1.1,-76.5,12.9,-75.9C26.9,-75.3,34.4,-73.4,46.9,-64.3Z" transform="translate(100 100)"/>
+  </svg>
+  <div class="wrap">
+    <p class="eyebrow">Book a sauna</p>
+    <h2>Choose your heat</h2>
+    <p style="max-width:44rem">Every slot is 45 minutes with full use of the wood-fired sauna and both cold plunges.
+    Aim to arrive just before your booking — changing rooms are ready for you.</p>
+
+    <div class="cards">
+      <div class="card" id="social">
+        <img src="images/social-plunge.jpg" alt="Bathers laughing in the cold plunge at Live Löyly">
+        <div class="card-body">
+          <h3>Social Sauna</h3>
+          <div class="price">£8 <small>per person</small></div>
+          <p>Drop in and share the heat. We cap social sessions at 8 bathers so everyone gets space and time in the sauna and cold plunge.</p>
+          <ul>
+            <li>45 minutes · communal session</li>
+            <li>Sauna at 80–90°C + 2 cold plunges</li>
+            <li>Tue &amp; Thu evenings, Sat &amp; Sun mornings</li>
+            <li>Book online, or call in and we'll find you a slot</li>
+          </ul>
+          <a class="btn btn-forest" href="https://loyly.live/products/social-sauna">Book a Seat — £8</a>
+        </div>
+      </div>
+
+      <div class="card" id="private">
+        <img src="images/private-plunge.jpg" alt="Two friends in the cold plunge after a sauna round">
+        <div class="card-body">
+          <h3>Private Sauna</h3>
+          <div class="price">£60 <small>up to 8 people</small></div>
+          <p>Exclusive use for your group — birthdays, teams, recovery sessions, or a quiet reset with friends.</p>
+          <ul>
+            <li>45 minutes · just your group</li>
+            <li>Whole sauna + both cold plunges</li>
+            <li>£7.50 each with a full group of 8</li>
+            <li>Great for clubs &amp; celebrations</li>
+          </ul>
+          <a class="btn btn-forest" href="https://loyly.live/products/private-sauna-session">Book Private — £60</a>
+        </div>
+      </div>
+
+      <div class="card" id="hire">
+        <img src="images/hire-van.jpg" alt="The Live Löyly branded van, ready to deliver the mobile sauna">
+        <div class="card-body">
+          <h3>Sauna Hire</h3>
+          <div class="price">from £250 <small>per day*</small></div>
+          <p>Our mobile wood-fired sauna, delivered to your event, retreat, shoreline swim or wellness day.</p>
+          <ul>
+            <li>Delivery, setup &amp; collection</li>
+            <li>Fully equipped: stove, buckets, thermometer</li>
+            <li>Weekend &amp; multi-day rates available</li>
+            <li>Commercial &amp; private events</li>
+          </ul>
+          <a class="btn btn-line" href="mailto:info@loyly.live?subject=Sauna%20Hire%20Enquiry">Enquire About Hire</a>
+        </div>
+      </div>
+    </div>
+    <p class="notice">*Suggested guide price — confirm or adjust before launch.</p>
+  </div>
+</section>
+
+<!-- ============ WHAT TO DO / BRING ============ -->
+<section>
+  <svg class="blob" style="bottom:-30px;left:-70px;width:240px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#ecbd98" d="M39.5,-51.7C54,-43.4,70.1,-34.4,75.7,-21.1C81.3,-7.8,76.4,9.8,68.2,24.5C60,39.2,48.4,51,34.8,58.9C21.2,66.8,5.6,70.8,-9.7,69.1C-25,67.4,-40,60,-51.4,48.8C-62.8,37.6,-70.6,22.6,-72.3,6.8C-74,-9,-69.6,-25.6,-59.9,-37.6C-50.2,-49.6,-35.2,-57,-20.9,-64.8C-6.6,-72.6,7,-80.8,19.5,-77.3C32,-73.8,25,-60,39.5,-51.7Z" transform="translate(100 100)"/>
+  </svg>
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Your 45 minutes</p>
+      <h2>What to do</h2>
+      <p>New to contrast therapy? Here's how we recommend getting the best from your slot:</p>
+      <ol class="steps">
+        <li><strong>Start:</strong>&nbsp;1–2 min cold plunge</li>
+        <li>10–15 min in the sauna</li>
+        <li>1–2 min cold plunge</li>
+        <li>10–15 min in the sauna</li>
+        <li><strong>Finish:</strong>&nbsp;1–2 min cold plunge</li>
+      </ol>
+      <p class="smallprint">Always listen to your body, stay hydrated, and consult your GP or practitioner on whether sauna use is suitable for you.</p>
+    </div>
+    <div>
+      <p class="eyebrow">What to bring</p>
+      <h2 style="font-size:clamp(2rem,4vw,2.6rem)">Pack light</h2>
+      <div class="bring">
+        <div>Towel for the sauna<br><small>to sit on</small></div>
+        <div>Towel for drying</div>
+        <div>Swimwear</div>
+        <div>Water bottle</div>
+        <div style="grid-column:span 2">Flip flops / sliders</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BENEFITS ============ -->
+<section class="band-sage">
+  <div class="wrap">
+    <p class="eyebrow">Why heat + cold</p>
+    <h2>The science of the sweat</h2>
+    <p style="max-width:46rem">Regular sauna bathing is one of the best-studied wellness habits there is.
+    One example: a 2020 study (Kirby et&nbsp;al.) had 20 middle-distance runners add ~30-minute post-exercise
+    sauna sessions a few times a week for 3 weeks. Compared with the control group, the sauna group showed:</p>
+    <div class="benefit-grid">
+      <div class="benefit">
+        <span class="hand">Cooler under pressure</span>
+        <p>Lower core body temperature and heart rate during exercise in the heat.</p>
+      </div>
+      <div class="benefit">
+        <span class="hand">Bigger engine</span>
+        <p>Improved aerobic capacity — VO₂max rose by 0.27&nbsp;L/min.</p>
+      </div>
+      <div class="benefit">
+        <span class="hand">Faster for free</span>
+        <p>Better running speed at a given intensity (+0.6&nbsp;km/h).</p>
+      </div>
+    </div>
+    <p class="smallprint">Source: Kirby et&nbsp;al., 2020. Sauna bathing is not a substitute for medical advice — if you have any medical condition that may be affected by heat, cold or extreme temperatures, seek advice from a medical professional before using our facilities.</p>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="wrap split">
+    <div class="framed">
+      <img src="images/story-build.jpg" alt="Building the Live Löyly sauna by hand">
+    </div>
+    <div>
+      <p class="eyebrow">Our story</p>
+      <h2>Löyly — the steam that rises when water hits hot stone</h2>
+      <p style="margin-bottom:1rem">
+        We built this place by hand — the sauna, the plunges, the benches — on the
+        Tullysaran Road, ten minutes from Armagh. No plastic wellness, no rush. Just a
+        proper wood-fired stove, real steam, cold water, and the kind of conversation
+        that only happens on a sauna bench.
+      </p>
+      <p class="notice">HOLDING COPY — your colleague's "Our Story" drops in here when it's ready. The build photos are already in place.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="band-sage">
+  <div class="wrap">
+    <p class="eyebrow">What bathers say</p>
+    <h2>Word from the bench</h2>
+    <div class="quotes">
+      <blockquote>
+        "[REVIEW PLACEHOLDER — paste a real Google or Instagram review here]"
+        <footer>— Name, Google review</footer>
+      </blockquote>
+      <blockquote>
+        "[REVIEW PLACEHOLDER — paste a real Google or Instagram review here]"
+        <footer>— Name, Google review</footer>
+      </blockquote>
+      <blockquote>
+        "[REVIEW PLACEHOLDER — paste a real Google or Instagram review here]"
+        <footer>— Name, Google review</footer>
+      </blockquote>
+    </div>
+    <p style="margin-top:1.6rem">
+      <a class="btn btn-line" href="https://maps.app.goo.gl/M1wvYfXLygibh9YUA">Read &amp; leave reviews on Google →</a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ FAQ — real answers ============ -->
+<section id="faq">
+  <div class="wrap">
+    <p class="eyebrow">Before you book</p>
+    <h2>FAQs</h2>
+
+    <details open>
+      <summary>What do I need to bring with me?</summary>
+      <p>Towel for drying, towel for the sauna, swimwear, water bottle, flip flops/sliders.</p>
+    </details>
+    <details>
+      <summary>How long are the slots?</summary>
+      <p>Each slot is 45 minutes.</p>
+    </details>
+    <details>
+      <summary>When should I arrive?</summary>
+      <p>You should aim to arrive just before your booking.</p>
+    </details>
+    <details>
+      <summary>How many people are in each slot?</summary>
+      <p>For our social sauna we limit the numbers to 8 people — this ensures everyone can have space and time in the sauna and cold plunge.</p>
+    </details>
+    <details>
+      <summary>Do I need to book in advance?</summary>
+      <p>You can book online, or you can visit us onsite and we can find a slot for you.</p>
+    </details>
+    <details>
+      <summary>Are there changing rooms?</summary>
+      <p>Yes, we have changing rooms available for all customers.</p>
+    </details>
+    <details>
+      <summary>Is there parking on site?</summary>
+      <p>We have parking available, but if possible please share a car to keep some spaces free.</p>
+    </details>
+    <details>
+      <summary>How hot is the sauna?</summary>
+      <p>We aim to keep the sauna between 80–90°C.</p>
+    </details>
+    <details>
+      <summary>How cold is the cold plunge?</summary>
+      <p>The cold plunge is kept at ambient temperature — cold enough to refresh you and give contrast after the sauna.</p>
+    </details>
+    <details>
+      <summary>What age do I have to be?</summary>
+      <p>The minimum age to use our facilities is 18. We will not allow entry to U18s or those perceived to be. We may request ID.</p>
+    </details>
+    <details>
+      <summary>Is it safe if I have a medical condition?</summary>
+      <p>If you have any medical conditions that may be adversely affected by the use of saunas, cold plunges, or extreme temperatures, please seek advice from a medical professional before using our facilities.</p>
+    </details>
+    <details>
+      <summary>What happens if I need to cancel?</summary>
+      <p>[CONFIRM POLICY — e.g. "Full refund or free reschedule with 24 hours' notice." Write your real policy here; it reduces booking hesitancy.]</p>
+    </details>
+    <details>
+      <summary>Can you bring the sauna to us?</summary>
+      <p>Yes — our mobile sauna is available for private and commercial hire: events, retreats, sports clubs and swim spots. Email <a href="mailto:info@loyly.live">info@loyly.live</a> with your date and location.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============ FIND US ============ -->
+<section id="find-us" class="band-sage">
+  <svg class="blob" style="top:-50px;left:-80px;width:260px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#8fa96b" d="M42.8,-62.3C55.2,-53.3,64.7,-40.3,69.9,-25.6C75.1,-10.9,76,5.5,71.3,20.1C66.6,34.7,56.3,47.5,43.4,56.7C30.5,65.9,15.2,71.5,0.2,71.2C-14.8,70.9,-29.6,64.7,-42.4,55.4C-55.2,46.1,-66,33.7,-70.9,19C-75.8,4.3,-74.8,-12.7,-67.9,-26.5C-61,-40.3,-48.2,-50.9,-34.6,-59.5C-21,-68.1,-6.6,-74.7,4.7,-81.1C16,-87.5,30.4,-71.3,42.8,-62.3Z" transform="translate(100 100)"/>
+  </svg>
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Find us</p>
+      <h2>Where the steam rises</h2>
+      <p><strong>Live Löyly</strong><br>
+      13 Tullysaran Road<br>
+      Dungannon BT71 7LU<br>
+      Northern Ireland</p>
+      <p style="margin-top:.9rem">10 minutes from Armagh · 10 minutes from The Moy<br>
+      Via Blackwatertown Road, near Tullygoonigan Industrial Estate</p>
+      <p style="margin-top:.9rem">✉️ <a href="mailto:info@loyly.live">info@loyly.live</a><br>
+      📍 <a href="https://maps.app.goo.gl/M1wvYfXLygibh9YUA">Open in Google Maps</a></p>
+
+      <table class="hours-table" aria-label="Opening hours">
+        <tr><td>Monday</td><td>Closed</td></tr>
+        <tr><td>Tuesday</td><td>18:00 – 22:00</td></tr>
+        <tr><td>Wednesday</td><td>Closed</td></tr>
+        <tr><td>Thursday</td><td>18:00 – 22:00</td></tr>
+        <tr><td>Friday</td><td>Closed</td></tr>
+        <tr><td>Saturday</td><td>09:00 – 14:00</td></tr>
+        <tr><td>Sunday</td><td>09:00 – 14:00</td></tr>
+      </table>
+    </div>
+    <div>
+      <iframe class="map-frame" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+        title="Map to Live Löyly, 13 Tullysaran Road BT71 7LU"
+        src="https://www.google.com/maps?q=13+Tullysaran+Road+BT71+7LU&output=embed"></iframe>
+      <p style="font-size:.85rem;opacity:.7;margin-top:.6rem">Parking on site — please car-share where you can to keep spaces free.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTAGRAM ============ -->
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Follow the heat</p>
+    <h2>@liveloyly</h2>
+    <p>Session updates, plunge faces and the odd misty morning — on <a href="https://www.instagram.com/liveloyly/">Instagram</a> and <a href="https://www.tiktok.com/@liveloyly">TikTok</a>.</p>
+    <div class="ig-grid">
+      <a href="https://www.instagram.com/liveloyly/"><img src="images/ig-1.jpg" alt="Live Löyly on Instagram"></a>
+      <a href="https://www.instagram.com/liveloyly/"><img src="images/ig-2.jpg" alt="Live Löyly on Instagram"></a>
+      <a href="https://www.instagram.com/liveloyly/"><img src="images/ig-3.jpg" alt="Live Löyly on Instagram"></a>
+      <a href="https://www.instagram.com/liveloyly/"><img src="images/ig-4.jpg" alt="Live Löyly on Instagram"></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#top"><span>live</span><span>löyly</span></a>
+        <p style="margin-top:.9rem;opacity:.8">Wood-fired sauna &amp; cold plunge<br>near Armagh, Northern Ireland.</p>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul>
+          <li>13 Tullysaran Road</li>
+          <li>Dungannon BT71 7LU</li>
+          <li><a href="mailto:info@loyly.live">info@loyly.live</a></li>
+          <li><a href="https://maps.app.goo.gl/M1wvYfXLygibh9YUA">Google Maps →</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Hours</h4>
+        <ul>
+          <li>Tue &amp; Thu · 6pm–10pm</li>
+          <li>Sat &amp; Sun · 9am–2pm</li>
+          <li>Mon, Wed, Fri · Closed</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Quick links</h4>
+        <ul>
+          <li><a href="#book">Book a session</a></li>
+          <li><a href="#hire">Sauna hire</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="https://www.instagram.com/liveloyly/">Instagram</a></li>
+          <li><a href="https://www.tiktok.com/@liveloyly">TikTok</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 Live Löyly · 18+ only</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Refunds</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('nav a').forEach(a =>
+    a.addEventListener('click', () => document.querySelector('nav').classList.remove('open')));
+</script>
+</body>
+</html>
