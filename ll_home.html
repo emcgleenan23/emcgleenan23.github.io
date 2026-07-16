@@ -53,15 +53,19 @@
     font-weight:400;font-style:normal;font-display:swap;
   }
   :root{
-    --forest:#1c2f23;
-    --forest-2:#24392c;
-    --sage:#8fa96b;
-    --sage-tint:#e9ecdc;     /* pale sage wash for alternating bands */
-    --cream:#f5f0e4;
-    --paper:#f7f3e8;
-    --peach:#ecbd98;
-    --clay:#a4693c;          /* darker peach/terracotta for text accents */
-    --ink:#22301f;
+    /* Brand palette: 7fa362 / e8efe3 / c2d4b4 / a5c190 / 7b9764 / 92b776 / ecbb99 */
+    --sage:#7fa362;          /* primary green */
+    --paper:#e8efe3;         /* page background */
+    --cream:#e8efe3;
+    --sage-tint:#c2d4b4;     /* alternating band wash */
+    --sage-2:#a5c190;        /* borders / soft accents */
+    --deep:#7b9764;          /* deeper sage */
+    --green:#92b776;         /* fresh green accent */
+    --peach:#ecbb99;         /* peach accent */
+    --clay:#a4693c;          /* terracotta text accent (derived from peach for contrast) */
+    --forest:#3e4c33;        /* darkest shade of the palette greens — buttons/footer/infobar */
+    --forest-2:#4b5c3e;
+    --ink:#33402a;           /* body text — darkened palette green for readability */
     --max:1080px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -110,7 +114,7 @@
   /* ---------- Header ---------- */
   .infobar{background:var(--forest);color:var(--cream);font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.04em;text-align:center;padding:8px 12px}
   .infobar a{color:var(--peach)}
-  header{position:sticky;top:0;z-index:50;background:rgba(247,243,232,.93);backdrop-filter:blur(8px);border-bottom:1px solid rgba(34,48,31,.12)}
+  header{position:sticky;top:0;z-index:50;background:rgba(232,239,227,.93);backdrop-filter:blur(8px);border-bottom:1px solid rgba(34,48,31,.12)}
   .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:var(--max);margin:0 auto}
   .logo{font-weight:800;font-size:1.3rem;line-height:.9;text-decoration:none;letter-spacing:.01em;color:var(--forest)}
   .logo span{display:block}
@@ -130,7 +134,7 @@
   /* ---------- Hero: full-bleed photo, editorial ---------- */
   .hero{
     position:relative;min-height:88vh;display:flex;align-items:flex-end;padding:0;
-    background:linear-gradient(180deg, rgba(28,47,35,.25) 0%, rgba(28,47,35,.78) 88%),
+    background:linear-gradient(180deg, rgba(62,76,51,.25) 0%, rgba(62,76,51,.8) 88%),
       url('images/hero-sauna.jpg') center/cover;
     color:var(--cream);
   }
@@ -279,7 +283,7 @@
 <section id="book" class="band-sage">
   <!-- organic blob decoration -->
   <svg class="blob" style="top:-40px;right:-60px;width:280px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <path fill="#8fa96b" d="M46.9,-64.3C59.4,-55.2,67.3,-39.9,71.6,-23.9C75.9,-7.9,76.6,8.8,70.7,22.6C64.8,36.4,52.3,47.3,38.6,55.8C24.9,64.3,9.9,70.4,-5.4,71.1C-20.7,71.8,-36.3,67.1,-48.7,57.4C-61.1,47.7,-70.3,33,-73.6,17C-76.9,1,-74.3,-16.3,-65.9,-29.6C-57.5,-42.9,-43.3,-52.2,-29.2,-60.6C-15.1,-69,-1.1,-76.5,12.9,-75.9C26.9,-75.3,34.4,-73.4,46.9,-64.3Z" transform="translate(100 100)"/>
+    <path fill="#7fa362" d="M46.9,-64.3C59.4,-55.2,67.3,-39.9,71.6,-23.9C75.9,-7.9,76.6,8.8,70.7,22.6C64.8,36.4,52.3,47.3,38.6,55.8C24.9,64.3,9.9,70.4,-5.4,71.1C-20.7,71.8,-36.3,67.1,-48.7,57.4C-61.1,47.7,-70.3,33,-73.6,17C-76.9,1,-74.3,-16.3,-65.9,-29.6C-57.5,-42.9,-43.3,-52.2,-29.2,-60.6C-15.1,-69,-1.1,-76.5,12.9,-75.9C26.9,-75.3,34.4,-73.4,46.9,-64.3Z" transform="translate(100 100)"/>
   </svg>
   <div class="wrap">
     <p class="eyebrow">Book a sauna</p>
@@ -343,7 +347,7 @@
 <!-- ============ WHAT TO DO / BRING ============ -->
 <section>
   <svg class="blob" style="bottom:-30px;left:-70px;width:240px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <path fill="#ecbd98" d="M39.5,-51.7C54,-43.4,70.1,-34.4,75.7,-21.1C81.3,-7.8,76.4,9.8,68.2,24.5C60,39.2,48.4,51,34.8,58.9C21.2,66.8,5.6,70.8,-9.7,69.1C-25,67.4,-40,60,-51.4,48.8C-62.8,37.6,-70.6,22.6,-72.3,6.8C-74,-9,-69.6,-25.6,-59.9,-37.6C-50.2,-49.6,-35.2,-57,-20.9,-64.8C-6.6,-72.6,7,-80.8,19.5,-77.3C32,-73.8,25,-60,39.5,-51.7Z" transform="translate(100 100)"/>
+    <path fill="#ecbb99" d="M39.5,-51.7C54,-43.4,70.1,-34.4,75.7,-21.1C81.3,-7.8,76.4,9.8,68.2,24.5C60,39.2,48.4,51,34.8,58.9C21.2,66.8,5.6,70.8,-9.7,69.1C-25,67.4,-40,60,-51.4,48.8C-62.8,37.6,-70.6,22.6,-72.3,6.8C-74,-9,-69.6,-25.6,-59.9,-37.6C-50.2,-49.6,-35.2,-57,-20.9,-64.8C-6.6,-72.6,7,-80.8,19.5,-77.3C32,-73.8,25,-60,39.5,-51.7Z" transform="translate(100 100)"/>
   </svg>
   <div class="wrap split">
     <div>
@@ -508,7 +512,7 @@
 <!-- ============ FIND US ============ -->
 <section id="find-us" class="band-sage">
   <svg class="blob" style="top:-50px;left:-80px;width:260px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <path fill="#8fa96b" d="M42.8,-62.3C55.2,-53.3,64.7,-40.3,69.9,-25.6C75.1,-10.9,76,5.5,71.3,20.1C66.6,34.7,56.3,47.5,43.4,56.7C30.5,65.9,15.2,71.5,0.2,71.2C-14.8,70.9,-29.6,64.7,-42.4,55.4C-55.2,46.1,-66,33.7,-70.9,19C-75.8,4.3,-74.8,-12.7,-67.9,-26.5C-61,-40.3,-48.2,-50.9,-34.6,-59.5C-21,-68.1,-6.6,-74.7,4.7,-81.1C16,-87.5,30.4,-71.3,42.8,-62.3Z" transform="translate(100 100)"/>
+    <path fill="#92b776" d="M42.8,-62.3C55.2,-53.3,64.7,-40.3,69.9,-25.6C75.1,-10.9,76,5.5,71.3,20.1C66.6,34.7,56.3,47.5,43.4,56.7C30.5,65.9,15.2,71.5,0.2,71.2C-14.8,70.9,-29.6,64.7,-42.4,55.4C-55.2,46.1,-66,33.7,-70.9,19C-75.8,4.3,-74.8,-12.7,-67.9,-26.5C-61,-40.3,-48.2,-50.9,-34.6,-59.5C-21,-68.1,-6.6,-74.7,4.7,-81.1C16,-87.5,30.4,-71.3,42.8,-62.3Z" transform="translate(100 100)"/>
   </svg>
   <div class="wrap split">
     <div>
