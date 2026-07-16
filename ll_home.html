@@ -204,6 +204,8 @@
   .hours-table td:last-child{text-align:right;font-family:'Space Mono',monospace;font-size:.85rem}
   .map-frame{border:0;width:100%;height:340px;border-radius:6px;margin-top:1.4rem;filter:saturate(.85)}
 
+  .ig-embeds{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:1.8rem;align-items:start}
+  .ig-embeds .instagram-media{margin:0 !important;min-width:0 !important;max-width:100% !important;border-radius:6px !important}
   .ig-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:1.8rem}
   @media(max-width:880px){.ig-grid{grid-template-columns:repeat(2,1fr)}}
   .ig-grid a{aspect-ratio:1;border-radius:4px;overflow:hidden;display:block}
@@ -546,6 +548,17 @@
     <p class="eyebrow">Follow the heat</p>
     <h2>@liveloyly</h2>
     <p>Session updates, plunge faces and the odd misty morning — on <a href="https://www.instagram.com/liveloyly/">Instagram</a> and <a href="https://www.tiktok.com/@liveloyly">TikTok</a>.</p>
+
+    <!-- Live Instagram embeds (posts + reels). Rendered by Instagram's official embed.js -->
+    <div class="ig-embeds">
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYoyLD2DeP9/" data-instgrm-version="14"></blockquote>
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DX_e5lODElY/" data-instgrm-version="14"></blockquote>
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DYzQJtdtG0L/" data-instgrm-version="14"></blockquote>
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DY65hbOtlfy/" data-instgrm-version="14"></blockquote>
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DX7A-7It8Dc/" data-instgrm-version="14"></blockquote>
+    </div>
+
+    <!-- Photo strip fallback: shows instantly while embeds load, and covers offline/blocked cases -->
     <div class="ig-grid">
       <a href="https://www.instagram.com/liveloyly/"><img src="images/ig-1.jpg" alt="Live Löyly on Instagram"></a>
       <a href="https://www.instagram.com/liveloyly/"><img src="images/ig-2.jpg" alt="Live Löyly on Instagram"></a>
@@ -554,6 +567,7 @@
     </div>
   </div>
 </section>
+<script async src="https://www.instagram.com/embed.js"></script>
 
 <!-- ============ FOOTER ============ -->
 <footer class="site">
