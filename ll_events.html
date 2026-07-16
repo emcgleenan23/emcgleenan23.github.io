@@ -9,24 +9,37 @@
 <meta property="og:title" content="Events &amp; Collaborations | Live Löyly">
 <meta property="og:description" content="Sauna events with Wing It, Opus Gym, Sober Social and more.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="images/event-sobersocial.jpg">
+<meta property="og:image" content="images/sober_social_1.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mansalva&family=Space+Mono:wght@400;700&family=Archivo:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="ll_style.css">
 <style>
-  /* Brand logo chips on event cards */
-  .brand-chip{
-    display:flex;align-items:center;justify-content:center;
-    background:#fff;border:1px solid rgba(34,48,31,.12);border-radius:6px;
-    padding:12px 18px;height:64px;margin-bottom:1rem;
+  /* ---------- Scenes from the road: scroll-snap carousel ----------
+     Images keep their ORIGINAL orientation: fixed height, natural width.
+     Portrait shots show tall & narrow, landscape shots show wide. */
+  .carousel{position:relative;margin-top:1.8rem}
+  .car-track{
+    display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding:4px 2px 12px;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
   }
-  .brand-chip img{max-height:36px;width:auto;object-fit:contain}
-  /* Wing It's logo is off-white — darken it so it shows on light backgrounds */
-  .brand-chip img.logo-light{filter:brightness(.35) saturate(.4)}
-  .event-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:1.8rem}
-  @media(max-width:880px){.event-gallery{grid-template-columns:repeat(2,1fr)}}
-  .event-gallery img{width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px;filter:saturate(.92)}
+  .car-track::-webkit-scrollbar{display:none}
+  .car-track img{
+    height:440px;width:auto;flex:none;scroll-snap-align:start;
+    border-radius:4px;filter:saturate(.92);object-fit:contain;background:rgba(34,48,31,.06);
+  }
+  @media(max-width:880px){.car-track img{height:300px}}
+  .car-btn{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+    width:46px;height:46px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--forest);color:var(--cream);font-size:1.3rem;line-height:1;
+    display:flex;align-items:center;justify-content:center;opacity:.9;transition:opacity .15s;
+  }
+  .car-btn:hover{opacity:1}
+  .car-btn.prev{left:-8px}
+  .car-btn.next{right:-8px}
+  @media(max-width:880px){.car-btn{display:none}} /* swipe on touch devices */
 </style>
 </head>
 <body>
@@ -74,9 +87,9 @@
         <img src="images/wing_it_1.jpg" alt="The Live Löyly mobile sauna parked outside Wing It in Belfast">
         <div class="card-body">
           <h3>Wing It</h3>
-          <p>Sundays Marathon After Party with <href="https://www.instagram.com/wingitbelfast/">@wingitbelfast</href> and <href="https://www.instagram.com/macivorscider/">@macivorscider</href> serious craic had!
-
-Well done to everyone who ran and thanks to Wing It for having us down 🙌</p>
+          <p>Sundays Marathon After Party with <a href="https://www.instagram.com/wingitbelfast/">@wingitbelfast</a>
+          and <a href="https://www.instagram.com/macivorscider/">@macivorscider</a> — serious craic had!
+          Well done to everyone who ran and thanks to Wing It for having us down 🙌</p>
         </div>
       </div>
 
@@ -84,7 +97,8 @@ Well done to everyone who ran and thanks to Wing It for having us down 🙌</p>
         <img src="images/opus_2.jpg" alt="The Live Löyly sauna trailer at Opus Gym's recovery day">
         <div class="card-body">
           <h3>Opus Gym</h3>
-          <p>Savage Sunday spent at the <href="https://www.instagram.com/opus.training/">@opus.training</href> Run Club, follow them to join in the next one! Thanks to Rob and the team for having us down</p>
+          <p>Savage Sunday spent at the <a href="https://www.instagram.com/opus.training/">@opus.training</a> Run Club —
+          follow them to join in the next one! Thanks to Rob and the team for having us down.</p>
         </div>
       </div>
 
@@ -92,9 +106,9 @@ Well done to everyone who ran and thanks to Wing It for having us down 🙌</p>
         <img src="images/sober_social_1.jpg" alt="The Live Löyly sauna and van on the beach with the Mourne Mountains behind">
         <div class="card-body">
           <h3>Sober Social</h3>
-          <p>A different kind of day out: we brought the sauna to the beach for the <href="https://www.instagram.com/sobersocial_/">Sober Social```</href>
-          crew — sea dips, sauna heat, a BBQ on the sand and the Mournes across the water.
-          Good craic, no bar required.</p>
+          <p>A different kind of day out: we brought the sauna to the beach for the
+          <a href="https://www.instagram.com/sobersocial_/">Sober Social</a> crew — sea dips, sauna heat,
+          a BBQ on the sand and the Mournes across the water. Good craic, no bar required.</p>
         </div>
       </div>
 
@@ -102,18 +116,22 @@ Well done to everyone who ran and thanks to Wing It for having us down 🙌</p>
   </div>
 </section>
 
-<!-- Photo gallery from past events -->
+<!-- Photo carousel from past events -->
 <section class="band-sage">
   <div class="wrap">
     <p class="eyebrow">From the events</p>
     <h2>Scenes from the road</h2>
-    <div class="event-gallery">
-      <img src="images/wing_it_2.jpg" alt="Bathers in the cold plunge outside Wing It">
-      <img src="images/opus_1.jpg" alt="The cold plunge set up at Opus Gym">
-      <img src="images/sober_social_2.jpg" alt="Sea dips at the Sober Social beach day">
-      <img src="images/sober_social_3.jpg" alt="BBQ on the beach at the Sober Social event">
-      <img src="images/opus_3.jpg" alt="Stepping out of the sauna at Opus Gym">
-      <img src="images/wing_it_3.jpg" alt="Wing It signage reflected in the sauna window">
+    <div class="carousel">
+      <button class="car-btn prev" aria-label="Previous photos" onclick="carScroll(-1)">‹</button>
+      <div class="car-track" id="carTrack">
+        <img src="images/wing_it_2.jpg" alt="Bathers in the cold plunge outside Wing It">
+        <img src="images/opus_1.jpg" alt="The cold plunge set up at Opus Gym">
+        <img src="images/sober_social_2.jpg" alt="Sea dips at the Sober Social beach day">
+        <img src="images/sober_social_3.jpg" alt="BBQ on the beach at the Sober Social event">
+        <img src="images/opus_3.jpg" alt="Stepping out of the sauna at Opus Gym">
+        <img src="images/wing_it_3.jpg" alt="Wing It signage reflected in the sauna window">
+      </div>
+      <button class="car-btn next" aria-label="Next photos" onclick="carScroll(1)">›</button>
     </div>
   </div>
 </section>
@@ -196,6 +214,11 @@ Well done to everyone who ran and thanks to Wing It for having us down 🙌</p>
 <script>
   document.querySelectorAll('nav a').forEach(a =>
     a.addEventListener('click', () => document.querySelector('nav').classList.remove('open')));
+
+  function carScroll(dir){
+    const t = document.getElementById('carTrack');
+    t.scrollBy({left: dir * t.clientWidth * 0.7, behavior: 'smooth'});
+  }
 </script>
 </body>
 </html>
