@@ -89,7 +89,7 @@ nav a.active{color:var(--clay);font-weight:700}
 .hero{
   position:relative;min-height:88vh;display:flex;align-items:flex-end;padding:0;
   background:linear-gradient(180deg, rgba(62,76,51,.25) 0%, rgba(62,76,51,.8) 88%),
-    url('images/sober_social_6_hero.jpg') center/cover;
+    url('images/sober_social_6.jpg') center/cover;
   color:var(--cream);
 }
 .hero-inner{max-width:var(--max);margin:0 auto;padding:120px 24px 72px;width:100%}
