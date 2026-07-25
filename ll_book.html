@@ -311,7 +311,9 @@ function fmtHour(h){ const ap=h<12?'am':'pm'; let hr=h%12; if(hr===0)hr=12; retu
 function fmtRange(h){ const end=h*60+45, eh=Math.floor(end/60), em=end%60;
   const ap=eh<12?'am':'pm'; let ehr=eh%12; if(ehr===0)ehr=12;
   return fmtHour(h)+' – '+ehr+':'+String(em).padStart(2,'0')+' '+ap; }
-function isoOf(d){ return d.toISOString().slice(0,10); }
+function isoOf(d){ // LOCAL date (not UTC) so labels and stored dates always agree
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), da=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${da}`; }
 function niceDate(iso){ const d=new Date(iso+'T00:00:00');
   return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}); }
 
