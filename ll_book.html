@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Session | Live Löyly</title>
+<meta name="description" content="Book your 45-minute sauna session at Live Löyly. Pick a slot — pay cash or card on site.">
+
+<!-- Same fonts + stylesheet as the live site, so this matches exactly -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mansalva&family=Space+Mono:wght@400;700&family=Archivo:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://emcgleenan23.github.io/ll_style.css">
+
+<style>
+  /* ---------- Booking-specific styles (uses the site's CSS variables) ---------- */
+  .book-hero{background:var(--sage-tint);padding:64px 0 48px;position:relative;overflow:hidden}
+  .book-hero h1{font-family:var(--display);font-weight:400;font-size:clamp(2.6rem,6vw,4rem);line-height:1.05;color:var(--forest)}
+  .book-hero p.lede{font-size:1.08rem;max-width:38rem;margin-top:.7rem}
+
+  .steps-bar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 2.4rem;font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+  .steps-bar span{display:flex;align-items:center;gap:8px;color:var(--ink);opacity:.4}
+  .steps-bar span.done{opacity:.75}
+  .steps-bar span.active{opacity:1;color:var(--clay);font-weight:700}
+  .steps-bar b{width:22px;height:22px;border-radius:50%;background:var(--sage-2);color:var(--forest);display:flex;align-items:center;justify-content:center;font-weight:700}
+  .steps-bar span.active b{background:var(--peach)}
+  .steps-bar span.done b{background:var(--sage)}
+
+  .panel{display:none}
+  .panel.on{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .type-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:.6rem}
+  @media(max-width:720px){.type-cards{grid-template-columns:1fr}}
+  .type-card{background:var(--paper);border:1.5px solid rgba(34,48,31,.16);border-radius:8px;padding:28px;cursor:pointer;transition:border-color .15s,transform .15s;display:flex;flex-direction:column}
+  .type-card:hover{transform:translateY(-3px);border-color:var(--sage)}
+  .type-card.sel{border-color:var(--forest);box-shadow:0 0 0 3px rgba(62,76,51,.12)}
+  .type-card h3{font-size:1.25rem}
+  .type-card .price{font-family:var(--display);font-weight:700;font-size:2.4rem;color:var(--clay);line-height:1;margin:.3rem 0 .8rem}
+  .type-card .price small{font-family:'Space Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);opacity:.7}
+  .type-card ul{list-style:none;margin:.4rem 0 0;font-size:.92rem}
+  .type-card li{padding:4px 0 4px 20px;position:relative}
+  .type-card li::before{content:"";position:absolute;left:0;top:12px;width:7px;height:7px;border-radius:50%;background:var(--sage)}
+
+  .day-scroll{display:flex;gap:12px;overflow-x:auto;padding:.4rem 2px 1rem;margin-top:.4rem}
+  .day-chip{flex:none;min-width:96px;text-align:center;background:var(--paper);border:1.5px solid rgba(34,48,31,.16);border-radius:10px;padding:14px 10px;cursor:pointer;transition:border-color .15s}
+  .day-chip:hover{border-color:var(--sage)}
+  .day-chip.sel{border-color:var(--forest);background:var(--sage-tint)}
+  .day-chip .dow{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--clay)}
+  .day-chip .dnum{font-family:var(--display);font-size:1.8rem;color:var(--forest);line-height:1.1}
+  .day-chip .mon{font-size:.78rem;opacity:.7}
+
+  .slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:1.2rem}
+  .slot{background:var(--paper);border:1.5px solid rgba(34,48,31,.16);border-radius:8px;padding:14px 12px;cursor:pointer;text-align:left;transition:border-color .15s;font-size:.9rem}
+  .slot:hover:not(.full){border-color:var(--sage)}
+  .slot.sel{border-color:var(--forest);background:var(--sage-tint)}
+  .slot .t{font-weight:700;font-size:1rem}
+  .slot .avail{font-family:'Space Mono',monospace;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;margin-top:4px;opacity:.8}
+  .slot.full{opacity:.45;cursor:not-allowed;background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(34,48,31,.05) 6px,rgba(34,48,31,.05) 12px)}
+  .slot.full .avail{color:var(--clay);opacity:1}
+
+  .qty{display:flex;align-items:center;gap:16px;margin-top:1.2rem}
+  .qty button{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--forest);background:var(--paper);color:var(--forest);font-size:1.4rem;font-weight:700;cursor:pointer;line-height:1}
+  .qty button:disabled{opacity:.3;cursor:not-allowed}
+  .qty .n{font-family:var(--display);font-size:2rem;color:var(--forest);min-width:38px;text-align:center}
+
+  .field{margin-bottom:1.1rem;max-width:30rem}
+  .field label{display:block;font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--clay);margin-bottom:.4rem}
+  .field input{width:100%;padding:13px 15px;border:1.5px solid rgba(34,48,31,.2);border-radius:8px;font-family:'Archivo',sans-serif;font-size:1rem;background:var(--paper);color:var(--ink)}
+  .field input:focus{outline:none;border-color:var(--sage)}
+
+  .summary{background:var(--sage-tint);border:1px solid rgba(34,48,31,.12);border-radius:8px;padding:20px 22px;margin:1rem 0 1.6rem;max-width:34rem}
+  .summary div{display:flex;justify-content:space-between;padding:6px 0;font-size:.95rem;border-bottom:1px dashed rgba(34,48,31,.14)}
+  .summary div:last-child{border:0;font-weight:700}
+  .summary .tot{font-family:var(--display);color:var(--clay);font-size:1.3rem}
+
+  .flow-nav{display:flex;gap:12px;margin-top:1.8rem;flex-wrap:wrap}
+  .btn-ghost{border:1.5px solid rgba(34,48,31,.3);color:var(--forest);background:none;cursor:pointer}
+  .btn.dis{opacity:.4;pointer-events:none}
+
+  .confirm-card{background:var(--paper);border:1.5px solid var(--sage);border-radius:10px;padding:34px;max-width:40rem;position:relative}
+  .confirm-card .tick{width:54px;height:54px;border-radius:50%;background:var(--sage);color:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1rem}
+  .pay-badge{display:inline-block;background:var(--peach);color:var(--ink);font-weight:700;padding:8px 16px;border-radius:999px;margin:.6rem 0 1.2rem;font-size:.95rem}
+  .conf-detail{font-size:.96rem;margin:.3rem 0}
+  .conf-detail b{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--clay);display:inline-block;min-width:120px}
+  .bring-mini{display:flex;flex-wrap:wrap;gap:8px;margin-top:.6rem}
+  .bring-mini span{background:var(--sage-tint);border-radius:999px;padding:5px 12px;font-size:.82rem}
+  .email-note{background:rgba(236,189,152,.18);border:1px dashed var(--clay);border-radius:6px;padding:12px 15px;font-size:.85rem;margin-top:1.4rem}
+
+  .empty{opacity:.7;font-style:italic;margin-top:1rem}
+
+  /* Owner dashboard */
+  .owner-table{width:100%;border-collapse:collapse;margin-top:1.4rem;font-size:.9rem}
+  .owner-table th{text-align:left;font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--clay);border-bottom:2px solid var(--forest);padding:8px 10px}
+  .owner-table td{padding:10px;border-bottom:1px solid rgba(34,48,31,.14)}
+  .owner-table tr:hover td{background:var(--sage-tint)}
+  .tag{font-family:'Space Mono',monospace;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+  .tag.social{background:var(--sage);color:var(--cream)}
+  .tag.private{background:var(--clay);color:var(--cream)}
+  .demo-flag{background:var(--forest);color:var(--cream);font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:7px 12px}
+</style>
+</head>
+<body>
+
+<div class="demo-flag">Prototype · bookings are saved in this browser only · no online payment taken</div>
+
+<div class="infobar">
+  13 Tullysaran Rd, BT71 7LU · Tue &amp; Thu 6–10pm · Sat &amp; Sun 9am–2pm · Pay cash or card on site
+</div>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="https://emcgleenan23.github.io/ll_home.html" aria-label="Live Löyly home"><span>live</span><span>löyly</span></a>
+    <button class="menu-toggle" aria-label="Menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+    <nav>
+      <ul>
+        <li><a href="https://emcgleenan23.github.io/ll_home.html">Home</a></li>
+        <li><a href="https://emcgleenan23.github.io/ll_hire.html">Sauna Hire</a></li>
+        <li><a href="https://emcgleenan23.github.io/ll_events.html">Events</a></li>
+        <li><a href="https://emcgleenan23.github.io/ll_about.html">Our Story</a></li>
+        <li><a href="https://emcgleenan23.github.io/ll_faqs.html">FAQs</a></li>
+        <li><a class="nav-book" href="#">Book Now</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ BOOK HERO ============ -->
+<section class="book-hero">
+  <div class="wrap">
+    <p class="eyebrow">Book a sauna</p>
+    <h1>Choose your heat</h1>
+    <p class="lede">Every slot is 45 minutes with full use of the applewood-fired sauna, both cold plunges and the fire pit. Pick your session and time below — <strong>pay cash or card when you arrive</strong>.</p>
+  </div>
+</section>
+
+<!-- ============ CUSTOMER BOOKING FLOW ============ -->
+<section id="flow">
+  <div class="wrap">
+    <div class="steps-bar" id="stepsBar">
+      <span data-s="1" class="active"><b>1</b> Session</span>
+      <span data-s="2"><b>2</b> Date &amp; time</span>
+      <span data-s="3"><b>3</b> Your details</span>
+      <span data-s="4"><b>4</b> Confirmed</span>
+    </div>
+
+    <!-- STEP 1: type -->
+    <div class="panel on" id="p1">
+      <p class="eyebrow">Step 1</p>
+      <h2 style="font-size:clamp(1.8rem,4vw,2.4rem)">What kind of session?</h2>
+      <div class="type-cards">
+        <div class="type-card" data-type="social" onclick="pickType('social')">
+          <h3>Social Sauna</h3>
+          <div class="price">£8 <small>per person</small></div>
+          <p>Drop in and share the heat. Capped at 8 bathers so everyone gets space in the sauna and cold plunge.</p>
+          <ul>
+            <li>45 minutes · communal session</li>
+            <li>Up to 8 people per slot</li>
+            <li>Great for solo visits &amp; pairs</li>
+          </ul>
+        </div>
+        <div class="type-card" data-type="private" onclick="pickType('private')">
+          <h3>Private Sauna</h3>
+          <div class="price">£60 <small>whole slot · up to 8</small></div>
+          <p>Exclusive use for your group — birthdays, teams, recovery sessions or a quiet reset with friends.</p>
+          <ul>
+            <li>45 minutes · just your group</li>
+            <li>Whole sauna + both cold plunges</li>
+            <li>Works out £7.50 each with a full 8</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flow-nav">
+        <a class="btn btn-forest dis" id="toStep2" onclick="goStep(2)">Continue →</a>
+      </div>
+    </div>
+
+    <!-- STEP 2: date + time -->
+    <div class="panel" id="p2">
+      <p class="eyebrow">Step 2</p>
+      <h2 style="font-size:clamp(1.8rem,4vw,2.4rem)">Pick a day</h2>
+      <p id="typeLine" style="opacity:.8;margin-bottom:.4rem"></p>
+      <div class="day-scroll" id="dayScroll"></div>
+
+      <h3 style="margin-top:1.4rem;font-family:var(--display);font-weight:400;font-size:1.5rem;color:var(--forest)">Available times</h3>
+      <div class="slot-grid" id="slotGrid"></div>
+
+      <div id="qtyWrap" style="display:none">
+        <p class="eyebrow" style="margin-top:1.8rem">How many bathers?</p>
+        <div class="qty">
+          <button onclick="changeQty(-1)" id="qMinus">–</button>
+          <span class="n" id="qtyN">1</span>
+          <button onclick="changeQty(1)" id="qPlus">+</button>
+        </div>
+        <p style="font-size:.85rem;opacity:.7;margin-top:.5rem" id="qtyHint"></p>
+      </div>
+
+      <div class="flow-nav">
+        <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+        <a class="btn btn-forest dis" id="toStep3" onclick="goStep(3)">Continue →</a>
+      </div>
+    </div>
+
+    <!-- STEP 3: details -->
+    <div class="panel" id="p3">
+      <p class="eyebrow">Step 3</p>
+      <h2 style="font-size:clamp(1.8rem,4vw,2.4rem)">Your details</h2>
+      <div class="summary" id="sum3"></div>
+      <div class="field">
+        <label for="fName">Name</label>
+        <input id="fName" type="text" autocomplete="name" placeholder="Your name" oninput="checkDetails()">
+      </div>
+      <div class="field">
+        <label for="fEmail">Email</label>
+        <input id="fEmail" type="email" autocomplete="email" placeholder="you@email.com" oninput="checkDetails()">
+        <p style="font-size:.8rem;opacity:.7;margin-top:.4rem">We'll send your confirmation and what to bring here.</p>
+      </div>
+      <div class="flow-nav">
+        <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
+        <a class="btn btn-forest dis" id="toStep4" onclick="confirmBooking()">Confirm booking →</a>
+      </div>
+    </div>
+
+    <!-- STEP 4: confirmation -->
+    <div class="panel" id="p4">
+      <div class="confirm-card" id="confirmCard"></div>
+      <div class="flow-nav">
+        <button class="btn btn-forest" onclick="restart()">Book another session</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OWNER DASHBOARD (add #owner to the URL, or click below) ============ -->
+<section class="band-sage" id="ownerSection" style="display:none">
+  <div class="wrap">
+    <p class="eyebrow">For Live Löyly</p>
+    <h2 style="font-size:clamp(1.8rem,4vw,2.6rem)">Bookings dashboard</h2>
+    <p style="max-width:44rem">Every booking made through this page. In the live version, each new booking also emails <strong>info@loyly.live</strong> automatically.</p>
+    <div id="ownerBody"></div>
+    <p style="margin-top:1.4rem">
+      <button class="btn btn-line" onclick="exportCsv()">Download as CSV</button>
+      <button class="btn btn-ghost" onclick="clearAll()">Clear all (demo)</button>
+    </p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="https://emcgleenan23.github.io/ll_home.html"><span>live</span><span>löyly</span></a>
+        <p style="margin-top:.9rem;opacity:.8">Wood-fired sauna &amp; cold plunge<br>near Armagh, Northern Ireland.</p>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul>
+          <li>13 Tullysaran Road</li>
+          <li>Dungannon BT71 7LU</li>
+          <li><a href="mailto:info@loyly.live">info@loyly.live</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Hours</h4>
+        <ul>
+          <li>Tue &amp; Thu · 6pm–10pm</li>
+          <li>Sat &amp; Sun · 9am–2pm</li>
+          <li>Mon, Wed, Fri · Closed</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Quick links</h4>
+        <ul>
+          <li><a href="#" onclick="toggleOwner();return false">Owner: bookings dashboard</a></li>
+          <li><a href="https://www.instagram.com/liveloyly/">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 Live Löyly · 18+ only</span>
+      <span>Prototype booking tool</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   Live Löyly — slot-picker booking (prototype)
+   No online payment. Pay cash/card on site.
+   State stored in localStorage so the dashboard + availability
+   behave realistically on this device.
+   ============================================================ */
+
+const OPEN = {           // getDay(): Sun0 Mon1 Tue2 Wed3 Thu4 Fri5 Sat6
+  2:[18,19,20,21],       // Tue 6–10pm
+  4:[18,19,20,21],       // Thu 6–10pm
+  6:[9,10,11,12,13],     // Sat 9am–2pm
+  0:[9,10,11,12,13]      // Sun 9am–2pm
+};
+const SOCIAL_CAP = 8, SOCIAL_PRICE = 8, PRIVATE_PRICE = 60, WEEKS_AHEAD = 6;
+const KEY = 'll_bookings_v1';
+
+let sel = { type:null, dateISO:null, hour:null, qty:1 };
+
+const load = () => JSON.parse(localStorage.getItem(KEY) || '[]');
+const save = (a) => localStorage.setItem(KEY, JSON.stringify(a));
+
+/* ---- helpers ---- */
+function fmtHour(h){ const ap=h<12?'am':'pm'; let hr=h%12; if(hr===0)hr=12; return hr+':00 '+ap; }
+function fmtRange(h){ const end=h*60+45, eh=Math.floor(end/60), em=end%60;
+  const ap=eh<12?'am':'pm'; let ehr=eh%12; if(ehr===0)ehr=12;
+  return fmtHour(h)+' – '+ehr+':'+String(em).padStart(2,'0')+' '+ap; }
+function isoOf(d){ return d.toISOString().slice(0,10); }
+function niceDate(iso){ const d=new Date(iso+'T00:00:00');
+  return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}); }
+
+/* ---- availability derived from existing bookings ---- */
+function slotState(iso,hour){
+  const b = load().filter(x=>x.dateISO===iso && x.hour===hour);
+  const priv = b.some(x=>x.type==='private');
+  const socialSeats = b.filter(x=>x.type==='social').reduce((s,x)=>s+x.people,0);
+  return { priv, socialSeats, socialLeft: SOCIAL_CAP - socialSeats };
+}
+
+/* ---- STEP 1 ---- */
+function pickType(t){
+  sel.type=t;
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('sel',c.dataset.type===t));
+  document.getElementById('toStep2').classList.remove('dis');
+}
+
+/* ---- STEP 2 ---- */
+function buildDays(){
+  const scroll=document.getElementById('dayScroll'); scroll.innerHTML='';
+  const today=new Date(); today.setHours(0,0,0,0);
+  const end=new Date(today); end.setDate(end.getDate()+WEEKS_AHEAD*7);
+  for(let d=new Date(today); d<=end; d.setDate(d.getDate()+1)){
+    if(!(d.getDay() in OPEN)) continue;
+    const iso=isoOf(new Date(d));
+    const chip=document.createElement('div');
+    chip.className='day-chip'+(iso===sel.dateISO?' sel':'');
+    chip.innerHTML=`<div class="dow">${d.toLocaleDateString('en-GB',{weekday:'short'})}</div>
+      <div class="dnum">${d.getDate()}</div>
+      <div class="mon">${d.toLocaleDateString('en-GB',{month:'short'})}</div>`;
+    chip.onclick=()=>{ sel.dateISO=iso; sel.hour=null; buildDays(); buildSlots(); };
+    scroll.appendChild(chip);
+  }
+  document.getElementById('typeLine').textContent =
+    sel.type==='social' ? 'Social Sauna · £8 per person' : 'Private Sauna · £60 for the whole slot';
+}
+
+function buildSlots(){
+  const grid=document.getElementById('slotGrid'); grid.innerHTML='';
+  document.getElementById('qtyWrap').style.display='none';
+  document.getElementById('toStep3').classList.add('dis');
+  if(!sel.dateISO){ grid.innerHTML='<p class="empty">Pick a day above to see times.</p>'; return; }
+  const hours=OPEN[new Date(sel.dateISO+'T00:00:00').getDay()];
+  const now=new Date();
+  hours.forEach(h=>{
+    const st=slotState(sel.dateISO,h);
+    let full=false, note='';
+    if(sel.type==='private'){
+      full = st.priv || st.socialSeats>0;
+      note = st.priv ? 'Already booked' : (st.socialSeats>0 ? 'Social in progress' : 'Available');
+    } else { // social
+      full = st.priv || st.socialLeft<=0;
+      note = st.priv ? 'Private booked' : (st.socialLeft<=0 ? 'Full' : st.socialLeft+' of 8 left');
+    }
+    // past slots today
+    const slotStart=new Date(sel.dateISO+'T00:00:00'); slotStart.setHours(h);
+    if(slotStart < now){ full=true; note='Passed'; }
+
+    const el=document.createElement('div');
+    el.className='slot'+(full?' full':'')+(sel.hour===h?' sel':'');
+    el.innerHTML=`<div class="t">${fmtHour(h)}</div><div class="avail">${note}</div>`;
+    if(!full) el.onclick=()=>pickSlot(h);
+    grid.appendChild(el);
+  });
+}
+
+function pickSlot(h){
+  sel.hour=h; buildSlots();
+  if(sel.type==='social'){
+    const left=slotState(sel.dateISO,h).socialLeft;
+    sel.qty=Math.min(sel.qty,left)||1;
+    document.getElementById('qtyWrap').style.display='block';
+    renderQty(left);
+  } else { sel.qty=1; }
+  document.getElementById('toStep3').classList.remove('dis');
+}
+
+function renderQty(left){
+  document.getElementById('qtyN').textContent=sel.qty;
+  document.getElementById('qMinus').disabled = sel.qty<=1;
+  document.getElementById('qPlus').disabled = sel.qty>=left;
+  document.getElementById('qtyHint').textContent =
+    left+' seat'+(left===1?'':'s')+' left in this slot · £'+(sel.qty*SOCIAL_PRICE)+' total';
+}
+function changeQty(d){
+  const left=slotState(sel.dateISO,sel.hour).socialLeft;
+  sel.qty=Math.max(1,Math.min(left,sel.qty+d)); renderQty(left);
+}
+
+/* ---- steps + nav ---- */
+function goStep(n){
+  if(n===2){ buildDays(); buildSlots(); }
+  if(n===3){ renderSummary(); checkDetails(); }
+  for(let i=1;i<=4;i++) document.getElementById('p'+i).classList.toggle('on',i===n);
+  document.querySelectorAll('#stepsBar span').forEach(s=>{
+    const si=+s.dataset.s; s.classList.toggle('active',si===n); s.classList.toggle('done',si<n);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderSummary(){
+  const price = sel.type==='private' ? PRIVATE_PRICE : sel.qty*SOCIAL_PRICE;
+  const who = sel.type==='private' ? 'Private Sauna (whole slot)' : 'Social Sauna × '+sel.qty;
+  document.getElementById('sum3').innerHTML=`
+    <div><span>Session</span><span>${who}</span></div>
+    <div><span>Date</span><span>${niceDate(sel.dateISO)}</span></div>
+    <div><span>Time</span><span>${fmtRange(sel.hour)}</span></div>
+    <div><span>Pay on site</span><span class="tot">£${price}</span></div>`;
+}
+
+function checkDetails(){
+  const n=document.getElementById('fName').value.trim();
+  const e=document.getElementById('fEmail').value.trim();
+  const ok=n.length>1 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  document.getElementById('toStep4').classList.toggle('dis',!ok);
+}
+
+/* ---- confirm ---- */
+function confirmBooking(){
+  const name=document.getElementById('fName').value.trim();
+  const email=document.getElementById('fEmail').value.trim();
+  // re-check availability at the last moment (protects against a slot filling up)
+  const st=slotState(sel.dateISO,sel.hour);
+  const clash = sel.type==='private' ? (st.priv||st.socialSeats>0) : (st.priv||st.socialLeft<sel.qty);
+  if(clash){ alert('Sorry — that slot was just taken. Please pick another time.'); goStep(2); return; }
+
+  const price = sel.type==='private' ? PRIVATE_PRICE : sel.qty*SOCIAL_PRICE;
+  const rec={ id:'LL'+Date.now().toString(36).toUpperCase(), type:sel.type,
+    dateISO:sel.dateISO, hour:sel.hour, people:sel.type==='private'?null:sel.qty,
+    name, email, price, created:new Date().toISOString() };
+  const all=load(); all.push(rec); save(all);
+  renderConfirm(rec); goStep(4); renderOwner();
+}
+
+function renderConfirm(r){
+  const who = r.type==='private' ? 'Private Sauna — whole slot for your group (up to 8)'
+                                 : 'Social Sauna — '+r.people+' '+(r.people===1?'bather':'bathers');
+  document.getElementById('confirmCard').innerHTML=`
+    <div class="tick">✓</div>
+    <p class="eyebrow" style="justify-content:flex-start">Booking confirmed · ${r.id}</p>
+    <h2 style="font-size:clamp(1.8rem,4vw,2.4rem)">See you at the sauna, ${r.name.split(' ')[0]}</h2>
+    <div class="pay-badge">Pay £${r.price} — cash or card on site</div>
+    <p class="conf-detail"><b>Session</b> ${who}</p>
+    <p class="conf-detail"><b>Date</b> ${niceDate(r.dateISO)}</p>
+    <p class="conf-detail"><b>Time</b> ${fmtRange(r.hour)} <span style="opacity:.7">(45 min)</span></p>
+    <p class="conf-detail"><b>Where</b> 13 Tullysaran Road, Dungannon BT71 7LU</p>
+    <p class="conf-detail" style="margin-top:1rem"><b>What to bring</b></p>
+    <div class="bring-mini">
+      <span>Towel to sit on</span><span>Towel to dry</span><span>Swimwear</span>
+      <span>Water bottle</span><span>Flip flops / sliders</span>
+    </div>
+    <p class="conf-detail" style="margin-top:1rem;opacity:.85">Arrive a few minutes early — changing rooms are ready for you. 18+ only, ID may be requested.</p>
+    <div class="email-note">📧 A confirmation email with these details has been sent to <strong>${r.email}</strong>.
+      <br><span style="opacity:.75">(Prototype: no email is actually sent yet — this is where the confirmation with location, directions and what-to-bring will go once wired up.)</span></div>`;
+}
+
+function restart(){ sel={type:null,dateISO:null,hour:null,qty:1};
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('toStep2').classList.add('dis');
+  document.getElementById('fName').value=''; document.getElementById('fEmail').value='';
+  goStep(1);
+}
+
+/* ---- owner dashboard ---- */
+function toggleOwner(){
+  const s=document.getElementById('ownerSection');
+  const show = s.style.display==='none';
+  s.style.display = show?'block':'none';
+  if(show){ renderOwner(); s.scrollIntoView({behavior:'smooth'}); }
+}
+function renderOwner(){
+  const all=load().slice().sort((a,b)=> (a.dateISO+a.hour) < (b.dateISO+b.hour) ? -1:1);
+  const body=document.getElementById('ownerBody');
+  if(!all.length){ body.innerHTML='<p class="empty">No bookings yet.</p>'; return; }
+  let rows=all.map(r=>`<tr>
+    <td>${niceDate(r.dateISO)}</td>
+    <td>${fmtHour(r.hour)}</td>
+    <td><span class="tag ${r.type}">${r.type}</span></td>
+    <td>${r.type==='private'?'Group':r.people+' pax'}</td>
+    <td>${r.name}</td>
+    <td><a href="mailto:${r.email}">${r.email}</a></td>
+    <td>£${r.price}</td>
+    <td style="opacity:.6">${r.id}</td></tr>`).join('');
+  const total=all.reduce((s,r)=>s+r.price,0);
+  body.innerHTML=`<table class="owner-table">
+    <thead><tr><th>Date</th><th>Time</th><th>Type</th><th>Size</th><th>Name</th><th>Email</th><th>Due on site</th><th>Ref</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+    <p style="margin-top:1rem;font-weight:700">${all.length} booking${all.length===1?'':'s'} · £${total} expected on site</p>`;
+}
+function exportCsv(){
+  const all=load(); if(!all.length){ alert('No bookings to export.'); return; }
+  const head=['Ref','Date','Time','Type','People','Name','Email','DueOnSite'];
+  const rows=all.map(r=>[r.id,r.dateISO,fmtHour(r.hour),r.type,r.people||'group',r.name,r.email,r.price]);
+  const csv=[head,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='liveloyly-bookings.csv'; a.click();
+}
+function clearAll(){ if(confirm('Clear all demo bookings on this device?')){ save([]); renderOwner(); buildSlots&&buildSlots(); } }
+
+/* ---- init ---- */
+if(location.hash==='#owner'){ toggleOwner(); }
+</script>
+</body>
+</html>
