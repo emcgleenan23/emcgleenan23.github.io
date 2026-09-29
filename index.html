@@ -587,9 +587,30 @@
         <span>Open Source</span>
       </div>
     </div>
-  </div>
 
-  <div class="project fade-in" style="grid-column: 1 / -1;">
+    <div class="project fade-in" style="grid-column: 1 / -1;">
+      <h3><a href="gps-performance-dashboard.html">GPS Performance Dashboard — Session Analysis &amp; Load Monitoring</a></h3>
+      <p>
+      The next step on from the Tullysaran pipeline: an end-to-end system that turns raw 10&nbsp;Hz STATSports exports into a browser-based dashboard for Gaelic football. It works at 10-second resolution within a session, finding each player's most demanding 1 to 10-minute passages, and treats the season's load as a time series, with changepoint detection, wavelet analysis and acute:chronic workload.
+      </p>
+      <p style="margin-top: 8px;">
+      Players are pseudonymised before anything leaves the pipeline, and dashboards built on real data are encrypted in the browser so they can be shared by link. The public demo runs on a synthetic squad generated in the same export format.
+      </p>
+      <p style="margin-top: .65rem;">
+        <a href="gps-performance-dashboard.html" style="display:inline-flex; align-items:center; gap:.35rem; font-size:.82rem; font-weight:500; color:var(--accent); text-decoration:none;">
+          Read the write-up and try the live demo
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </p>
+      <div class="tech">
+        <span>Python</span>
+        <span>GPS Analytics</span>
+        <span>Time Series</span>
+        <span>Open Source</span>
+      </div>
+    </div>
+
+    <div class="project fade-in" style="grid-column: 1 / -1;">
       <h3><a href="pfv-practitioners-guide.html">In-Situ PFv Profiling — A Practitioner's Guide</a></h3>
       <p>
       An interactive companion to our research paper (under review) on deriving force-velocity profiles from in-situ GPS data. The guide walks practitioners through the methodology, from Butterworth filtering and acceleration-speed envelope extraction through to in-match fatigue monitoring using sliding-window ballistic power.
@@ -608,6 +629,28 @@
         <span>GPS Analytics</span>
         <span>In-Situ Monitoring</span>
         <span>Interactive</span>
+      </div>
+    </div>
+
+    <div class="project fade-in" style="grid-column: 1 / -1;">
+      <h3><a href="football-scouting.html">Can Open Data Spot the Next €30m Player?</a></h3>
+      <p>
+      A transparent scouting screen across the ten strongest leagues in world football, built entirely from free FBref and Transfermarkt data. It scores young players on four signals (performance, intensity, misprofiling and underuse), always within their positional peer group.
+      </p>
+      <p style="margin-top: 8px;">
+      In a strict point-in-time back-test, the screen's top 20 hit at 55% against a 33% base rate. A second model, trained on 70,000 player-seasons, predicts big value rises with a ROC-AUC of 0.81, and shows that age dominates everything else.
+      </p>
+      <p style="margin-top: .65rem;">
+        <a href="football-scouting.html" style="display:inline-flex; align-items:center; gap:.35rem; font-size:.82rem; font-weight:500; color:var(--accent); text-decoration:none;">
+          Read the write-up
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </p>
+      <div class="tech">
+        <span>Python</span>
+        <span>Machine Learning</span>
+        <span>Football Analytics</span>
+        <span>Open Data</span>
       </div>
     </div>
   </div>

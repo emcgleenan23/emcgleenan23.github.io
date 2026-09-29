@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open-Data Football Scouting — Eamon McGleenan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fg: #1a1a1a;
+      --fg-secondary: #555;
+      --fg-muted: #888;
+      --bg: #fafaf8;
+      --bg-card: #fff;
+      --accent: #2a5a4c;
+      --accent-light: #e8f0ed;
+      --border: #e5e5e0;
+      --serif: 'Newsreader', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --max-w: 780px;
+      --space: 1.5rem;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.65;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250,250,248,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: .85rem var(--space);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav .name {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.05rem;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -.01em;
+    }
+    nav ul { list-style: none; display: flex; gap: 1.75rem; }
+    nav a {
+      text-decoration: none;
+      color: var(--fg-secondary);
+      font-size: .85rem;
+      font-weight: 500;
+      letter-spacing: .02em;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* ── ARTICLE ── */
+    .article {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 3.5rem var(--space) 2rem;
+    }
+    .article-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .breadcrumb {
+      font-size: .78rem;
+      color: var(--fg-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .breadcrumb a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article-header h1 {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+      line-height: 1.25;
+      letter-spacing: -.02em;
+      margin-bottom: .6rem;
+    }
+    .article-header .subtitle {
+      font-size: .92rem;
+      color: var(--fg-secondary);
+      line-height: 1.6;
+    }
+    .article-meta {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      font-size: .8rem;
+      color: var(--fg-muted);
+    }
+    .article-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .article-meta svg { width: 13px; height: 13px; }
+
+    /* ── TABLE OF CONTENTS ── */
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .toc-title {
+      font-family: var(--sans);
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--fg-muted);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+    .toc ol {
+      list-style: none;
+      counter-reset: toc-counter;
+    }
+    .toc ol li {
+      counter-increment: toc-counter;
+      margin-bottom: .35rem;
+    }
+    .toc ol li::before {
+      content: counter(toc-counter) ".";
+      font-family: var(--mono);
+      font-size: .75rem;
+      color: var(--accent);
+      margin-right: .5rem;
+      font-weight: 500;
+    }
+    .toc a {
+      font-size: .88rem;
+      color: var(--fg-secondary);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .toc a:hover { color: var(--accent); }
+
+    /* ── PROSE ── */
+    .prose h2 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.3rem;
+      letter-spacing: -.01em;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: .55rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .prose h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.05rem;
+      margin: 1.8rem 0 .7rem;
+    }
+    .prose p {
+      margin-bottom: 1.1rem;
+      color: var(--fg-secondary);
+      line-height: 1.75;
+    }
+    .prose a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s;
+    }
+    .prose a:hover { border-bottom-color: var(--accent); }
+
+    /* ── CALLOUT BOX ── */
+    .callout {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 0 6px 6px 0;
+      margin: 1.5rem 0;
+    }
+    .callout p {
+      color: var(--fg);
+      margin: 0;
+      font-size: .9rem;
+    }
+    .callout-title {
+      font-weight: 500;
+      font-size: .82rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: .35rem;
+    }
+
+    .callout-warn {
+      background: #fef7ec;
+      border-left-color: #c4820a;
+    }
+    .callout-warn .callout-title { color: #a06c05; }
+
+    /* ── CODE ── */
+    code {
+      font-family: var(--mono);
+      font-size: .82rem;
+      background: #f0f0ec;
+      padding: .15rem .4rem;
+      border-radius: 3px;
+      color: var(--fg);
+    }
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      margin: 1.2rem 0 1.5rem;
+      line-height: 1.6;
+      font-size: .82rem;
+      border: 1px solid #333;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2d2d2d;
+      padding: .5rem 1rem;
+      border-radius: 6px 6px 0 0;
+      border: 1px solid #333;
+      border-bottom: none;
+      margin-top: 1.2rem;
+    }
+    .code-header + pre {
+      margin-top: 0;
+      border-radius: 0 0 6px 6px;
+    }
+    .code-header span {
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: #888;
+      font-weight: 500;
+    }
+    .code-header .copy-btn {
+      background: none;
+      border: 1px solid #555;
+      color: #aaa;
+      padding: .2rem .5rem;
+      border-radius: 3px;
+      font-size: .68rem;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: all .2s;
+    }
+    .code-header .copy-btn:hover {
+      border-color: #888;
+      color: #ddd;
+    }
+
+    /* Syntax highlighting tokens */
+    .tok-kw   { color: #c586c0; }
+    .tok-fn   { color: #dcdcaa; }
+    .tok-str  { color: #ce9178; }
+    .tok-cmt  { color: #6a9955; font-style: italic; }
+    .tok-num  { color: #b5cea8; }
+    .tok-op   { color: #d4d4d4; }
+    .tok-cls  { color: #4ec9b0; }
+    .tok-var  { color: #9cdcfe; }
+
+    /* ── PIPELINE DIAGRAM ── */
+    .pipeline-diagram {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 2rem 0;
+      overflow-x: auto;
+      padding: .5rem 0;
+    }
+    .pipeline-stage {
+      flex: 1;
+      min-width: 160px;
+      padding: 1.1rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: center;
+      position: relative;
+    }
+    .pipeline-stage .stage-num {
+      font-family: var(--mono);
+      font-size: .65rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .35rem;
+    }
+    .pipeline-stage h4 {
+      font-family: var(--serif);
+      font-size: .9rem;
+      font-weight: 500;
+      margin-bottom: .3rem;
+    }
+    .pipeline-stage p {
+      font-size: .75rem;
+      color: var(--fg-muted);
+      line-height: 1.5;
+    }
+    .pipeline-arrow {
+      display: flex;
+      align-items: center;
+      padding: 0 .3rem;
+      color: var(--accent);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* ── METRIC TABLE ── */
+    .metric-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0 1.5rem;
+      font-size: .84rem;
+    }
+    .metric-table th {
+      font-family: var(--sans);
+      font-weight: 500;
+      text-align: left;
+      padding: .65rem .8rem;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+      font-size: .78rem;
+      letter-spacing: .03em;
+    }
+    .metric-table td {
+      padding: .6rem .8rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--fg-secondary);
+      line-height: 1.5;
+    }
+    .metric-table tr:hover td {
+      background: rgba(42,90,76,.03);
+    }
+
+    /* ── CLONE BUTTON ── */
+    .clone-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .clone-section .clone-url {
+      flex: 1;
+      min-width: 250px;
+      font-family: var(--mono);
+      font-size: .82rem;
+      background: #f0f0ec;
+      padding: .55rem .85rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--fg-secondary);
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+    .clone-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .82rem;
+      font-weight: 500;
+      color: #fff;
+      background: var(--accent);
+      text-decoration: none;
+      padding: .55rem 1.1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .clone-btn:hover { background: #1e4a3d; }
+    .clone-btn svg { width: 14px; height: 14px; }
+
+    /* ── FILE TREE ── */
+    .file-tree {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.2rem 0 1.5rem;
+      font-family: var(--mono);
+      font-size: .8rem;
+      line-height: 1.9;
+      border: 1px solid #333;
+      overflow-x: auto;
+    }
+    .file-tree .dir  { color: #9cdcfe; }
+    .file-tree .file { color: #d4d4d4; }
+    .file-tree .desc { color: #6a9955; }
+
+    /* ── SCREENSHOTS ── */
+    .screenshot {
+      margin: 1.5rem 0 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+    .screenshot:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+    .screenshot img {
+      width: 100%;
+      display: block;
+    }
+    .screenshot figcaption {
+      padding: .75rem 1.2rem;
+      font-size: .78rem;
+      color: var(--fg-muted);
+      border-top: 1px solid var(--border);
+      line-height: 1.5;
+    }
+
+    /* ── REFERENCES ── */
+    .ref-list {
+      list-style: none;
+      counter-reset: ref-counter;
+      margin: 1rem 0;
+    }
+    .ref-list li {
+      counter-increment: ref-counter;
+      padding: .6rem 0 .6rem 2.2rem;
+      position: relative;
+      font-size: .84rem;
+      color: var(--fg-secondary);
+      line-height: 1.6;
+      border-bottom: 1px solid var(--border);
+    }
+    .ref-list li:last-child { border-bottom: none; }
+    .ref-list li::before {
+      content: "[" counter(ref-counter) "]";
+      position: absolute;
+      left: 0;
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .ref-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .ref-list a:hover { text-decoration: underline; }
+
+    /* ── TALK CARD ── */
+    .talk-card {
+      padding: 1.25rem 1.4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 1.2rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .talk-card:hover {
+      border-color: #ccc;
+      box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 2.5rem var(--space);
+      border-top: 1px solid var(--border);
+      font-size: .8rem;
+      color: var(--fg-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    footer a { color: var(--fg-secondary); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp .6s ease forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in:nth-child(1) { animation-delay: .05s; }
+    .fade-in:nth-child(2) { animation-delay: .12s; }
+    .fade-in:nth-child(3) { animation-delay: .19s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav ul { gap: 1rem; font-size: .75rem; }
+      .pipeline-diagram { flex-direction: column; }
+      .pipeline-arrow { transform: rotate(90deg); justify-content: center; padding: .3rem 0; }
+      .clone-section { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="inner">
+    <a href="index.html" class="name">Eamon McGleenan</a>
+    <ul>
+      <li><a href="index.html#publications">Publications</a></li>
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="index.html#media">Media</a></li>
+      <li><a href="index.html#talks">Talks</a></li>
+      <li><a href="index.html#qualifications">Qualifications</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── ARTICLE ── -->
+<article class="article">
+
+  <div class="article-header fade-in">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <a href="index.html#projects">Projects</a>
+      <span>›</span>
+      <span>Open-Data Football Scouting</span>
+    </div>
+    <h1>Can Open Data Spot the Next €30m Player?</h1>
+    <p class="subtitle">
+      A transparent scouting screen built from free FBref and Transfermarkt data, back-tested against
+      what actually happened next, and a model trained on 70,000 player-seasons that shows what really
+      drives a player's price.
+    </p>
+    <div class="article-meta">
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        12 min read
+      </span>
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Updated September 2026
+      </span>
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Python · pandas · scikit-learn · FBref · Transfermarkt
+      </span>
+    </div>
+  </div>
+
+  <!-- ── TABLE OF CONTENTS ── -->
+  <div class="toc fade-in">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#overview">Overview &amp; Motivation</a></li>
+      <li><a href="#data">Data &amp; Scope</a></li>
+      <li><a href="#signals">The Screen: Four Signals</a></li>
+      <li><a href="#backtest">Does It Work? The Back-Test</a></li>
+      <li><a href="#model">What Drives a Value Rise?</a></li>
+      <li><a href="#watch">Ones to Watch for 2026/27</a></li>
+      <li><a href="#limitations">Limitations &amp; Considerations</a></li>
+      <li><a href="#quickstart">Quick Start</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </div>
+
+  <div class="prose">
+
+    <!-- ── 1. OVERVIEW ── -->
+    <h2 id="overview">1. Overview &amp; Motivation</h2>
+
+    <p>
+      Every summer, clubs spend billions chasing the same insight: which cheap young player is about to
+      become expensive. The received wisdom is that you need scouts, contacts and proprietary tracking
+      data. This project asks a smaller question: how far can you get with data anyone can download?
+    </p>
+
+    <p>
+      Further than you'd think, with important caveats. A transparent screen built from open data
+      ranked its top-20 players at a 55% hit rate against a 33% base rate, and a learned model across
+      fourteen seasons tripled the base rate in its top decile, while confirming what football
+      economists have long argued about what drives a player's price.
+    </p>
+
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Result</th>
+          <th>Value</th>
+          <th>What it means</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Screen: top-20 hit rate</strong></td>
+          <td>55% vs 33% base</td>
+          <td>A 1.66× lift in a strict point-in-time back-test</td>
+        </tr>
+        <tr>
+          <td><strong>Value model: ROC-AUC</strong></td>
+          <td>0.81</td>
+          <td>Out-of-time test on the most recent seasons (0.5 = coin flip)</td>
+        </tr>
+        <tr>
+          <td><strong>Value model: top-decile lift</strong></td>
+          <td>3.1×</td>
+          <td>44% of top-decile picks rose ≥50% in value, against a 14% base</td>
+        </tr>
+        <tr>
+          <td><strong>Training data</strong></td>
+          <td>~70,000</td>
+          <td>Player-seasons from 2012 to 2025</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── 2. DATA ── -->
+    <h2 id="data">2. Data &amp; Scope</h2>
+
+    <p>
+      The pool is the ten strongest leagues in Opta's
+      <a href="https://theanalyst.com/articles/strongest-football-leagues-in-the-world-opta-power-rankings" target="_blank">Power Rankings</a>:
+      the Big Five plus the Championship, Primeira Liga, Eredivisie, and the Brazilian and Argentine top
+      flights. Opta's ratings are only used to choose which leagues to scout; all player data is open.
+    </p>
+    <p>
+      <strong>Performance</strong> comes from FBref advanced per-90 stats for 2024/25, roughly 6,700 players
+      across nine of the ten leagues. <strong>Market value, age, position and transfer history</strong>
+      come from a Transfermarkt-derived Kaggle dataset
+      (<a href="https://www.kaggle.com/datasets/davidcariboo/player-scores" target="_blank">davidcariboo/player-scores</a>);
+      Transfermarkt itself is never scraped. Players are resolved across the two sources by
+      accent-folded name plus season-accurate club, matching about 77% of players. Unmatched players are
+      kept, never silently dropped.
+    </p>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">FBref in 2026</div>
+      <p>
+        Opta withdrew its advanced statistics from FBref in 2026. The analysis here uses tables pulled
+        before that change. Re-running the pull today returns only basic stats (minutes, goals, assists,
+        cards), which is enough for the value model but not for the intensity or misprofiling signals.
+      </p>
+    </div>
+
+    <!-- ── 3. SIGNALS ── -->
+    <h2 id="signals">3. The Screen: Four Signals</h2>
+
+    <p>
+      Every metric is converted to per-90 and standardised <em>within the player's positional peer
+      group</em>, so a full-back is never measured against a striker. Position is a first-order
+      determinant of value <a href="#ref-3">[3,&nbsp;4]</a>, and scouting practice itself is role-based
+      <a href="#ref-1">[1,&nbsp;2]</a>, so cross-position comparison would bias the result.
+    </p>
+
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Signal</th>
+          <th>Weight</th>
+          <th>What it captures</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Performance</strong></td>
+          <td>0.35</td>
+          <td>Attacking output and creation per 90: shots, key passes, shot- and goal-creating actions</td>
+        </tr>
+        <tr>
+          <td><strong>Intensity</strong></td>
+          <td>0.25</td>
+          <td>Pressing, tackling, carrying and recovery volume: an open-data proxy for coping with a high-tempo game, since real GPS data is proprietary</td>
+        </tr>
+        <tr>
+          <td><strong>Misprofiling</strong></td>
+          <td>0.20</td>
+          <td>A linear discriminant role model flags players whose statistical fingerprint matches a different role from the one they're listed in</td>
+        </tr>
+        <tr>
+          <td><strong>Underused</strong></td>
+          <td>0.20</td>
+          <td>Strong per-90 output on a low share of team minutes: the classic under-priced profile</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      An eligibility gate runs first: at least 450 minutes for a stable per-90 sample, aged 24 or under,
+      no more than 70% of the team's minutes (so nailed-on starters are excluded), and a market value
+      ceiling of €20m. Each signal is scaled from 0 to 1 and combined into a weighted
+      <code>scout_score</code>, so any name on the shortlist can be traced back to <em>why</em> it
+      surfaced.
+    </p>
+
+    <h3>3.1 Why misprofiling matters</h3>
+    <p>
+      Listed position often mis-describes what a player actually does. The role model learns each
+      position's fingerprint from globally standardised features, then asks how much probability it
+      assigns to the best role <em>other</em> than the listed one. A listed winger whose numbers cluster
+      with progressive full-backs is exactly the kind of player a market pricing by label can miss
+      <a href="#ref-1">[1,&nbsp;2]</a>.
+    </p>
+
+    <!-- ── 4. BACKTEST ── -->
+    <h2 id="backtest">4. Does It Work? The Back-Test</h2>
+
+    <p>
+      A screen is only worth anything if its picks come true. The back-test freezes everything that was
+      knowable in June 2025 (stats, market value as of that date, position), ranks the players, then
+      checks what happened over the following year. A <strong>hit</strong> is a player sold for a real
+      fee (≥€10m) or whose market value rose by at least 50%. Outcomes are measured strictly after the
+      cutoff, so there is no lookahead.
+    </p>
+
+    <figure class="screenshot fade-in">
+      <img src="images/scout-fig1_backtest.png" alt="Hit rate by screen rank, declining from the top-20 down the ranking" loading="lazy">
+      <figcaption>Among eligible young players, 33% hit over the next year. The screen's top 20 hit at 55%, a 1.66× lift, declining smoothly down the ranking.</figcaption>
+    </figure>
+
+    <p>
+      The names hold up too. High-ranked 2024/25 players that went on to pay off include:
+    </p>
+
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Club (24/25)</th>
+          <th>Position, age</th>
+          <th>Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Abdoul Ouattara</td><td>Strasbourg</td><td>RB, 18</td><td>Value +1150%</td></tr>
+        <tr><td>Rodrigo Zalazar</td><td>SC Braga</td><td>MF, 24</td><td>€30m fee, value +67%</td></tr>
+        <tr><td>Enzo Le Fée</td><td>Sunderland</td><td>MF, 24</td><td>€24m fee, value +56%</td></tr>
+        <tr><td>Lazar Samardžić</td><td>Atalanta</td><td>MF, 23</td><td>€17m fee</td></tr>
+        <tr><td>Can Uzun</td><td>Frankfurt</td><td>AM, 19</td><td>Value +150%</td></tr>
+        <tr><td>Nico O'Reilly</td><td>Man City</td><td>FB, 19</td><td>Value +289%</td></tr>
+        <tr><td>Samuel Dahl</td><td>Benfica</td><td>LB, 21</td><td>€9m fee, value +86%</td></tr>
+        <tr><td>Iván Fresneda</td><td>Sporting CP</td><td>RB, 19</td><td>Value +88%</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Value change is Transfermarkt market value to mid-2026.
+    </p>
+
+    <!-- ── 5. MODEL ── -->
+    <h2 id="model">5. What Drives a Value Rise?</h2>
+
+    <p>
+      The screen uses hand-picked weights. To ask the data directly, a second model (a
+      histogram-based gradient-boosting classifier) was trained on about 70,000 player-seasons from
+      2012 to 2025 to predict whether a player's value would rise by 50% or more the following year,
+      using only what was known at the end of each season. Trained on earlier seasons and tested on
+      the most recent ones, it reached a ROC-AUC of 0.81.
+    </p>
+
+    <figure class="screenshot fade-in">
+      <img src="images/scout-fig4_modellift.png" alt="Rise rate by model-score decile, climbing to more than triple the base rate" loading="lazy">
+      <figcaption>Players sorted into ten buckets by model score. The rise rate climbs steadily; the top bucket more than triples the base rate.</figcaption>
+    </figure>
+
+    <figure class="screenshot fade-in">
+      <img src="images/scout-fig2_importance.png" alt="Feature importance, with age far ahead of every other feature" loading="lazy">
+      <figcaption>What the model leans on. Age dwarfs everything else, followed by current value level, recent momentum, then playing time and goals.</figcaption>
+    </figure>
+
+    <p>
+      Age is destiny. Value level comes next, since cheaper players have more room to grow in
+      percentage terms, then momentum, minutes and goals. It's a striking, if slightly deflating,
+      confirmation of the economics literature <a href="#ref-3">[3,&nbsp;4]</a>: youth is the single
+      biggest lever on a player's price trajectory.
+    </p>
+
+    <figure class="screenshot fade-in">
+      <img src="images/scout-fig3_age.png" alt="Share of players whose value rises by 50% or more, falling sharply with age" loading="lazy">
+      <figcaption>The share of players whose value rises ≥50% falls sharply with age. An 18-year-old is several times more likely to "pop" than a 26-year-old with identical output.</figcaption>
+    </figure>
+
+    <!-- ── 6. WATCH ── -->
+    <h2 id="watch">6. Ones to Watch for 2026/27</h2>
+
+    <p>
+      Running the screen over the current season and filtering for the young-and-still-cheap profile,
+      three names stand out, chosen for a spread of position, league and risk. These are the model's
+      calls, not certainties: a place to point a scout's eye first.
+    </p>
+
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Profile</th>
+          <th>Why</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Héctor Fort</strong><br>Elche · €12m</td>
+          <td>Right-back, 18<br><em>The confident pick</em></td>
+          <td>The screen's number one. An attacking full-back posting an elite output score on a fraction of his side's minutes, the classic "producing above his role" signature.</td>
+        </tr>
+        <tr>
+          <td><strong>Rayane Bounida</strong><br>Ajax · €5m</td>
+          <td>Attacking mid, 19<br><em>The value play</em></td>
+          <td>Priced like a prospect, performing like a producer, with a profile spanning creator and second-striker roles. The cheapest of the three and the highest ceiling.</td>
+        </tr>
+        <tr>
+          <td><strong>Keny Arroyo</strong><br>Cruzeiro · €10m</td>
+          <td>Winger, 18<br><em>The high-upside flyer</em></td>
+          <td>The market-inefficiency bet: South American wide players routinely see their value multiply on the move to Europe. Higher variance than the other two.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── 7. LIMITATIONS ── -->
+    <h2 id="limitations">7. Limitations &amp; Considerations</h2>
+
+    <p>
+      <strong>Age does much of the work.</strong> Because a rise is measured in percentages, young players
+      have a mechanical advantage. The genuinely useful scouting question, which players rise
+      <em>beyond</em> what their age predicts, is harder and needs richer inputs.
+    </p>
+    <p>
+      <strong>The multi-season model uses basic stats only.</strong> Goals, assists and minutes are in the
+      historical data; xG, progression and defensive volume are not. Whether advanced metrics predict
+      value on top of age is the natural next study.
+    </p>
+    <p>
+      <strong>Market value is a crowd estimate</strong>, not ground truth, and it has momentum. Some of the
+      model's skill is simply the market continuing to re-rate players it is already re-rating.
+    </p>
+    <p>
+      <strong>Intensity is a proxy.</strong> Without tracking data it can't capture true high-speed running
+      capacity; real physical data would slot straight into that signal.
+    </p>
+    <p>
+      <strong>Coverage gaps.</strong> The Championship and Argentina are missing from the value dataset,
+      and name matching resolves about 77% of players.
+    </p>
+
+    <!-- ── 8. QUICK START ── -->
+    <h2 id="quickstart">8. Quick Start</h2>
+
+    <div class="clone-section fade-in">
+      <div class="clone-url" id="clone-url" style="width:100%; max-width:100%;">git clone https://github.com/emcgleenan23/open-source-football-exploration.git</div>
+      <button class="clone-btn" onclick="copyClone()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
+      </button>
+    </div>
+
+    <div class="code-header">
+      <span>terminal</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+<pre><code><span class="tok-cmt"># Install dependencies</span>
+pip install -r requirements.txt
+
+<span class="tok-cmt"># Pull FBref player tables, then run each stage</span>
+python -m src.pull_data_selenium
+python -m src.run            <span class="tok-cmt"># screen -> shortlist.csv</span>
+python -m src.backtest       <span class="tok-cmt"># point-in-time back-test</span>
+python -m src.value_model    <span class="tok-cmt"># multi-season determinant model</span>
+python -m src.forward        <span class="tok-cmt"># 2025/26 forward run</span></code></pre>
+
+    <p>
+      Weights, filters, leagues and positional peer groups all live in <code>config.yaml</code>. The
+      Kaggle CSVs go in <code>data/</code>, which is git-ignored, and the offline test suite runs on
+      synthetic data with <code>pytest</code>.
+    </p>
+
+    <!-- ── 9. REFERENCES ── -->
+    <h2 id="references">9. References</h2>
+
+    <ol class="ref-list">
+      <li id="ref-1">
+        Bergkamp, T.L.G., Frencken, W.G.P., Niessen, A.S.M., Meijer, R.R. &amp; den Hartigh, R.J.R. (2022).
+        How soccer scouts identify talented players.
+        <em>European Journal of Sport Science</em>, 22(7), 994–1004.
+        <a href="https://doi.org/10.1080/17461391.2021.1916081" target="_blank">doi:10.1080/17461391.2021.1916081</a>
+      </li>
+      <li id="ref-2">
+        Barraclough, S., Till, K., Kerr, A. &amp; Emmonds, S. (2025).
+        Challenges and solutions to talent (de)selection and development in a youth soccer academy:
+        the implementation of a multidisciplinary athlete profiling tool.
+        <em>Frontiers in Psychology</em>, 16.
+        <a href="https://doi.org/10.3389/fpsyg.2025.1636386" target="_blank">doi:10.3389/fpsyg.2025.1636386</a>
+      </li>
+      <li id="ref-3">
+        Poli, R., Besson, R. &amp; Ravenel, L. (2022).
+        Econometric Approach to Assessing the Transfer Fees and Values of Professional Football Players.
+        <em>Economies</em>, 10(1), 4.
+        <a href="https://doi.org/10.3390/economies10010004" target="_blank">doi:10.3390/economies10010004</a>
+      </li>
+      <li id="ref-4">
+        Franceschi, M., Brocard, J.-F., Follert, F. &amp; Gouguet, J.-J. (2024).
+        Determinants of football players' valuation: A systematic review.
+        <em>Journal of Economic Surveys</em>, 38(3), 577–600.
+        <a href="https://doi.org/10.1111/joes.12552" target="_blank">doi:10.1111/joes.12552</a>
+      </li>
+    </ol>
+
+  </div>
+
+</article>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>&copy; 2026 Eamon McGleenan</span>
+  <span>Built with <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> &amp; <a href="https://claude.ai/" target="_blank">Claude AI</a></span>
+</footer>
+
+<script>
+function copyClone() {
+  const text = document.getElementById('clone-url').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.clone-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => {
+      btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+    }, 2000);
+  });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-header').nextElementSibling;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+
+</body>
+</html>

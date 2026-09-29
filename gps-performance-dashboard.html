@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPS Performance Dashboard — Eamon McGleenan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fg: #1a1a1a;
+      --fg-secondary: #555;
+      --fg-muted: #888;
+      --bg: #fafaf8;
+      --bg-card: #fff;
+      --accent: #2a5a4c;
+      --accent-light: #e8f0ed;
+      --border: #e5e5e0;
+      --serif: 'Newsreader', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --max-w: 780px;
+      --space: 1.5rem;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.65;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250,250,248,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: .85rem var(--space);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav .name {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.05rem;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -.01em;
+    }
+    nav ul { list-style: none; display: flex; gap: 1.75rem; }
+    nav a {
+      text-decoration: none;
+      color: var(--fg-secondary);
+      font-size: .85rem;
+      font-weight: 500;
+      letter-spacing: .02em;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* ── ARTICLE ── */
+    .article {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 3.5rem var(--space) 2rem;
+    }
+    .article-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .breadcrumb {
+      font-size: .78rem;
+      color: var(--fg-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .breadcrumb a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article-header h1 {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+      line-height: 1.25;
+      letter-spacing: -.02em;
+      margin-bottom: .6rem;
+    }
+    .article-header .subtitle {
+      font-size: .92rem;
+      color: var(--fg-secondary);
+      line-height: 1.6;
+    }
+    .article-meta {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      font-size: .8rem;
+      color: var(--fg-muted);
+    }
+    .article-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .article-meta svg { width: 13px; height: 13px; }
+
+    /* ── TABLE OF CONTENTS ── */
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .toc-title {
+      font-family: var(--sans);
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--fg-muted);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+    .toc ol {
+      list-style: none;
+      counter-reset: toc-counter;
+    }
+    .toc ol li {
+      counter-increment: toc-counter;
+      margin-bottom: .35rem;
+    }
+    .toc ol li::before {
+      content: counter(toc-counter) ".";
+      font-family: var(--mono);
+      font-size: .75rem;
+      color: var(--accent);
+      margin-right: .5rem;
+      font-weight: 500;
+    }
+    .toc a {
+      font-size: .88rem;
+      color: var(--fg-secondary);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .toc a:hover { color: var(--accent); }
+
+    /* ── PROSE ── */
+    .prose h2 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.3rem;
+      letter-spacing: -.01em;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: .55rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .prose h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.05rem;
+      margin: 1.8rem 0 .7rem;
+    }
+    .prose p {
+      margin-bottom: 1.1rem;
+      color: var(--fg-secondary);
+      line-height: 1.75;
+    }
+    .prose a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s;
+    }
+    .prose a:hover { border-bottom-color: var(--accent); }
+
+    /* ── CALLOUT BOX ── */
+    .callout {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 0 6px 6px 0;
+      margin: 1.5rem 0;
+    }
+    .callout p {
+      color: var(--fg);
+      margin: 0;
+      font-size: .9rem;
+    }
+    .callout-title {
+      font-weight: 500;
+      font-size: .82rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: .35rem;
+    }
+
+    .callout-warn {
+      background: #fef7ec;
+      border-left-color: #c4820a;
+    }
+    .callout-warn .callout-title { color: #a06c05; }
+
+    /* ── CODE ── */
+    code {
+      font-family: var(--mono);
+      font-size: .82rem;
+      background: #f0f0ec;
+      padding: .15rem .4rem;
+      border-radius: 3px;
+      color: var(--fg);
+    }
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      margin: 1.2rem 0 1.5rem;
+      line-height: 1.6;
+      font-size: .82rem;
+      border: 1px solid #333;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2d2d2d;
+      padding: .5rem 1rem;
+      border-radius: 6px 6px 0 0;
+      border: 1px solid #333;
+      border-bottom: none;
+      margin-top: 1.2rem;
+    }
+    .code-header + pre {
+      margin-top: 0;
+      border-radius: 0 0 6px 6px;
+    }
+    .code-header span {
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: #888;
+      font-weight: 500;
+    }
+    .code-header .copy-btn {
+      background: none;
+      border: 1px solid #555;
+      color: #aaa;
+      padding: .2rem .5rem;
+      border-radius: 3px;
+      font-size: .68rem;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: all .2s;
+    }
+    .code-header .copy-btn:hover {
+      border-color: #888;
+      color: #ddd;
+    }
+
+    /* Syntax highlighting tokens */
+    .tok-kw   { color: #c586c0; }
+    .tok-fn   { color: #dcdcaa; }
+    .tok-str  { color: #ce9178; }
+    .tok-cmt  { color: #6a9955; font-style: italic; }
+    .tok-num  { color: #b5cea8; }
+    .tok-op   { color: #d4d4d4; }
+    .tok-cls  { color: #4ec9b0; }
+    .tok-var  { color: #9cdcfe; }
+
+    /* ── PIPELINE DIAGRAM ── */
+    .pipeline-diagram {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 2rem 0;
+      overflow-x: auto;
+      padding: .5rem 0;
+    }
+    .pipeline-stage {
+      flex: 1;
+      min-width: 160px;
+      padding: 1.1rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: center;
+      position: relative;
+    }
+    .pipeline-stage .stage-num {
+      font-family: var(--mono);
+      font-size: .65rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .35rem;
+    }
+    .pipeline-stage h4 {
+      font-family: var(--serif);
+      font-size: .9rem;
+      font-weight: 500;
+      margin-bottom: .3rem;
+    }
+    .pipeline-stage p {
+      font-size: .75rem;
+      color: var(--fg-muted);
+      line-height: 1.5;
+    }
+    .pipeline-arrow {
+      display: flex;
+      align-items: center;
+      padding: 0 .3rem;
+      color: var(--accent);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* ── METRIC TABLE ── */
+    .metric-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0 1.5rem;
+      font-size: .84rem;
+    }
+    .metric-table th {
+      font-family: var(--sans);
+      font-weight: 500;
+      text-align: left;
+      padding: .65rem .8rem;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+      font-size: .78rem;
+      letter-spacing: .03em;
+    }
+    .metric-table td {
+      padding: .6rem .8rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--fg-secondary);
+      line-height: 1.5;
+    }
+    .metric-table tr:hover td {
+      background: rgba(42,90,76,.03);
+    }
+
+    /* ── CLONE BUTTON ── */
+    .clone-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .clone-section .clone-url {
+      flex: 1;
+      min-width: 250px;
+      font-family: var(--mono);
+      font-size: .82rem;
+      background: #f0f0ec;
+      padding: .55rem .85rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--fg-secondary);
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+    .clone-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .82rem;
+      font-weight: 500;
+      color: #fff;
+      background: var(--accent);
+      text-decoration: none;
+      padding: .55rem 1.1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .clone-btn:hover { background: #1e4a3d; }
+    .clone-btn svg { width: 14px; height: 14px; }
+
+    /* ── FILE TREE ── */
+    .file-tree {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.2rem 0 1.5rem;
+      font-family: var(--mono);
+      font-size: .8rem;
+      line-height: 1.9;
+      border: 1px solid #333;
+      overflow-x: auto;
+    }
+    .file-tree .dir  { color: #9cdcfe; }
+    .file-tree .file { color: #d4d4d4; }
+    .file-tree .desc { color: #6a9955; }
+
+    /* ── SCREENSHOTS ── */
+    .screenshot {
+      margin: 1.5rem 0 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+    .screenshot:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+    .screenshot img {
+      width: 100%;
+      display: block;
+    }
+    .screenshot figcaption {
+      padding: .75rem 1.2rem;
+      font-size: .78rem;
+      color: var(--fg-muted);
+      border-top: 1px solid var(--border);
+      line-height: 1.5;
+    }
+
+    /* ── REFERENCES ── */
+    .ref-list {
+      list-style: none;
+      counter-reset: ref-counter;
+      margin: 1rem 0;
+    }
+    .ref-list li {
+      counter-increment: ref-counter;
+      padding: .6rem 0 .6rem 2.2rem;
+      position: relative;
+      font-size: .84rem;
+      color: var(--fg-secondary);
+      line-height: 1.6;
+      border-bottom: 1px solid var(--border);
+    }
+    .ref-list li:last-child { border-bottom: none; }
+    .ref-list li::before {
+      content: "[" counter(ref-counter) "]";
+      position: absolute;
+      left: 0;
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .ref-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .ref-list a:hover { text-decoration: underline; }
+
+    /* ── TALK CARD ── */
+    .talk-card {
+      padding: 1.25rem 1.4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 1.2rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .talk-card:hover {
+      border-color: #ccc;
+      box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 2.5rem var(--space);
+      border-top: 1px solid var(--border);
+      font-size: .8rem;
+      color: var(--fg-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    footer a { color: var(--fg-secondary); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp .6s ease forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in:nth-child(1) { animation-delay: .05s; }
+    .fade-in:nth-child(2) { animation-delay: .12s; }
+    .fade-in:nth-child(3) { animation-delay: .19s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav ul { gap: 1rem; font-size: .75rem; }
+      .pipeline-diagram { flex-direction: column; }
+      .pipeline-arrow { transform: rotate(90deg); justify-content: center; padding: .3rem 0; }
+      .clone-section { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="inner">
+    <a href="index.html" class="name">Eamon McGleenan</a>
+    <ul>
+      <li><a href="index.html#publications">Publications</a></li>
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="index.html#media">Media</a></li>
+      <li><a href="index.html#talks">Talks</a></li>
+      <li><a href="index.html#qualifications">Qualifications</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── ARTICLE ── -->
+<article class="article">
+
+  <div class="article-header fade-in">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <a href="index.html#projects">Projects</a>
+      <span>›</span>
+      <span>GPS Performance Dashboard</span>
+    </div>
+    <h1>GPS Performance Dashboard: Session Analysis &amp; Load Monitoring</h1>
+    <p class="subtitle">
+      An end-to-end pipeline that turns raw 10&nbsp;Hz STATSports exports into a pseudonymised,
+      browser-based dashboard for Gaelic football: per-minute match demands, most demanding
+      scenarios, acute:chronic workload and changepoint detection on the training rhythm.
+    </p>
+    <div class="article-meta">
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        10 min read
+      </span>
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Updated September 2026
+      </span>
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Python · Polars · NumPy · ruptures · HTML/SVG · STATSports
+      </span>
+    </div>
+  </div>
+
+  <!-- ── TABLE OF CONTENTS ── -->
+  <div class="toc fade-in">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#overview">Overview &amp; Motivation</a></li>
+      <li><a href="#demo">Live Demo &amp; Screenshots</a></li>
+      <li><a href="#architecture">Pipeline Architecture</a></li>
+      <li><a href="#methods">Metrics &amp; Methods</a></li>
+      <li><a href="#sample-data">Synthetic Sample Data</a></li>
+      <li><a href="#privacy">Data Privacy &amp; Secure Sharing</a></li>
+      <li><a href="#quickstart">Quick Start</a></li>
+      <li><a href="#limitations">Limitations &amp; Considerations</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </div>
+
+  <div class="prose">
+
+    <!-- ── 1. OVERVIEW ── -->
+    <h2 id="overview">1. Overview &amp; Motivation</h2>
+
+    <p>
+      Most GPS reporting in team sport stops at session totals: distance, high-speed running, sprint
+      distance, top speed. Those numbers are useful, but they flatten two things coaches actually
+      ask about. The first is <em>when</em> the hardest passages of a game happen and whether training
+      prepares players for them. The second is whether the week-to-week training rhythm is doing
+      what the plan says it should.
+    </p>
+
+    <p>
+      This project builds on my <a href="gps-pipeline.html">GPS processing pipeline for Gaelic games</a>
+      and takes it a step further: from summary tables in Tableau to a self-contained dashboard that
+      works at 10-second resolution within a session and treats the season's load as a time series.
+      The structure follows the five-stage decision-support framework of Schelling &amp; Robertson
+      <a href="#ref-1">[1]</a>, and the time-series toolkit mirrors the methods reviewed by Schelling
+      et&nbsp;al. <a href="#ref-2">[2]</a>, adapted to the demands of Gaelic football.
+    </p>
+
+    <div class="callout">
+      <div class="callout-title">Performance, not just protection</div>
+      <p>
+        The same numbers that feed an injury-risk report can answer a performance question: are we
+        training players to the worst-case demands of the game, and are our best players peaking on
+        the days that matter? The dashboard is framed around that second question.
+      </p>
+    </div>
+
+    <!-- ── 2. DEMO ── -->
+    <h2 id="demo">2. Live Demo &amp; Screenshots</h2>
+
+    <p>
+      The public demo runs on an invented squad (see <a href="#sample-data">section 5</a>), so every
+      filter and chart can be explored without exposing any real athlete data.
+      <a href="https://emcgleenan23.github.io/gps-performance-dashboard/" target="_blank">Open the live demo</a>.
+    </p>
+
+    <h3>2.1 Session Analysis</h3>
+    <p>
+      One match or training session at 10-second resolution. Filters cover squad (senior, reserve,
+      training), opposition, date, player and period (full game, either half, or an individual
+      training drill). The page shows per-minute distance, high-speed running, sprint distance and
+      total acceleration load; the most demanding scenario for each metric over 1 to 10-minute
+      windows; a sortable player comparison; and benchmarks against the season average for the
+      player, squad, position line or playing group.
+    </p>
+    <figure class="screenshot fade-in">
+      <img src="images/screenshot-gps-dashboard-session.jpg" alt="Session analysis page showing a match summary, per-minute timeline and player comparison" loading="lazy">
+      <figcaption>Session analysis on the synthetic squad: a plain-language summary of the hardest 3-minute passage, the per-minute timeline with half-time marked, and a player comparison with session averages.</figcaption>
+    </figure>
+
+    <h3>2.2 Load Monitoring</h3>
+    <p>
+      The season view. A changepoint panel marks abrupt shifts in the 7-day load, alongside a toolkit
+      of supporting views on the same series: raw daily load, smoothing, power spectrum, wavelet
+      scalogram and a short-term forecast. Daily load and acute:chronic workload sit underneath, split
+      by senior match, reserve match and training days.
+    </p>
+    <figure class="screenshot fade-in">
+      <img src="images/screenshot-gps-dashboard-load.jpg" alt="Load monitoring page with changepoint detection and time-series toolkit" loading="lazy">
+      <figcaption>Load monitoring: the headline acute:chronic ratio, two detected changepoints in the 7-day load, and the time-series toolkit (smoothing, spectrum, wavelet, forecast).</figcaption>
+    </figure>
+
+    <!-- ── 3. ARCHITECTURE ── -->
+    <h2 id="architecture">3. Pipeline Architecture</h2>
+
+    <p>
+      Each stage is a small, separately testable module. Raw exports are read exactly once; everything
+      downstream is derived from a cache, so a rerun after a new session takes seconds rather than
+      minutes.
+    </p>
+
+    <div class="pipeline-diagram fade-in">
+      <div class="pipeline-stage">
+        <div class="stage-num">Stage 1</div>
+        <h4>Collect</h4>
+        <p>Lazy Polars scan of each 10&nbsp;Hz export into a 10&nbsp;s bin cache</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-stage">
+        <div class="stage-num">Stage 2</div>
+        <h4>Condition</h4>
+        <p>Velocity from position, smoothing, artefact removal</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-stage">
+        <div class="stage-num">Stage 3</div>
+        <h4>Features</h4>
+        <p>Session totals, per-minute distance, ACWR</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-stage">
+        <div class="stage-num">Stage 4</div>
+        <h4>Patterns</h4>
+        <p>MDS windows, wavelet &amp; spectrum, changepoints</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-stage">
+        <div class="stage-num">Stage 5</div>
+        <h4>Output</h4>
+        <p>Pseudonymised JS payloads for the dashboard</p>
+      </div>
+    </div>
+
+    <p>
+      Two details in the collect stage matter more than they look. STATSports exports every drill
+      twice, once under its own title and again inside "Entire Session", so only the Entire Session
+      rows count towards load and the drill rows are used purely for their time windows (halves,
+      drills). And because each raw file is scanned with projection and predicate pushdown (only the
+      seven columns needed, filtered before loading), a first pass over a season of about 11&nbsp;GB takes
+      a few minutes, and later runs only read files that are new or have changed.
+    </p>
+
+    <!-- ── 4. METHODS ── -->
+    <h2 id="methods">4. Metrics &amp; Methods</h2>
+
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Definition</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Total distance (TD)</strong></td>
+          <td>Metres covered, from STATSports filtered speed at 10&nbsp;Hz</td>
+          <td>Also shown per minute on the field, so players with different minutes compare fairly</td>
+        </tr>
+        <tr>
+          <td><strong>High-speed running</strong></td>
+          <td>Distance above 5.5&nbsp;m/s (19.8&nbsp;km/h)</td>
+          <td>Includes sprint distance</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint distance</strong></td>
+          <td>Distance above 7.0&nbsp;m/s (25.2&nbsp;km/h)</td>
+          <td>Readings above 10.5&nbsp;m/s are treated as GPS artefacts</td>
+        </tr>
+        <tr>
+          <td><strong>Total acceleration load (TAL)</strong></td>
+          <td>Σ|Δv| between consecutive 10&nbsp;Hz samples <a href="#ref-2">[2]</a></td>
+          <td>Never bridges dropouts longer than 0.25&nbsp;s; captures stop-start work that distance misses</td>
+        </tr>
+        <tr>
+          <td><strong>Most demanding scenario (MDS)</strong></td>
+          <td>Highest rolling 1, 2, 3, 4, 5 or 10-minute window, per minute</td>
+          <td>Never counted across half-time</td>
+        </tr>
+        <tr>
+          <td><strong>Acute:chronic workload</strong></td>
+          <td>Rolling 7-day ÷ 28-day mean load</td>
+          <td>First 21 days shown as a baseline-building period</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>4.1 Why 1 to 10-minute windows</h3>
+    <p>
+      The changepoint-based MDS analysis in Schelling et&nbsp;al. <a href="#ref-2">[2]</a> was built for
+      basketball, where a 12-second window matches a possession. Gaelic football is played on a far
+      larger pitch with longer passages of play, so the duration-specific windows here run from one
+      minute upwards. That gives coaches a worst-case target per window length that can be set
+      directly against conditioning drills of the same duration.
+    </p>
+
+    <h3>4.2 Treating load as a time series</h3>
+    <p>
+      The load page treats daily load as a signal rather than a list of numbers. A 7-day moving average
+      and an exponentially weighted average (α&nbsp;=&nbsp;0.3) show the trend; a periodogram and a Morlet
+      continuous wavelet transform show which cycle lengths dominate and whether the weekly rhythm is
+      stable across the season; an additive Holt-Winters model projects 28 days ahead with a 95% band.
+    </p>
+    <p>
+      The headline panel is changepoint detection on the 7-day load, using PELT via the
+      <code>ruptures</code> library with a NumPy binary-segmentation fallback. It answers a question
+      coaches rarely get a clean answer to: <em>when</em> did the load structurally shift, and by how
+      much? Each break is labelled with its date and the percentage change in the 7-day mean.
+    </p>
+
+    <!-- ── 5. SAMPLE DATA ── -->
+    <h2 id="sample-data">5. Synthetic Sample Data</h2>
+
+    <p>
+      Real athlete data cannot be published, so the repository ships a generator that writes a fake
+      squad in the exact STATSports export format and runs it through the unmodified pipeline. That
+      way the public demo exercises every stage end to end rather than a mock-up.
+    </p>
+    <p>
+      The generator invents a 14-player squad across five position lines over eight weeks, with two
+      training sessions and a match each week, a three-build, one-deload block, fictional fixtures
+      and occasional substitutions. Speed follows a mean-reverting baseline with superimposed
+      high-speed efforts, scaled by position line. It targets plausible magnitudes (about 100 to
+      110&nbsp;m/min in matches) rather than modelling real players.
+    </p>
+
+    <!-- ── 6. PRIVACY ── -->
+    <h2 id="privacy">6. Data Privacy &amp; Secure Sharing</h2>
+
+    <p>
+      Governance is built into the pipeline rather than left to the user:
+    </p>
+    <p>
+      <strong>Pseudonymisation.</strong> Players become P01, P02 and so on before anything reaches the
+      output folder or the browser. The name key stays in a local, git-ignored cache.
+    </p>
+    <p>
+      <strong>Nothing sensitive in version control.</strong> Raw exports, caches, squad reference files
+      and all CSVs are excluded by default.
+    </p>
+    <p>
+      <strong>Encrypted sharing.</strong> For real data, the publish step inlines each page into a single
+      file and encrypts it with AES-256-GCM, with the key derived from a password via PBKDF2-SHA256
+      (600,000 iterations). The hosted page contains only ciphertext and decrypts in the viewer's
+      browser, so a dashboard can be shared by link without the data ever being readable on the server.
+    </p>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">A safeguard on the public build</div>
+      <p>
+        The unencrypted demo build refuses to run unless the pipeline is pointed at the synthetic
+        sample data, so a real dataset can't be published in the clear by accident.
+      </p>
+    </div>
+
+    <!-- ── 7. QUICK START ── -->
+    <h2 id="quickstart">7. Quick Start</h2>
+
+    <div class="clone-section fade-in">
+      <div class="clone-url" id="clone-url" style="width:100%; max-width:100%;">git clone https://github.com/emcgleenan23/gps-performance-dashboard.git</div>
+      <button class="clone-btn" onclick="copyClone()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
+      </button>
+    </div>
+
+    <div class="code-header">
+      <span>terminal</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+<pre><code><span class="tok-cmt"># Install dependencies</span>
+pip install -r requirements.txt
+
+<span class="tok-cmt"># Generate the synthetic squad (~1 GB, git-ignored)</span>
+python scripts/make_sample_data.py
+
+<span class="tok-cmt"># Run the pipeline, then open the dashboard straight from disk</span>
+python run.py
+open dashboard/index.html</code></pre>
+
+    <p>
+      To use real exports, point <code>data.root</code> in <code>config.yaml</code> at a folder of
+      STATSports CSVs named <code>YYYY-MM-DD-&lt;Team&gt;-&lt;Match|Training&gt;.csv</code>. Optional
+      squad context (fixtures, grades, position lines) is joined from small reference CSVs.
+    </p>
+
+    <!-- ── 8. LIMITATIONS ── -->
+    <h2 id="limitations">8. Limitations &amp; Considerations</h2>
+
+    <p>
+      <strong>Acute:chronic workload is contested.</strong> The ratio is widely used but its statistical
+      properties and its link to injury are debated. It is presented here as one descriptive view of
+      load alongside the time-series methods, not as a risk score.
+    </p>
+    <p>
+      <strong>Window lengths and changepoint penalties need calibrating.</strong> The defaults are
+      sensible starting points for Gaelic football, but the minimum segment length and penalty should
+      be tuned against a squad's own match data.
+    </p>
+    <p>
+      <strong>Device-specific values.</strong> Metrics come from STATSports' filtered speed channel, so
+      absolute values depend on the device's own processing and aren't directly comparable across
+      manufacturers.
+    </p>
+    <p>
+      <strong>Descriptive before predictive.</strong> The forecasting panel is a short-term projection
+      of the load series. There is deliberately no injury-prediction model; simpler, interpretable
+      views tend to hold up better in practice than opaque ones.
+    </p>
+
+    <!-- ── 9. REFERENCES ── -->
+    <h2 id="references">9. References</h2>
+
+    <ol class="ref-list">
+      <li id="ref-1">
+        Schelling, X. &amp; Robertson, S. (2020).
+        A development framework for decision support systems in high-performance sport.
+        <em>International Journal of Computer Science in Sport</em>, 19(1), 1–23.
+        <a href="https://doi.org/10.2478/ijcss-2020-0001" target="_blank">doi:10.2478/ijcss-2020-0001</a>
+      </li>
+      <li id="ref-2">
+        Schelling, X. et&nbsp;al. (2025).
+        Decision Support Systems for Time Series in Sport: Literature Review and Applied Example of
+        Changepoint-Based Most Demanding Scenario Analysis in Basketball.
+        <em>Applied Sciences</em>, 15(19), 10575.
+        <a href="https://doi.org/10.3390/app151910575" target="_blank">doi:10.3390/app151910575</a>
+      </li>
+    </ol>
+
+  </div>
+
+</article>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>&copy; 2026 Eamon McGleenan</span>
+  <span>Built with <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> &amp; <a href="https://claude.ai/" target="_blank">Claude AI</a></span>
+</footer>
+
+<script>
+function copyClone() {
+  const text = document.getElementById('clone-url').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.clone-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => {
+      btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+    }, 2000);
+  });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-header').nextElementSibling;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+
+</body>
+</html>
