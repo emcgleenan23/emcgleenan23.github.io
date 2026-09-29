@@ -34,11 +34,6 @@
       font-size: clamp(2.6rem, 6.2vw, 4.4rem); line-height: 1.02; letter-spacing: -.035em;
       margin: 1rem 0 1.25rem;
     }
-    .hero .lede {
-      font-family: var(--serif); font-size: clamp(1.2rem, 2.2vw, 1.45rem); line-height: 1.45;
-      color: var(--fg); letter-spacing: -.005em; max-width: 34ch; text-wrap: pretty;
-    }
-    .hero .lede em { color: var(--accent); font-style: italic; }
     .hero .meta { margin-top: 1.1rem; font-size: .92rem; color: var(--fg-secondary); }
     .hero .actions { margin-top: 2rem; display: flex; gap: .5rem; flex-wrap: wrap; }
     .hero .actions .btn-ghost { padding: .62rem .85rem; }
@@ -56,21 +51,6 @@
     .hero-figure figcaption {
       margin: .85rem 0 0 88px; font-size: .8rem; color: var(--fg-muted); line-height: 1.45;
     }
-
-    /* ── STATS ── */
-    .stats { padding: 0 0 1rem; }
-    .stats .grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
-    }
-    .stat { padding: 1.35rem 1.4rem; }
-    .stat + .stat { border-left: 1px solid var(--border); }
-    .stat b {
-      display: block; font-family: var(--serif); font-weight: 400; font-size: 2.1rem; line-height: 1.05;
-      letter-spacing: -.03em; color: var(--accent);
-    }
-    .stat span { display: block; margin-top: .4rem; font-size: .82rem; line-height: 1.45; color: var(--fg-secondary); }
 
     /* ── SECTIONS ── */
     .section { padding: 5rem 0 0; }
@@ -213,9 +193,6 @@
     }
     @media (max-width: 700px) {
       .hero { padding-top: 2.5rem; }
-      .stats .grid { grid-template-columns: 1fr 1fr; }
-      .stat:nth-child(3) { border-left: 0; }
-      .stat:nth-child(n+3) { border-top: 1px solid var(--border); }
       .projects-grid, .media-grid, .quals { grid-template-columns: 1fr; }
       .pub { grid-template-columns: 1fr; gap: .8rem; }
       .section { padding-top: 3.75rem; }
@@ -251,7 +228,6 @@
     <div class="reveal">
       <span class="eyebrow">PhD Researcher · Predictive Sports Analytics</span>
       <h1>Eamon McGleenan</h1>
-      <p class="lede">I turn wearable GPS data into <em>decisions coaches can act on</em>, from peer-reviewed methods to the pitch on a Tuesday night.</p>
       <p class="meta">Queen's University Belfast · in collaboration with STATSports · GPS analyst, Tullysaran GAC</p>
       <div class="actions">
         <a class="btn btn-primary" href="#projects">
@@ -287,16 +263,6 @@
   </div>
 </header>
 
-<!-- ── STATS ── -->
-<div class="stats">
-  <div class="wrap">
-    <div class="grid reveal">
-      <div class="stat"><b>135 yrs</b><span>First senior promotion in Tullysaran GAC's history, backed by the GPS pipeline</span></div>
-      <div class="stat"><b>1st author</b><span>Peer-reviewed paper on GPS-derived ballistic power, 2026</span></div>
-      <div class="stat"><b>55%</b><span>Top-20 hit rate of my open-data scouting screen, against a 33% base rate</span></div>
-      <div class="stat"><b>6+ yrs</b><span>Python, alongside SQL, R, Tableau and Power BI</span></div>
-    </div>
-  </div>
 </div>
 
 <!-- ── ABOUT ── -->
@@ -306,7 +272,6 @@
       <span class="eyebrow">About</span>
       <div class="section-head" style="margin-bottom:1.25rem"><h2>Sports science, software and a lifelong love of sport</h2></div>
       <p>I am a PhD candidate in the <a href="https://www.predictive-sports-analytics.com" target="_blank" rel="noopener">Predictive Sports Analytics</a> Group at Queen's University Belfast, working in collaboration with <a href="https://statsports.com" target="_blank" rel="noopener">STATSports</a> on sensor-derived performance metrics, validity testing, and applied fatigue monitoring. I hold an MSc in Medical Physics and have over six years of Python experience, with additional proficiency in SQL, R, Tableau, and Power BI.</p>
-      <p>Professionally, I work as a GPS data analyst and U18 performance coach with Tullysaran GAC, where I built end-to-end data pipelines for processing wearable sensor data and contributed to the club's historic promotion to senior status. I am a first-author researcher and hold a GAA Athletic Development certification. My background spans applied sports science, software engineering, and mathematics teaching, underpinned by a lifelong passion for sport and evidence-based performance optimisation.</p>
     </div>
     <dl class="facts reveal">
       <div><dt>Research</dt><dd>In-situ force-velocity profiling, ballistic power, neuromuscular fatigue</dd></div>
@@ -375,7 +340,7 @@
         </div>
         <div class="card-body">
           <h3><a href="pfv-practitioners-guide.html">In-Situ PFv Profiling — A Practitioner's Guide</a></h3>
-          <p>An interactive companion to our research paper (under review) on deriving force-velocity profiles from in-situ GPS data. The guide walks practitioners through the methodology, from Butterworth filtering and acceleration-speed envelope extraction through to in-match fatigue monitoring using sliding-window ballistic power.</p>
+          <p>An interactive companion to our published research paper on deriving force-velocity profiles from in-situ GPS data. The guide walks practitioners through the methodology, from Butterworth filtering and acceleration-speed envelope extraction through to in-match fatigue monitoring using sliding-window ballistic power.</p>
           <div class="stat-line">Includes a <strong>browser-based tool</strong> that replicates the paper's figures from any raw STATSports CSV, with all processing run locally and nothing uploaded.</div>
           <div class="card-foot">
             <div class="actions">
@@ -420,22 +385,25 @@
       <div class="pub reveal">
         <span class="status">Published 2026</span>
         <div>
+          <h3><a href="pfv-practitioners-guide.html">In-Situ PFv profiling in sub-elite Gaelic football: validation, comparison with isolated sprints, minimum data load requirements, and exploring "real-time" monitoring potential</a></h3>
+          <div class="authors"><strong>Eamon McGleenan</strong>, Samuel Grant, Lisa M. McFetridge, Jack C.J. Brown, Richard Hawkins, Tiago de Melo Malaquias, Ruth Montgomery, Richard McCann, David B. Jess</div>
+          <div class="row">
+            <div class="tags"><span>In-situ monitoring</span><span>Force-velocity profiling</span><span>Fatigue detection</span></div>
+            <span style="display:flex;gap:1rem;flex-wrap:wrap">
+              <a class="link-arrow" href="https://journals.sagepub.com/doi/10.1177/17479541261468202" target="_blank" rel="noopener">Full text <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></a>
+              <a class="link-arrow" href="pfv-practitioners-guide.html">Practitioner's guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="pub reveal">
+        <span class="status">Published 2026</span>
+        <div>
           <h3><a href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank" rel="noopener">Ballistic power: GPS-derived measurements suitable for the real-time monitoring of neuromuscular fatigue during repeated sprints</a></h3>
           <div class="authors"><strong>Eamon McGleenan</strong>, Samuel Grant, Lisa M. McFetridge, Jack C.J Brown, Joseph W. Shaw, Tiago de Melo Malaquias, Ruth Montgomery, David B. Jess</div>
           <div class="row">
             <div class="tags"><span>Global positioning system</span><span>Force velocity relationships</span></div>
             <a class="link-arrow" href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank" rel="noopener">Full text <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></a>
-          </div>
-        </div>
-      </div>
-      <div class="pub reveal">
-        <span class="status review">Under review</span>
-        <div>
-          <h3><a href="pfv-practitioners-guide.html">In-Situ PFv profiling in sub-elite Gaelic football: validation, comparison with isolated sprints, minimum data load requirements, and exploring "real-time" monitoring potential</a></h3>
-          <div class="authors"><strong>Eamon McGleenan</strong>, Samuel Grant, Lisa M. McFetridge, Jack C.J. Brown, Richard Hawkins, Tiago de Melo Malaquias, Ruth Montgomery, Richard McCann, David B. Jess</div>
-          <div class="row">
-            <div class="tags"><span>In-situ monitoring</span><span>Force-velocity profiling</span><span>Fatigue detection</span></div>
-            <a class="link-arrow" href="pfv-practitioners-guide.html">Practitioner's guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
           </div>
         </div>
       </div>
