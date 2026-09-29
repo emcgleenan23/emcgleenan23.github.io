@@ -293,3 +293,21 @@ a.clone-btn:hover { color: #fff !important; }
   .clone-url { max-width: 100%; overflow-x: auto; }
   .clone-url code, .clone-url span { min-width: 0; }
 }
+
+/* published-paper banner at the top of a research write-up */
+.paper-banner {
+  margin-top: 1.5rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+  background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+  border-radius: var(--radius); padding: 1.15rem 1.35rem; box-shadow: var(--shadow-sm);
+}
+.paper-banner .label {
+  display: block; font-size: .7rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: .35rem;
+}
+.paper-banner .title { font-family: var(--serif); font-size: 1.02rem; line-height: 1.4; color: var(--ink); margin: 0; }
+.paper-banner .journal { font-size: .8rem; color: var(--fg-muted); margin: .35rem 0 0; }
+.paper-banner .btn { flex-shrink: 0; color: #fff; }
+@media (max-width: 700px) {
+  .paper-banner { flex-direction: column; align-items: flex-start; }
+}
