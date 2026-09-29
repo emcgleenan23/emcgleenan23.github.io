@@ -3,468 +3,227 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eamon McGleenan</title>
+  <title>Eamon McGleenan — Sports Data Science &amp; GPS Analytics</title>
+  <meta name="description" content="PhD researcher in Predictive Sports Analytics at Queen's University Belfast. GPS-derived performance monitoring, force-velocity profiling and open-source sports data tools.">
+  <meta property="og:title" content="Eamon McGleenan — Sports Data Science &amp; GPS Analytics">
+  <meta property="og:description" content="PhD researcher at Queen's University Belfast working with STATSports on GPS-derived performance metrics.">
+  <meta property="og:image" content="https://emcgleenan23.github.io/images/web/og-image.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
   <style>
-    :root {
-      --fg: #1a1a1a;
-      --fg-secondary: #555;
-      --fg-muted: #888;
-      --bg: #fafaf8;
-      --bg-card: #fff;
-      --accent: #2a5a4c;
-      --accent-light: #e8f0ed;
-      --border: #e5e5e0;
-      --serif: 'Newsreader', Georgia, serif;
-      --sans: 'DM Sans', system-ui, sans-serif;
-      --max-w: 720px;
-      --space: 1.5rem;
-    }
-
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; font-weight: 500; }
 
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--sans);
-      color: var(--fg);
-      background: var(--bg);
-      line-height: 1.65;
-      font-size: 15px;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(250,250,248,.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    nav .inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: .85rem var(--space);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    nav .name {
-      font-family: var(--serif);
-      font-weight: 500;
-      font-size: 1.05rem;
-      color: var(--fg);
-      text-decoration: none;
-      letter-spacing: -.01em;
-    }
-    nav ul { list-style: none; display: flex; gap: 1.75rem; }
-    nav a {
-      text-decoration: none;
-      color: var(--fg-secondary);
-      font-size: .85rem;
-      font-weight: 500;
-      letter-spacing: .02em;
-      transition: color .2s;
-    }
-    nav a:hover { color: var(--accent); }
+    .wrap { max-width: var(--wide); margin: 0 auto; padding: 0 var(--space); }
 
     /* ── HERO ── */
-    .hero {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 4.5rem var(--space) 3rem;
+    .hero { padding: 4.5rem 0 3.5rem; }
+    .hero .wrap { display: grid; grid-template-columns: 1.08fr .92fr; gap: 3.5rem; align-items: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .76rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent);
     }
-    .hero-top {
-      display: flex;
-      gap: 2rem;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-    }
-    .hero-photo {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--border);
-      flex-shrink: 0;
-    }
-    .hero-photo-placeholder {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      background: var(--accent-light);
-      border: 3px solid var(--border);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hero-photo-placeholder svg {
-      width: 48px;
-      height: 48px;
-      color: var(--accent);
-      opacity: .5;
-    }
-    .hero-intro { flex: 1; }
+    .eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--accent); border-radius: 2px; }
     .hero h1 {
-      font-family: var(--serif);
-      font-weight: 300;
-      font-size: clamp(1.8rem, 5vw, 2.6rem);
-      line-height: 1.25;
-      letter-spacing: -.02em;
-      margin-bottom: .3rem;
+      font-family: var(--serif); font-weight: 300; color: var(--ink);
+      font-size: clamp(2.6rem, 6.2vw, 4.4rem); line-height: 1.02; letter-spacing: -.035em;
+      margin: 1rem 0 1.25rem;
     }
-    .hero .subtitle {
-      font-size: .9rem;
-      color: var(--accent);
-      font-weight: 500;
-      margin-bottom: .75rem;
+    .hero .lede {
+      font-family: var(--serif); font-size: clamp(1.2rem, 2.2vw, 1.45rem); line-height: 1.45;
+      color: var(--fg); letter-spacing: -.005em; max-width: 34ch; text-wrap: pretty;
     }
-    .hero .bio {
-      color: var(--fg-secondary);
-      font-size: .95rem;
-      line-height: 1.7;
-    }
-    .hero .links {
-      margin-top: 1.5rem;
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .hero .links a {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      font-size: .82rem;
-      font-weight: 500;
-      color: var(--accent);
-      text-decoration: none;
-      padding: .4rem .85rem;
-      border: 1px solid var(--accent);
-      border-radius: 4px;
-      transition: background .2s, color .2s;
-    }
-    .hero .links a:hover {
-      background: var(--accent);
-      color: #fff;
-    }
-    .hero .links a svg { width: 14px; height: 14px; }
+    .hero .lede em { color: var(--accent); font-style: italic; }
+    .hero .meta { margin-top: 1.1rem; font-size: .92rem; color: var(--fg-secondary); }
+    .hero .actions { margin-top: 2rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+    .hero .actions .btn-ghost { padding: .62rem .85rem; }
 
-    @media (max-width: 600px) {
-      .hero-top {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-      .hero .links { justify-content: center; }
+    .hero-figure { position: relative; margin: 0; }
+    .hero-figure .frame {
+      border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-lg);
+      aspect-ratio: 4 / 3.4; background: var(--bg-sunken);
     }
+    .hero-figure .frame img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 40%; display: block; }
+    .hero-figure .avatar {
+      position: absolute; left: -26px; bottom: -26px; width: 96px; height: 96px; border-radius: 50%;
+      border: 5px solid var(--bg); box-shadow: var(--shadow); object-fit: cover; background: var(--accent-light);
+    }
+    .hero-figure figcaption {
+      margin: .85rem 0 0 88px; font-size: .8rem; color: var(--fg-muted); line-height: 1.45;
+    }
+
+    /* ── STATS ── */
+    .stats { padding: 0 0 1rem; }
+    .stats .grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+    .stat { padding: 1.35rem 1.4rem; }
+    .stat + .stat { border-left: 1px solid var(--border); }
+    .stat b {
+      display: block; font-family: var(--serif); font-weight: 400; font-size: 2.1rem; line-height: 1.05;
+      letter-spacing: -.03em; color: var(--accent);
+    }
+    .stat span { display: block; margin-top: .4rem; font-size: .82rem; line-height: 1.45; color: var(--fg-secondary); }
 
     /* ── SECTIONS ── */
-    section {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 3rem var(--space);
+    .section { padding: 5rem 0 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .section-head h2 {
+      font-family: var(--serif); font-weight: 400; color: var(--ink);
+      font-size: clamp(1.8rem, 3.4vw, 2.4rem); line-height: 1.1; letter-spacing: -.025em; margin-top: .55rem;
     }
-    section + section { padding-top: 0; }
+    .section-head p { max-width: 46ch; color: var(--fg-secondary); font-size: .95rem; }
 
-    .section-title {
-      font-family: var(--serif);
-      font-weight: 500;
-      font-size: 1.35rem;
-      letter-spacing: -.01em;
-      margin-bottom: 1.75rem;
-      padding-bottom: .65rem;
-      border-bottom: 1px solid var(--border);
-    }
+    /* about */
+    .about { display: grid; grid-template-columns: 1.35fr 1fr; gap: 3rem; align-items: start; }
+    .about .prose p { color: var(--fg-secondary); font-size: 1rem; line-height: 1.78; }
+    .about .prose p + p { margin-top: 1rem; }
+    .facts { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: .4rem 1.4rem; box-shadow: var(--shadow-sm); }
+    .facts div { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1rem; padding: .85rem 0; font-size: .9rem; }
+    .facts div + div { border-top: 1px solid var(--border); }
+    .facts dt { color: var(--fg-muted); font-size: .78rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; padding-top: .15rem; }
+    .facts dd { color: var(--ink); }
 
-    /* ── PUBLICATION CARDS ── */
+    /* projects */
+    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+
+    /* publications */
+    .pubs { display: grid; gap: 1rem; }
     .pub {
-      margin-bottom: 1.6rem;
-      padding: 1.25rem 1.4rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      transition: border-color .2s, box-shadow .2s;
+      display: grid; grid-template-columns: 8.5rem 1fr; gap: 1.5rem;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem 1.6rem; box-shadow: var(--shadow-sm);
+      transition: box-shadow .3s var(--ease), border-color .3s;
     }
-    .pub:hover {
-      border-color: #ccc;
-      box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    .pub:hover { box-shadow: var(--shadow); border-color: var(--border-strong); }
+    .pub .status {
+      align-self: start; justify-self: start;
+      font-size: .7rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+      padding: .3rem .65rem; border-radius: 999px; background: var(--accent); color: #fff;
     }
-    .pub .year {
-      font-size: .75rem;
-      font-weight: 500;
-      color: var(--accent);
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      margin-bottom: .35rem;
-    }
-    .pub h3 {
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: 1.05rem;
-      line-height: 1.45;
-      margin-bottom: .35rem;
-    }
-    .pub h3 a {
-      color: var(--fg);
-      text-decoration: none;
-    }
+    .pub .status.review { background: #fbeee4; color: var(--warm); }
+    .pub h3 { font-family: var(--serif); font-weight: 500; font-size: 1.2rem; line-height: 1.38; letter-spacing: -.01em; color: var(--ink); text-wrap: pretty; }
+    .pub h3 a { color: inherit; }
     .pub h3 a:hover { color: var(--accent); }
-    .pub .authors {
-      font-size: .85rem;
-      color: var(--fg-secondary);
-      margin-bottom: .25rem;
-    }
-    .pub .venue {
-      font-size: .82rem;
-      color: var(--fg-muted);
-      font-style: italic;
-    }
-    .pub .tags {
-      margin-top: .65rem;
-      display: flex;
-      gap: .5rem;
-      flex-wrap: wrap;
-    }
-    .pub .tag {
-      font-size: .72rem;
-      font-weight: 500;
-      padding: .2rem .6rem;
-      background: var(--accent-light);
-      color: var(--accent);
-      border-radius: 3px;
-      letter-spacing: .02em;
-    }
-    a.tag {
-      text-decoration: none;
-      transition: background .2s, color .2s;
-    }
-    a.tag:hover {
-      background: var(--accent);
-      color: #fff;
-    }
+    .pub .authors { margin-top: .5rem; font-size: .86rem; color: var(--fg-secondary); line-height: 1.55; }
+    .pub .authors strong { color: var(--ink); font-weight: 500; }
+    .pub .row { margin-top: .9rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
 
-    /* ── MEDIA CARDS ── */
-    .media-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.1rem;
-    }
-    @media (max-width: 600px) {
-      .media-grid { grid-template-columns: 1fr; }
-    }
+    /* media */
+    .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
     .media-card {
-      padding: 1.25rem 1.3rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      text-decoration: none;
-      color: var(--fg);
-      transition: border-color .2s, box-shadow .2s;
-      display: block;
+      display: flex; flex-direction: column; gap: .7rem; min-height: 210px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; color: var(--fg); box-shadow: var(--shadow-sm);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
     }
-    .media-card:hover {
-      border-color: #ccc;
-      box-shadow: 0 2px 12px rgba(0,0,0,.04);
-    }
-    .media-card .outlet {
-      font-size: .72rem;
-      font-weight: 500;
-      color: var(--accent);
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      margin-bottom: .35rem;
-    }
-    .media-card h3 {
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: .95rem;
-      line-height: 1.45;
-      margin-bottom: .35rem;
-    }
-    .media-card .date {
-      font-size: .78rem;
-      color: var(--fg-muted);
-    }
-    .media-card .read-more {
-      display: inline-flex;
-      align-items: center;
-      gap: .3rem;
-      margin-top: .6rem;
-      font-size: .78rem;
-      font-weight: 500;
-      color: var(--accent);
-    }
-    .media-card .read-more svg { width: 12px; height: 12px; }
+    .media-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--border-strong); }
+    .media-card .outlet { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; color: var(--ink); display: flex; align-items: center; gap: .55rem; }
+    .media-card .outlet i { width: 8px; height: 8px; border-radius: 50%; background: var(--warm); display: inline-block; }
+    .media-card h3 { font-family: var(--serif); font-weight: 400; font-size: 1.18rem; line-height: 1.38; color: var(--fg); letter-spacing: -.005em; }
+    .media-card .foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; font-size: .8rem; color: var(--fg-muted); }
 
-    /* ── QUALIFICATIONS ── */
-    .qual-item {
-      display: flex;
-      gap: 1.1rem;
-      align-items: flex-start;
-      margin-bottom: 1.4rem;
-      padding: 1.25rem 1.4rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      transition: border-color .2s, box-shadow .2s;
+    /* talks */
+    .talk {
+      display: grid; grid-template-columns: 1.15fr 1fr; gap: 0;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; box-shadow: var(--shadow);
     }
-    .qual-item:hover {
-      border-color: #ccc;
-      box-shadow: 0 2px 12px rgba(0,0,0,.04);
-    }
-    .qual-icon {
-      flex-shrink: 0;
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      background: var(--accent-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 2px;
-    }
-    .qual-icon svg {
-      width: 18px;
-      height: 18px;
-      color: var(--accent);
-    }
-    .qual-details { flex: 1; }
-    .qual-details h3 {
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: 1rem;
-      line-height: 1.4;
-      margin-bottom: .2rem;
-    }
-    .qual-details .institution {
-      font-size: .84rem;
-      color: var(--fg-secondary);
-      margin-bottom: .15rem;
-    }
-    .qual-details .year {
-      font-size: .75rem;
-      font-weight: 500;
-      color: var(--accent);
-      letter-spacing: .04em;
-    }
-    .qual-gallery {
-      margin-top: 1.75rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-    .qual-gallery img {
-      width: 100%;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      transition: transform .2s, box-shadow .2s;
-      cursor: pointer;
-    }
-    .qual-gallery img:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0,0,0,.08);
-    }
-    .qual-gallery figcaption {
-      font-size: .76rem;
-      color: var(--fg-muted);
-      margin-top: .4rem;
-      text-align: center;
-    }
+    .talk .media { background: #0e1512; display: flex; align-items: center; }
+    .talk .media img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; cursor: zoom-in; }
+    .talk .body { padding: 2rem 2.1rem; display: flex; flex-direction: column; gap: .9rem; }
+    .talk .date { font-size: .78rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+    .talk h3 { font-family: var(--serif); font-weight: 500; font-size: 1.45rem; line-height: 1.28; letter-spacing: -.015em; color: var(--ink); }
+    .talk .venue { display: flex; align-items: center; gap: .45rem; font-size: .88rem; color: var(--fg-secondary); }
+    .talk .venue svg { width: 15px; height: 15px; color: var(--fg-muted); }
+    .talk p { font-size: .95rem; color: var(--fg-secondary); line-height: 1.7; }
+    .talk .thumbs { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; padding-top: .5rem; }
+    .talk .thumbs img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-sm); cursor: zoom-in; transition: opacity .2s; }
+    .talk .thumbs img:hover { opacity: .88; }
 
-    /* ── PROJECT CARDS ── */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.1rem;
+    /* qualifications */
+    .quals { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+    .qual-col { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.6rem 1.6rem .6rem; box-shadow: var(--shadow-sm); }
+    .qual-col h3 {
+      display: flex; align-items: center; gap: .6rem;
+      font-size: .76rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 1.1rem;
     }
-    @media (max-width: 600px) {
-      .projects-grid { grid-template-columns: 1fr; }
+    .qual-col h3 svg { width: 17px; height: 17px; color: var(--accent); }
+    .timeline { list-style: none; position: relative; }
+    .timeline li { position: relative; padding: 0 0 1.25rem 1.5rem; }
+    .timeline li::before {
+      content: ""; position: absolute; left: 3px; top: .5rem; width: 9px; height: 9px; border-radius: 50%;
+      background: var(--bg-card); border: 2px solid var(--accent);
     }
-    .project {
-      padding: 1.25rem 1.3rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .project:hover {
-      border-color: #ccc;
-      box-shadow: 0 2px 12px rgba(0,0,0,.04);
-    }
-    .project h3 {
-      font-size: .95rem;
-      font-weight: 500;
-      margin-bottom: .4rem;
-    }
-    .project h3 
-      color: var(--fg);
-      text-decoration: none;
-    }
-    .project h3 a:hover { color: var(--accent); }
-    .project p {
-      font-size: .84rem;
-      color: var(--fg-secondary);
-      line-height: 1.6;
-      margin-bottom: .65rem;
-    }
-    .project .tech {
-      display: flex;
-      gap: .4rem;
-      flex-wrap: wrap;
-    }
-    .project .tech span {
-      font-size: .7rem;
-      font-weight: 500;
-      padding: .15rem .5rem;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      color: var(--fg-muted);
-    }
+    .timeline li::after { content: ""; position: absolute; left: 7px; top: 1.2rem; bottom: .2rem; width: 1px; background: var(--border); }
+    .timeline li:last-child::after { display: none; }
+    .timeline li.current::before { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
+    .timeline h4 { font-family: var(--serif); font-weight: 500; font-size: 1.05rem; line-height: 1.35; color: var(--ink); }
+    .timeline .inst { font-size: .86rem; color: var(--fg-secondary); }
+    .timeline .yr { font-size: .76rem; font-weight: 500; letter-spacing: .04em; color: var(--accent); margin-top: .1rem; }
 
-    /* ── FOOTER ── */
-    footer {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 2.5rem var(--space);
-      border-top: 1px solid var(--border);
-      font-size: .8rem;
-      color: var(--fg-muted);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: .5rem;
-    }
-    footer a {
-      color: var(--fg-secondary);
-      text-decoration: none;
-    }
-    footer a:hover { color: var(--accent); }
+    .gallery { margin-top: 1.5rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .gallery figure { margin: 0; }
+    .gallery .ph { aspect-ratio: 4 / 3; border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-card); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    .gallery img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; transition: transform .5s var(--ease); }
+    .gallery img.contain { object-fit: contain; background: #fff; }
+    .gallery .ph:hover img { transform: scale(1.04); }
+    .gallery figcaption { font-size: .78rem; color: var(--fg-muted); margin-top: .5rem; line-height: 1.4; }
 
-    a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight:500;
+    /* contact */
+    .contact { margin: 5.5rem 0 0; }
+    .contact .band {
+      position: relative; overflow: hidden;
+      background: var(--accent-strong); color: #e8f0ec; border-radius: 18px;
+      padding: 3rem clamp(1.5rem, 4vw, 3.25rem);
+      display: grid; grid-template-columns: 1.3fr 1fr; gap: 2.5rem; align-items: center;
     }
+    .contact .band::after {
+      content: ""; position: absolute; right: -120px; top: -120px; width: 380px; height: 380px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(111, 178, 150, .28), transparent 65%);
+    }
+    .contact .eyebrow { color: #9cc9b5; }
+    .contact .eyebrow::before { background: #9cc9b5; }
+    .contact h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.8rem, 3.4vw, 2.4rem); line-height: 1.12; letter-spacing: -.025em; color: #fff; margin: .6rem 0 1rem; }
+    .contact p { color: #c7d8d0; font-size: .98rem; line-height: 1.7; }
+    .contact .details { position: relative; z-index: 1; display: grid; gap: 1rem; }
+    .contact .details .item { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: var(--radius); padding: 1rem 1.15rem; }
+    .contact .details small { display: block; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: #9cc9b5; margin-bottom: .2rem; }
+    .contact .details a, .contact .details span { color: #fff; font-size: .98rem; }
+    .contact .details a:hover { text-decoration: underline; }
+    .contact .details a.btn-light { background: #fff; color: var(--accent-strong); justify-self: start; font-size: .88rem; }
+    .contact .details a.btn-light:hover { text-decoration: none; }
+    .contact .details a.btn-light:hover { background: #e9f2ee; }
 
-    /* ── ANIMATIONS ── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(12px);
-      animation: fadeUp .6s ease forwards;
+    body > footer { margin-top: 5rem; }
+
+    @media (max-width: 960px) {
+      .hero .wrap, .about, .talk, .contact .band { grid-template-columns: 1fr; }
+      .hero .wrap { gap: 3rem; }
+      .hero-figure { max-width: 560px; }
+      .media-grid { grid-template-columns: 1fr 1fr; }
+      .gallery { grid-template-columns: repeat(2, 1fr); }
     }
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
+    @media (max-width: 700px) {
+      .hero { padding-top: 2.5rem; }
+      .stats .grid { grid-template-columns: 1fr 1fr; }
+      .stat:nth-child(3) { border-left: 0; }
+      .stat:nth-child(n+3) { border-top: 1px solid var(--border); }
+      .projects-grid, .media-grid, .quals { grid-template-columns: 1fr; }
+      .pub { grid-template-columns: 1fr; gap: .8rem; }
+      .section { padding-top: 3.75rem; }
+      .hero-figure .avatar { left: 12px; bottom: -30px; width: 76px; height: 76px; }
+      .hero-figure figcaption { margin-left: 100px; }
+      .talk .body { padding: 1.5rem; }
+      .facts div { grid-template-columns: 1fr; gap: .15rem; }
     }
-    .fade-in:nth-child(1) { animation-delay: .05s; }
-    .fade-in:nth-child(2) { animation-delay: .12s; }
-    .fade-in:nth-child(3) { animation-delay: .19s; }
-    .fade-in:nth-child(4) { animation-delay: .26s; }
-    .fade-in:nth-child(5) { animation-delay: .33s; }
-    .fade-in:nth-child(6) { animation-delay: .4s; }
   </style>
 </head>
 <body>
@@ -472,10 +231,10 @@
 <!-- ── NAVIGATION ── -->
 <nav>
   <div class="inner">
-    <a href="#" class="name">Eamon McGleenan</a>
+    <a href="#top" class="name"><span class="mark" aria-hidden="true">EM</span>Eamon McGleenan</a>
     <ul>
-      <li><a href="#publications">Publications</a></li>
       <li><a href="#projects">Projects</a></li>
+      <li><a href="#publications">Publications</a></li>
       <li><a href="#media">Media</a></li>
       <li><a href="#talks">Talks</a></li>
       <li><a href="#qualifications">Qualifications</a></li>
@@ -484,340 +243,339 @@
   </div>
 </nav>
 
+<main id="top">
+
 <!-- ── HERO ── -->
 <header class="hero">
-  <div class="hero-top fade-in">
-    <!--
-      PROFILE PHOTO: To add your photo, do TWO things:
-      1. Uncomment the <img> line below and set the src to your image filename
-      2. Delete or comment out the <div class="hero-photo-placeholder"> block
-    -->
-    <img src="https://avatars.githubusercontent.com/u/86169758?v=4" alt="Eamon McGleenan" class="hero-photo">
-    <div class="hero-intro">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">PhD Researcher · Predictive Sports Analytics</span>
       <h1>Eamon McGleenan</h1>
-      <div class="subtitle">PhD Researcher · Predictive Sports Analytics · Queen's University Belfast</div>
+      <p class="lede">I turn wearable GPS data into <em>decisions coaches can act on</em>, from peer-reviewed methods to the pitch on a Tuesday night.</p>
+      <p class="meta">Queen's University Belfast · in collaboration with STATSports · GPS analyst, Tullysaran GAC</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#projects">
+          See my work
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="https://scholar.google.co.uk/citations?user=K2tIJRQAAAAJ&amp;hl=en&amp;oi=ao" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+          Scholar
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/emcgleenan23" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          GitHub
+        </a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/eamon-mcgleenan" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+        <a class="btn btn-ghost" href="https://emcg-cv.tiiny.site" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          CV
+        </a>
+      </div>
     </div>
-  </div>
 
-  <p class="bio fade-in">
-    I am a PhD candidate in the <a href="https://www.predictive-sports-analytics.com" target="_blank">Predictive Sports Analytics</a> Group at Queen's University Belfast, working in collaboration with <a href="https://statsports.com" target="_blank">STATSports</a> on sensor-derived performance metrics, validity testing, and applied fatigue monitoring. I hold an MSc in Medical Physics and have over six years of Python experience, with additional proficiency in SQL, R, Tableau, and Power BI. Professionally, I work as a GPS data analyst and U18 performance coach with Tullysaran GAC, where I built end-to-end data pipelines for processing wearable sensor data and contributed to the club's historic promotion to senior status. I am a first-author researcher and hold a GAA Athletic Development certification. My background spans applied sports science, software engineering, and mathematics teaching, underpinned by a lifelong passion for sport and evidence-based performance optimisation.
-  </p>
-
-  <div class="links fade-in">
-    <a href="https://scholar.google.co.uk/citations?user=K2tIJRQAAAAJ&amp;hl=en&amp;oi=ao" target="_blank">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-      Google Scholar
-    </a>
-    <a href="https://github.com/emcgleenan23" target="_blank">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-      GitHub
-    </a>
-    <a href="https://www.linkedin.com/in/eamon-mcgleenan" target="_blank">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-      LinkedIn
-    </a>
-    <a href="https://emcg-cv.tiiny.site" target="_blank">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-      CV / Resume
-    </a>
+    <figure class="hero-figure reveal">
+      <div class="frame">
+        <img src="images/web/hero-talk.jpg" alt="Eamon presenting GPS research to coaches at the CS Coaching Conference in Belfast" width="1100" height="929" fetchpriority="high">
+      </div>
+      <img class="avatar" src="https://avatars.githubusercontent.com/u/86169758?v=4" alt="" width="96" height="96">
+      <figcaption>Presenting evidence-informed GPS recommendations to coaches, Newforge Sports Complex, November 2025.</figcaption>
+    </figure>
   </div>
 </header>
 
-<!-- ── PUBLICATIONS ── -->
-<section id="publications">
-  <h2 class="section-title">Publications</h2>
-
-  <div class="pub fade-in">
-    <div class="year">2026</div>
-    <h3><a href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank">Ballistic power: GPS-derived measurements suitable for the real-time monitoring of neuromuscular fatigue during repeated sprints</a></h3>
-    <div class="authors"><strong>Eamon McGleenan</strong>, Samuel Grant, Lisa M. McFetridge, Jack C.J Brown, Joseph W. Shaw, Tiago de Melo Malaquias, Ruth Montgomery, David B. Jess</div>
-    <div class="tags">
-      <a href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank" class="tag">Full Text</a>
-      <span class="tag">Global positioning system</span>
-      <span class="tag">Force velocity relationships</span>
+<!-- ── STATS ── -->
+<div class="stats">
+  <div class="wrap">
+    <div class="grid reveal">
+      <div class="stat"><b>135 yrs</b><span>First senior promotion in Tullysaran GAC's history, backed by the GPS pipeline</span></div>
+      <div class="stat"><b>1st author</b><span>Peer-reviewed paper on GPS-derived ballistic power, 2026</span></div>
+      <div class="stat"><b>55%</b><span>Top-20 hit rate of my open-data scouting screen, against a 33% base rate</span></div>
+      <div class="stat"><b>6+ yrs</b><span>Python, alongside SQL, R, Tableau and Power BI</span></div>
     </div>
   </div>
+</div>
 
-   <div class="pub fade-in">
-    <div class="year">Under Review</div>
-    <h3><a href="pfv-practitioners-guide.html">In-Situ PFv profiling in sub-elite Gaelic football: validation, comparison with isolated sprints, minimum data load requirements, and exploring "real-time" monitoring potential</a></h3>
-    <div class="authors"><strong>Eamon McGleenan</strong>, Samuel Grant, Lisa M. McFetridge, Jack C.J. Brown, Richard Hawkins, Tiago de Melo Malaquias, Ruth Montgomery, Richard McCann, David B. Jess</div>
-    <div class="tags">
-      <a href="pfv-practitioners-guide.html" class="tag">Practitioner's Guide</a>
-      <span class="tag">In-situ monitoring</span>
-      <span class="tag">Force-velocity profiling</span>
-      <span class="tag">Fatigue detection</span>
+<!-- ── ABOUT ── -->
+<section class="section" id="about">
+  <div class="wrap about">
+    <div class="prose reveal">
+      <span class="eyebrow">About</span>
+      <div class="section-head" style="margin-bottom:1.25rem"><h2>Sports science, software and a lifelong love of sport</h2></div>
+      <p>I am a PhD candidate in the <a href="https://www.predictive-sports-analytics.com" target="_blank" rel="noopener">Predictive Sports Analytics</a> Group at Queen's University Belfast, working in collaboration with <a href="https://statsports.com" target="_blank" rel="noopener">STATSports</a> on sensor-derived performance metrics, validity testing, and applied fatigue monitoring. I hold an MSc in Medical Physics and have over six years of Python experience, with additional proficiency in SQL, R, Tableau, and Power BI.</p>
+      <p>Professionally, I work as a GPS data analyst and U18 performance coach with Tullysaran GAC, where I built end-to-end data pipelines for processing wearable sensor data and contributed to the club's historic promotion to senior status. I am a first-author researcher and hold a GAA Athletic Development certification. My background spans applied sports science, software engineering, and mathematics teaching, underpinned by a lifelong passion for sport and evidence-based performance optimisation.</p>
     </div>
+    <dl class="facts reveal">
+      <div><dt>Research</dt><dd>In-situ force-velocity profiling, ballistic power, neuromuscular fatigue</dd></div>
+      <div><dt>Industry</dt><dd>STATSports (research collaboration)</dd></div>
+      <div><dt>Applied</dt><dd>GPS analyst &amp; U18 performance coach, Tullysaran GAC</dd></div>
+      <div><dt>Tools</dt><dd>Python, SQL, R, Tableau, Power BI</dd></div>
+      <div><dt>Based</dt><dd>Belfast, Northern Ireland</dd></div>
+    </dl>
   </div>
-  
 </section>
 
 <!-- ── PROJECTS ── -->
-<section id="projects">
-  <h2 class="section-title">Projects &amp; Code</h2>
-
-  <div class="projects-grid">
-    <div class="project fade-in" style="grid-column: 1 / -1;">
-      <h3><a href="gps-pipeline.html">GPS Analyst — Tullysaran GAC Senior Football Team</a></h3>
-      <p>
-      Working with my local GAA club, O’Connell’s Tullysaran GAC, where I’ve played my whole life, I developed an end-to-end performance data pipeline using STATSports Apex Pro units to monitor player speed, acceleration, directional changes, and heart rate data.
-      </p>
-      
-      <p style="margin-top: 8px;">
-      Processed through Python and visualised in Tableau, the system enabled the management and coaching team to individualise training programmes and make more informed tactical decisions on match days.
-      </p>
-      
-      <p style="margin-top: 8px;">
-      This work contributed to the team winning the Armagh Intermediate Football League and securing promotion to senior football for the first time in the club’s 135-year history.
-      </p>
-      
-      <p style="margin-top: 8px;">
-      Huge thanks to the management team; Pauric McGlone, Ciaran O’Riordan, and Mickey Coogan, as well as our S&amp;C coaches, Caolan Harvey and Ciaran Campbell, for their support throughout the year.
-      </p>
-      <p style="margin-top: .65rem;">
-        <a href="gps-pipeline.html" style="display:inline-flex; align-items:center; gap:.35rem; font-size:.82rem; font-weight:500; color:var(--accent); text-decoration:none;">
-          View the open-source GPS processing pipeline
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </p>
-      <div class="tech">
-        <span>Python</span>
-        <span>GPS Analytics</span>
-        <span>Sports Science</span>
-        <span>Open Source</span>
+<section class="section" id="projects">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Projects &amp; Code</span>
+        <h2>Tools built for the pitch, written up in the open</h2>
       </div>
+      <p>Each project has a full write-up with methods, screenshots and the code, so another club or analyst can pick it up and use it.</p>
     </div>
 
-    <div class="project fade-in" style="grid-column: 1 / -1;">
-      <h3><a href="gps-performance-dashboard.html">GPS Performance Dashboard — Session Analysis &amp; Load Monitoring</a></h3>
-      <p>
-      The next step on from the Tullysaran pipeline: an end-to-end system that turns raw 10&nbsp;Hz STATSports exports into a browser-based dashboard for Gaelic football. It works at 10-second resolution within a session, finding each player's most demanding 1 to 10-minute passages, and treats the season's load as a time series, with changepoint detection, wavelet analysis and acute:chronic workload.
-      </p>
-      <p style="margin-top: 8px;">
-      Players are pseudonymised before anything leaves the pipeline, and dashboards built on real data are encrypted in the browser so they can be shared by link. The public demo runs on a synthetic squad generated in the same export format.
-      </p>
-      <p style="margin-top: .65rem; display:flex; gap:1.25rem; flex-wrap:wrap;">
-        <a href="gps-performance-dashboard.html" style="display:inline-flex; align-items:center; gap:.35rem; font-size:.82rem; font-weight:500; color:var(--accent); text-decoration:none;">
-          Read the write-up
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-        <a href="gps-dashboard-demo/index.html" target="_blank" style="display:inline-flex; align-items:center; gap:.35rem; font-size:.82rem; font-weight:500; color:var(--accent); text-decoration:none;">
-          Try the live demo
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </p>
-      <div class="tech">
-        <span>Python</span>
-        <span>GPS Analytics</span>
-        <span>Time Series</span>
-        <span>Open Source</span>
+    <div class="projects-grid">
+      <article class="card reveal">
+        <div class="card-media">
+          <img src="images/web/cover-tullysaran.jpg" alt="Tableau match summary built from the Tullysaran GPS pipeline" loading="lazy" width="1200" height="750">
+          <span class="badge">Applied · Club</span>
+        </div>
+        <div class="card-body">
+          <h3><a href="gps-pipeline.html">GPS Analyst — Tullysaran GAC Senior Football Team</a></h3>
+          <p>Working with my local GAA club, O'Connell's Tullysaran GAC, where I've played my whole life, I developed an end-to-end performance data pipeline using STATSports Apex Pro units to monitor player speed, acceleration, directional changes, and heart rate data. Processed through Python and visualised in Tableau, the system enabled the management and coaching team to individualise training programmes and make more informed tactical decisions on match days.</p>
+          <div class="stat-line">Contributed to winning the <strong>Armagh Intermediate Football League</strong> and promotion to senior football for the first time in the club's 135-year history.</div>
+          <p class="thanks">Huge thanks to the management team; Pauric McGlone, Ciaran O'Riordan, and Mickey Coogan, as well as our S&amp;C coaches, Caolan Harvey and Ciaran Campbell, for their support throughout the year.</p>
+          <div class="card-foot">
+            <div class="actions">
+              <a class="link-arrow" href="gps-pipeline.html">View the open-source pipeline <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="tags"><span>Python</span><span>GPS Analytics</span><span>Tableau</span><span>Open Source</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-media">
+          <img src="images/web/cover-dashboard.jpg" alt="Session analysis view of the GPS performance dashboard on a synthetic squad" loading="lazy" width="1200" height="750">
+          <span class="badge">Dashboard · Live demo</span>
+        </div>
+        <div class="card-body">
+          <h3><a href="gps-performance-dashboard.html">GPS Performance Dashboard — Session Analysis &amp; Load Monitoring</a></h3>
+          <p>The next step on from the Tullysaran pipeline: an end-to-end system that turns raw 10&nbsp;Hz STATSports exports into a browser-based dashboard for Gaelic football. It works at 10-second resolution within a session, finding each player's most demanding 1 to 10-minute passages, and treats the season's load as a time series, with changepoint detection, wavelet analysis and acute:chronic workload.</p>
+          <div class="stat-line">Players are <strong>pseudonymised</strong> before anything leaves the pipeline, and real-data dashboards are <strong>encrypted in the browser</strong>. The public demo runs on a synthetic squad.</div>
+          <div class="card-foot">
+            <div class="actions">
+              <a class="link-arrow" href="gps-performance-dashboard.html">Read the write-up <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <a class="link-arrow" href="gps-dashboard-demo/index.html" target="_blank" rel="noopener">Try the live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></a>
+            </div>
+            <div class="tags"><span>Python</span><span>Time Series</span><span>Open Source</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-media">
+          <img src="images/web/cover-pfv.jpg" alt="Illustrative acceleration-speed profile with the top-two envelope and fitted line" loading="lazy" width="1200" height="750">
+          <span class="badge">Research · Interactive</span>
+        </div>
+        <div class="card-body">
+          <h3><a href="pfv-practitioners-guide.html">In-Situ PFv Profiling — A Practitioner's Guide</a></h3>
+          <p>An interactive companion to our research paper (under review) on deriving force-velocity profiles from in-situ GPS data. The guide walks practitioners through the methodology, from Butterworth filtering and acceleration-speed envelope extraction through to in-match fatigue monitoring using sliding-window ballistic power.</p>
+          <div class="stat-line">Includes a <strong>browser-based tool</strong> that replicates the paper's figures from any raw STATSports CSV, with all processing run locally and nothing uploaded.</div>
+          <div class="card-foot">
+            <div class="actions">
+              <a class="link-arrow" href="pfv-practitioners-guide.html">Read the practitioner's guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="tags"><span>Force-Velocity</span><span>In-Situ Monitoring</span><span>Interactive</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-media">
+          <img src="images/web/cover-scouting.jpg" alt="Back-test chart: scouting screen hit rate rising from 33% base to 55% in the top 20" loading="lazy" width="1200" height="750" style="object-fit:contain;background:#fff;padding:2.4rem .75rem .5rem">
+          <span class="badge">Football · Machine learning</span>
+        </div>
+        <div class="card-body">
+          <h3><a href="football-scouting.html">Can Open Data Spot the Next €30m Player?</a></h3>
+          <p>A transparent scouting screen across the ten strongest leagues in world football, built entirely from free FBref and Transfermarkt data. It scores young players on four signals (performance, intensity, misprofiling and underuse), always within their positional peer group.</p>
+          <div class="stat-line">Top 20 hit at <strong>55%</strong> against a 33% base rate in a point-in-time back-test. A model trained on 70,000 player-seasons reaches a <strong>ROC-AUC of 0.81</strong>, and shows age dominates everything else.</div>
+          <div class="card-foot">
+            <div class="actions">
+              <a class="link-arrow" href="football-scouting.html">Read the write-up <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="tags"><span>Python</span><span>Machine Learning</span><span>Open Data</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── PUBLICATIONS ── -->
+<section class="section" id="publications">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Publications</span>
+        <h2>Research</h2>
       </div>
     </div>
-
-    <div class="project fade-in" style="grid-column: 1 / -1;">
-      <h3><a href="pfv-practitioners-guide.html">In-Situ PFv Profiling — A Practitioner's Guide</a></h3>
-      <p>
-      An interactive companion to our research paper (under review) on deriving force-velocity profiles from in-situ GPS data. The guide walks practitioners through the methodology, from Butterworth filtering and acceleration-speed envelope extraction through to in-match fatigue monitoring using sliding-window ballistic power.
-      </p>
-      <p style="margin-top: 8px;">
-      Includes a browser-based interactive tool that replicates the paper's figures from any raw STATSports CSV — all processing runs locally with nothing uploaded. Built to help S&amp;C coaches and sport scientists implement PFv profiling in their own day-to-day workflows without additional testing equipment.
-      </p>
-      <p style="margin-top: .65rem;">
-        <a href="pfv-practitioners-guide.html" style="display:inline-flex; align-items:center; gap:.35rem; font-size:.82rem; font-weight:500; color:var(--accent); text-decoration:none;">
-          Read the practitioner's guide
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </p>
-      <div class="tech">
-        <span>Force-Velocity</span>
-        <span>GPS Analytics</span>
-        <span>In-Situ Monitoring</span>
-        <span>Interactive</span>
+    <div class="pubs">
+      <div class="pub reveal">
+        <span class="status">Published 2026</span>
+        <div>
+          <h3><a href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank" rel="noopener">Ballistic power: GPS-derived measurements suitable for the real-time monitoring of neuromuscular fatigue during repeated sprints</a></h3>
+          <div class="authors"><strong>Eamon McGleenan</strong>, Samuel Grant, Lisa M. McFetridge, Jack C.J Brown, Joseph W. Shaw, Tiago de Melo Malaquias, Ruth Montgomery, David B. Jess</div>
+          <div class="row">
+            <div class="tags"><span>Global positioning system</span><span>Force velocity relationships</span></div>
+            <a class="link-arrow" href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank" rel="noopener">Full text <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></a>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="project fade-in" style="grid-column: 1 / -1;">
-      <h3><a href="football-scouting.html">Can Open Data Spot the Next €30m Player?</a></h3>
-      <p>
-      A transparent scouting screen across the ten strongest leagues in world football, built entirely from free FBref and Transfermarkt data. It scores young players on four signals (performance, intensity, misprofiling and underuse), always within their positional peer group.
-      </p>
-      <p style="margin-top: 8px;">
-      In a strict point-in-time back-test, the screen's top 20 hit at 55% against a 33% base rate. A second model, trained on 70,000 player-seasons, predicts big value rises with a ROC-AUC of 0.81, and shows that age dominates everything else.
-      </p>
-      <p style="margin-top: .65rem;">
-        <a href="football-scouting.html" style="display:inline-flex; align-items:center; gap:.35rem; font-size:.82rem; font-weight:500; color:var(--accent); text-decoration:none;">
-          Read the write-up
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </p>
-      <div class="tech">
-        <span>Python</span>
-        <span>Machine Learning</span>
-        <span>Football Analytics</span>
-        <span>Open Data</span>
+      <div class="pub reveal">
+        <span class="status review">Under review</span>
+        <div>
+          <h3><a href="pfv-practitioners-guide.html">In-Situ PFv profiling in sub-elite Gaelic football: validation, comparison with isolated sprints, minimum data load requirements, and exploring "real-time" monitoring potential</a></h3>
+          <div class="authors"><strong>Eamon McGleenan</strong>, Samuel Grant, Lisa M. McFetridge, Jack C.J. Brown, Richard Hawkins, Tiago de Melo Malaquias, Ruth Montgomery, Richard McCann, David B. Jess</div>
+          <div class="row">
+            <div class="tags"><span>In-situ monitoring</span><span>Force-velocity profiling</span><span>Fatigue detection</span></div>
+            <a class="link-arrow" href="pfv-practitioners-guide.html">Practitioner's guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ── MEDIA ── -->
-<section id="media">
-  <h2 class="section-title">In the Media</h2>
-
-  <div class="media-grid">
-    <a href="https://www.irishtimes.com/ireland/2025/09/05/gaa-moneyball-astrophysics-student-uses-science-to-lead-club-to-historic-win/" target="_blank" class="media-card fade-in">
-      <div class="outlet">The Irish Times</div>
-      <h3>GAA moneyball: Astrophysics student uses science to lead club to historic win</h3>
-      <div class="date">5 September 2025</div>
-      <span class="read-more">
-        Read article
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-
-    <a href="https://www.rte.ie/news/regional/2025/0905/1531928-gaa-club-data/" target="_blank" class="media-card fade-in">
-      <div class="outlet">RTÉ News</div>
-      <h3>Big data helps GAA club to first senior status in 135 years</h3>
-      <div class="date">5 September 2025</div>
-      <span class="read-more">
-        Read article
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-
-    <a href="https://thesidelineeye.com/2025/09/08/tullysaran-take-division-three-minor-title/" target="_blank" class="media-card fade-in">
-      <div class="outlet">The Sideline Eye</div>
-      <h3>Tullysaran take Division Three Minor title</h3>
-      <div class="date">8 September 2025</div>
-      <span class="read-more">
-        Read article
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-    
+<section class="section" id="media">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">In the Media</span>
+        <h2>Press coverage</h2>
+      </div>
+      <p>Tullysaran's 2025 promotion, and the data behind it, made the national news.</p>
+    </div>
+    <div class="media-grid">
+      <a href="https://www.irishtimes.com/ireland/2025/09/05/gaa-moneyball-astrophysics-student-uses-science-to-lead-club-to-historic-win/" target="_blank" rel="noopener" class="media-card reveal">
+        <div class="outlet"><i></i>The Irish Times</div>
+        <h3>GAA moneyball: Astrophysics student uses science to lead club to historic win</h3>
+        <div class="foot"><span>5 September 2025</span><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></span></div>
+      </a>
+      <a href="https://www.rte.ie/news/regional/2025/0905/1531928-gaa-club-data/" target="_blank" rel="noopener" class="media-card reveal">
+        <div class="outlet"><i></i>RTÉ News</div>
+        <h3>Big data helps GAA club to first senior status in 135 years</h3>
+        <div class="foot"><span>5 September 2025</span><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></span></div>
+      </a>
+      <a href="https://thesidelineeye.com/2025/09/08/tullysaran-take-division-three-minor-title/" target="_blank" rel="noopener" class="media-card reveal">
+        <div class="outlet"><i></i>The Sideline Eye</div>
+        <h3>Tullysaran take Division Three Minor title</h3>
+        <div class="foot"><span>8 September 2025</span><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></span></div>
+      </a>
+    </div>
   </div>
 </section>
 
-<!-- ── TALKS & PRESENTATIONS ── -->
-<section id="talks">
-  <h2 class="section-title">Talks &amp; Presentations</h2>
- 
-  <div class="talk-card fade-in">
-    <div class="talk-date">15 November 2025</div>
-    <h3>Applying GPS Technology to Gaelic Games: Evidence-Informed Recommendations for the Weekly Microcycle</h3>
-    <div class="talk-venue">CS Coaching Conference · Newforge Sports Complex, Belfast</div>
-    <p class="talk-desc">Presented research on applying GPS tracking and data analytics to Gaelic Games coaching, covering evidence-based approaches to structuring the weekly training microcycle for club teams.</p>
+<!-- ── TALKS ── -->
+<section class="section" id="talks">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Talks &amp; Presentations</span>
+        <h2>Speaking</h2>
+      </div>
+    </div>
+    <article class="talk reveal">
+      <div class="media">
+        <img src="images/web/talk-slide.jpg" alt="Title slide: Applying GPS technology to Gaelic Games, over a photo of the Tullysaran squad" loading="lazy" data-zoom width="1200" height="675">
+      </div>
+      <div class="body">
+        <div class="date">15 November 2025</div>
+        <h3>Applying GPS Technology to Gaelic Games: Evidence-Informed Recommendations for the Weekly Microcycle</h3>
+        <div class="venue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          CS Coaching Conference · Newforge Sports Complex, Belfast
+        </div>
+        <p>Presented research on applying GPS tracking and data analytics to Gaelic Games coaching, covering evidence-based approaches to structuring the weekly training microcycle for club teams.</p>
+        <div class="thumbs">
+          <img src="images/web/talk-room.jpg" alt="Coaches in the audience during the talk" loading="lazy" data-zoom>
+          <img src="images/web/talk-poster.jpg" alt="Coaching Conference poster: Focus on GAA/LGFA, 15 November, Newforge Sports Complex" loading="lazy" data-zoom style="object-position:top">
+        </div>
+      </div>
+    </article>
   </div>
 </section>
 
-<!-- ── QUALIFICATIONS & CERTIFICATES ── -->
-<section id="qualifications">
-  <h2 class="section-title">Qualifications &amp; Certificates</h2>
+<!-- ── QUALIFICATIONS ── -->
+<section class="section" id="qualifications">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Qualifications &amp; Certificates</span>
+        <h2>Education and training</h2>
+      </div>
+    </div>
+    <div class="quals">
+      <div class="qual-col reveal">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>Degrees</h3>
+        <ol class="timeline">
+          <li class="current"><h4>PhD Predictive Sports Analytics</h4><div class="inst">Queen's University Belfast (in progress)</div><div class="yr">2023 – Autumn 2026</div></li>
+          <li><h4>MSc Medical Physics</h4><div class="inst">Queen's University Belfast</div><div class="yr">2018 – 2023</div></li>
+        </ol>
+      </div>
+      <div class="qual-col reveal">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>Certificates</h3>
+        <ol class="timeline">
+          <li><h4>F3 Youth Athletic Development Level 1</h4><div class="inst">GAA / LGFA / Camogie Association</div><div class="yr">January 2026</div></li>
+          <li><h4>Setanta Conditioning — A Personal Guide to Health &amp; Fitness</h4><div class="inst">Setanta College</div><div class="yr">September 2024</div></li>
+          <li><h4>Setanta Conditioning — Explosive Rotational Power</h4><div class="inst">Setanta College</div><div class="yr">August 2024</div></li>
+          <li><h4>Introduction to Machine Learning Using Matlab</h4><div class="inst">Queen's University Belfast</div><div class="yr">March 2024</div></li>
+        </ol>
+      </div>
+    </div>
 
-  <!-- Degree qualifications -->
-  <div class="qual-item fade-in">
-    <div class="qual-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>
+    <div class="gallery">
+      <figure class="reveal"><div class="ph"><img class="contain" src="images/cert-gaa-athletic-dev.jpeg" alt="GAA F3 Youth Athletic Development Level 1 certificate" loading="lazy" data-zoom></div><figcaption>GAA F3 Athletic Development Level 1</figcaption></figure>
+      <figure class="reveal"><div class="ph"><img src="images/web/f3-course.jpg" alt="Eamon with fellow coaches outside the GAA centre during the F3 course" loading="lazy" data-zoom></div><figcaption>On the F3 Athletic Development course</figcaption></figure>
+      <figure class="reveal"><div class="ph"><img class="contain" src="images/cert-setanta-conditioning.png" alt="Setanta Conditioning certificate" loading="lazy" data-zoom></div><figcaption>Setanta Conditioning</figcaption></figure>
+      <figure class="reveal"><div class="ph"><img class="contain" src="images/cert-setanta-rotational.png" alt="Setanta Explosive Rotational Power certificate" loading="lazy" data-zoom></div><figcaption>Explosive Rotational Power</figcaption></figure>
     </div>
-    <div class="qual-details">
-      <h3>PhD Predictive Sports Analytics</h3>
-      <div class="institution">Queen's University Belfast (in progress)</div>
-      <div class="year">2023 - Autumn 2026</div>
-    </div>
-  </div>
-
-  <div class="qual-item fade-in">
-    <div class="qual-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>
-    </div>
-    <div class="qual-details">
-      <h3>MSc Medical Physics</h3>
-      <div class="institution">Queen's University Belfast</div>
-      <div class="year">2018 - 2023</div>
-    </div>
-  </div>
-
-  <!-- Professional certificates -->
-  <div class="qual-item fade-in">
-    <div class="qual-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-    </div>
-    <div class="qual-details">
-      <h3>Introduction to Machine Learning Using Matlab</h3>
-      <div class="institution">Queen's University Belfast</div>
-      <div class="year">March 2024</div>
-    </div>
-  </div>
-  
-  <div class="qual-item fade-in">
-    <div class="qual-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-    </div>
-    <div class="qual-details">
-      <h3>F3 Youth Athletic Development Level 1</h3>
-      <div class="institution">GAA / LGFA / Camogie Association</div>
-      <div class="year">January 2026</div>
-    </div>
-  </div>
-
-  <div class="qual-item fade-in">
-    <div class="qual-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-    </div>
-    <div class="qual-details">
-      <h3>Setanta Conditioning — A Personal Guide to Health &amp; Fitness</h3>
-      <div class="institution">Setanta College</div>
-      <div class="year">September 2024</div>
-    </div>
-  </div>
-
-  <div class="qual-item fade-in">
-    <div class="qual-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-    </div>
-    <div class="qual-details">
-      <h3>Setanta Conditioning - Explosive Rotational Power</h3>
-      <div class="institution">Setanta College</div>
-      <div class="year">August 2024</div>
-    </div>
-  </div>
-
-  <!-- Certificate images & photo gallery -->
-  <div class="qual-gallery">
-    <figure>
-      <img src="images/cert-gaa-athletic-dev.jpeg" alt="GAA F3 Youth Athletic Development Level 1 Certificate">
-      <figcaption>GAA F3 Athletic Development Level 1</figcaption>
-    </figure>
-    <figure>
-      <img src="images/gaa-coaching-conference.jpeg" alt="GAA & LGFA Coaching Conference">
-      <figcaption>GAA F3 Athletic Development Level 1</figcaption>
-    </figure>
-    <figure>
-      <img src="images/cert-setanta-conditioning.png" alt="Setanta Conditioning Certificate">
-      <figcaption>Setanta Conditioning</figcaption>
-    </figure>
-    <figure>
-      <img src="images/cert-setanta-rotational.png" alt="Setanta Explosive Rotational Power Certificate">
-      <figcaption>Explosive Rotational Power</figcaption>
-    </figure>
   </div>
 </section>
 
 <!-- ── CONTACT ── -->
-<section id="contact">
-  <h2 class="section-title">Contact</h2>
-  <p style="color:var(--fg-secondary); font-size:.95rem; line-height:1.75;">
-    If you're a performance coach looking to integrate data analytics into your programme, interested in exploring new applications for wearable sensors, or a researcher in a related field; I'm always open to new collaborations. Feel free to reach out.<br><br>
-    <strong>Email:</strong> <a href="mailto:emcgleenan04@qub.ac.uk" style="color:var(--accent); text-decoration:none;">emcgleenan04@qub.ac.uk</a><br>
-    <strong>Office:</strong> Main Physics Building, University Rd, Belfast BT7 1NN
-  </p>
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="band reveal">
+      <div>
+        <span class="eyebrow">Contact</span>
+        <h2>Let's work together</h2>
+        <p>If you're a performance coach looking to integrate data analytics into your programme, interested in exploring new applications for wearable sensors, or a researcher in a related field; I'm always open to new collaborations. Feel free to reach out.</p>
+      </div>
+      <div class="details">
+        <div class="item"><small>Email</small><a href="mailto:emcgleenan04@qub.ac.uk">emcgleenan04@qub.ac.uk</a></div>
+        <div class="item"><small>Office</small><span>Main Physics Building, University Rd, Belfast BT7 1NN</span></div>
+        <a class="btn btn-light" href="mailto:emcgleenan04@qub.ac.uk">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+          Send an email
+        </a>
+      </div>
+    </div>
+  </div>
 </section>
+
+</main>
 
 <!-- ── FOOTER ── -->
 <footer>
-  <span>&copy; 2026 Eamon McGleenan</span>
-  <span>Built with <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> &amp; <a href="ttps://claude.ai/" target="_blank">Claude AI</a></span>
+  <div class="inner">
+    <span>&copy; 2026 Eamon McGleenan · Built with <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> &amp; <a href="https://claude.ai/" target="_blank" rel="noopener">Claude AI</a></span>
+    <div class="links">
+      <a href="https://scholar.google.co.uk/citations?user=K2tIJRQAAAAJ&amp;hl=en&amp;oi=ao" target="_blank" rel="noopener">Scholar</a>
+      <a href="https://github.com/emcgleenan23" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/eamon-mcgleenan" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </div>
 </footer>
 
+<script src="assets/site.js"></script>
 </body>
 </html>

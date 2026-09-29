@@ -538,16 +538,19 @@
       .clone-section { flex-direction: column; }
     }
   </style>
+  <link rel="stylesheet" href="assets/site.css">
+  <meta property="og:image" content="https://emcgleenan23.github.io/images/web/cover-dashboard.jpg">
 </head>
 <body>
+<div class="progress" aria-hidden="true"></div>
 
 <!-- ── NAVIGATION ── -->
 <nav>
   <div class="inner">
-    <a href="index.html" class="name">Eamon McGleenan</a>
+    <a href="index.html" class="name"><span class="mark" aria-hidden="true">EM</span>Eamon McGleenan</a>
     <ul>
+      <li><a href="index.html#projects" class="active">Projects</a></li>
       <li><a href="index.html#publications">Publications</a></li>
-      <li><a href="index.html#projects">Projects</a></li>
       <li><a href="index.html#media">Media</a></li>
       <li><a href="index.html#talks">Talks</a></li>
       <li><a href="index.html#qualifications">Qualifications</a></li>
@@ -567,6 +570,7 @@
       <span>›</span>
       <span>GPS Performance Dashboard</span>
     </div>
+    <span class="eyebrow">Project · Live demo</span>
     <h1>GPS Performance Dashboard: Session Analysis &amp; Load Monitoring</h1>
     <p class="subtitle">
       An end-to-end pipeline that turns raw 10&nbsp;Hz STATSports exports into a pseudonymised,
@@ -588,6 +592,11 @@
       </span>
     </div>
   </div>
+
+  <figure class="article-cover fade-in">
+    <img src="images/web/cover-dashboard.jpg" alt="Session analysis view of the GPS performance dashboard on a synthetic squad">
+    <figcaption>Session analysis on the synthetic demo squad. The same view runs on real, pseudonymised club data.</figcaption>
+  </figure>
 
   <!-- ── TABLE OF CONTENTS ── -->
   <div class="toc fade-in">
@@ -920,9 +929,49 @@ open dashboard/index.html</code></pre>
 </article>
 
 <!-- ── FOOTER ── -->
+<!-- ── MORE PROJECTS ── -->
+<aside class="more">
+  <div class="inner">
+    <h2>More projects</h2>
+    <div class="more-grid">
+      <article class="card compact">
+        <div class="card-media"><img src="images/web/cover-tullysaran.jpg" alt="" loading="lazy"><span class="badge">Applied · Club</span></div>
+        <div class="card-body">
+          <h3><a href="gps-pipeline.html">GPS Processing Pipeline for Gaelic Games</a></h3>
+          <p>Raw STATSports exports to Tableau-ready weekly summaries, built on evidence-informed thresholds.</p>
+          <div class="card-foot"><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+        </div>
+      </article>
+      <article class="card compact">
+        <div class="card-media"><img src="images/web/cover-pfv.jpg" alt="" loading="lazy"><span class="badge">Research · Interactive</span></div>
+        <div class="card-body">
+          <h3><a href="pfv-practitioners-guide.html">In-Situ PFv Profiling — A Practitioner's Guide</a></h3>
+          <p>Force-velocity profiles from the GPS data you already collect, with an in-browser tool.</p>
+          <div class="card-foot"><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+        </div>
+      </article>
+      <article class="card compact">
+        <div class="card-media"><img src="images/web/cover-scouting.jpg" alt="" loading="lazy" style="object-fit:contain;background:#fff;padding:2rem .6rem .4rem"><span class="badge">Football · ML</span></div>
+        <div class="card-body">
+          <h3><a href="football-scouting.html">Can Open Data Spot the Next €30m Player?</a></h3>
+          <p>A transparent scouting screen from free data, back-tested and explained.</p>
+          <div class="card-foot"><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</aside>
+
 <footer>
-  <span>&copy; 2026 Eamon McGleenan</span>
-  <span>Built with <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> &amp; <a href="https://claude.ai/" target="_blank">Claude AI</a></span>
+  <div class="inner">
+    <span>&copy; 2026 Eamon McGleenan · Built with <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> &amp; <a href="https://claude.ai/" target="_blank" rel="noopener">Claude AI</a></span>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="index.html#projects">All projects</a>
+      <a href="https://github.com/emcgleenan23" target="_blank" rel="noopener">GitHub</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+  </div>
 </footer>
 
 <script>
@@ -946,5 +995,6 @@ function copyCode(btn) {
 }
 </script>
 
+<script src="assets/site.js"></script>
 </body>
 </html>

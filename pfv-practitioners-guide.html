@@ -337,18 +337,22 @@
       .findings { grid-template-columns: 1fr; }
     }
   </style>
+  <link rel="stylesheet" href="assets/site.css">
+  <meta property="og:image" content="https://emcgleenan23.github.io/images/web/cover-pfv.jpg">
 </head>
 <body>
+<div class="progress" aria-hidden="true"></div>
 
 <!-- ── NAVIGATION ── -->
 <nav>
   <div class="inner">
-    <a href="index.html" class="name">Eamon McGleenan</a>
+    <a href="index.html" class="name"><span class="mark" aria-hidden="true">EM</span>Eamon McGleenan</a>
     <ul>
-      <li><a href="index.html#publications">Publications</a></li>
       <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="index.html#publications" class="active">Publications</a></li>
       <li><a href="index.html#media">Media</a></li>
       <li><a href="index.html#talks">Talks</a></li>
+      <li><a href="index.html#qualifications">Qualifications</a></li>
       <li><a href="index.html#contact">Contact</a></li>
     </ul>
   </div>
@@ -365,6 +369,7 @@
       <span>›</span>
       <span>In-Situ PFv Profiling</span>
     </div>
+    <span class="eyebrow">Research · Practitioner's guide</span>
     <h1>In-Situ PFv Profiling for Team Sports</h1>
     <p class="subtitle">
       A practitioner's guide to tracking force-velocity profiles from GPS data you're
@@ -385,6 +390,11 @@
       </span>
     </div>
   </div>
+
+  <figure class="article-cover fade-in">
+    <img src="images/web/cover-pfv.jpg" alt="Illustrative acceleration-speed profile showing the top-two envelope and the fitted line to A0 and S0">
+    <figcaption>How an in-situ profile is built: the top two accelerations in each 0.2 m/s speed bin above 3 m/s form the envelope, and the fitted line gives A₀ and S₀. Illustrative data.</figcaption>
+  </figure>
 
   <!-- ── TABLE OF CONTENTS ── -->
   <div class="toc fade-in">
@@ -876,9 +886,49 @@ STEP_S = 10                  # Sliding window step (seconds)</code></pre>
 </article>
 
 <!-- ── FOOTER ── -->
+<!-- ── MORE PROJECTS ── -->
+<aside class="more">
+  <div class="inner">
+    <h2>More projects</h2>
+    <div class="more-grid">
+      <article class="card compact">
+        <div class="card-media"><img src="images/web/cover-tullysaran.jpg" alt="" loading="lazy"><span class="badge">Applied · Club</span></div>
+        <div class="card-body">
+          <h3><a href="gps-pipeline.html">GPS Processing Pipeline for Gaelic Games</a></h3>
+          <p>Raw STATSports exports to Tableau-ready weekly summaries, built on evidence-informed thresholds.</p>
+          <div class="card-foot"><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+        </div>
+      </article>
+      <article class="card compact">
+        <div class="card-media"><img src="images/web/cover-dashboard.jpg" alt="" loading="lazy"><span class="badge">Dashboard · Live demo</span></div>
+        <div class="card-body">
+          <h3><a href="gps-performance-dashboard.html">GPS Performance Dashboard</a></h3>
+          <p>10-second session analysis, most demanding passages and season load as a time series.</p>
+          <div class="card-foot"><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+        </div>
+      </article>
+      <article class="card compact">
+        <div class="card-media"><img src="images/web/cover-scouting.jpg" alt="" loading="lazy" style="object-fit:contain;background:#fff;padding:2rem .6rem .4rem"><span class="badge">Football · ML</span></div>
+        <div class="card-body">
+          <h3><a href="football-scouting.html">Can Open Data Spot the Next €30m Player?</a></h3>
+          <p>A transparent scouting screen from free data, back-tested and explained.</p>
+          <div class="card-foot"><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</aside>
+
 <footer>
-  <span>Based on McGleenan et al. (2026). <em>In-Situ PFv profiling in sub-elite Gaelic football.</em></span>
-  <span>Processing runs entirely in your browser — no data is uploaded.</span>
+  <div class="inner">
+    <span>Based on McGleenan et al. (2026), <em>In-Situ PFv profiling in sub-elite Gaelic football</em>. The interactive tool runs entirely in your browser; no data is uploaded.</span>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="index.html#projects">All projects</a>
+      <a href="https://github.com/emcgleenan23" target="_blank" rel="noopener">GitHub</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+  </div>
 </footer>
 
 <script>
@@ -1581,5 +1631,6 @@ function copyCode(btn) {
 }
 </script>
 
+<script src="assets/site.js"></script>
 </body>
 </html>
