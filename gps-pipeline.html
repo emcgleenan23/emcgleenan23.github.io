@@ -3,541 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>document.documentElement.classList.add('js')</script>
   <title>GPS Processing Pipeline — Eamon McGleenan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --fg: #1a1a1a;
-      --fg-secondary: #555;
-      --fg-muted: #888;
-      --bg: #fafaf8;
-      --bg-card: #fff;
-      --accent: #2a5a4c;
-      --accent-light: #e8f0ed;
-      --border: #e5e5e0;
-      --serif: 'Newsreader', Georgia, serif;
-      --sans: 'DM Sans', system-ui, sans-serif;
-      --mono: 'JetBrains Mono', 'Fira Code', monospace;
-      --max-w: 780px;
-      --space: 1.5rem;
-    }
-
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--sans);
-      color: var(--fg);
-      background: var(--bg);
-      line-height: 1.65;
-      font-size: 15px;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(250,250,248,.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    nav .inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: .85rem var(--space);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    nav .name {
-      font-family: var(--serif);
-      font-weight: 500;
-      font-size: 1.05rem;
-      color: var(--fg);
-      text-decoration: none;
-      letter-spacing: -.01em;
-    }
-    nav ul { list-style: none; display: flex; gap: 1.75rem; }
-    nav a {
-      text-decoration: none;
-      color: var(--fg-secondary);
-      font-size: .85rem;
-      font-weight: 500;
-      letter-spacing: .02em;
-      transition: color .2s;
-    }
-    nav a:hover { color: var(--accent); }
-
-    /* ── ARTICLE ── */
-    .article {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 3.5rem var(--space) 2rem;
-    }
-    .article-header {
-      margin-bottom: 2.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .breadcrumb {
-      font-size: .78rem;
-      color: var(--fg-muted);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: .4rem;
-    }
-    .breadcrumb a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-    .breadcrumb a:hover { text-decoration: underline; }
-    .article-header h1 {
-      font-family: var(--serif);
-      font-weight: 300;
-      font-size: clamp(1.7rem, 4.5vw, 2.3rem);
-      line-height: 1.25;
-      letter-spacing: -.02em;
-      margin-bottom: .6rem;
-    }
-    .article-header .subtitle {
-      font-size: .92rem;
-      color: var(--fg-secondary);
-      line-height: 1.6;
-    }
-    .article-meta {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-      font-size: .8rem;
-      color: var(--fg-muted);
-    }
-    .article-meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: .3rem;
-    }
-    .article-meta svg { width: 13px; height: 13px; }
-
-    /* ── TABLE OF CONTENTS ── */
-    .toc {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-    .toc-title {
-      font-family: var(--sans);
-      font-size: .8rem;
-      font-weight: 500;
-      color: var(--fg-muted);
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      margin-bottom: .75rem;
-    }
-    .toc ol {
-      list-style: none;
-      counter-reset: toc-counter;
-    }
-    .toc ol li {
-      counter-increment: toc-counter;
-      margin-bottom: .35rem;
-    }
-    .toc ol li::before {
-      content: counter(toc-counter) ".";
-      font-family: var(--mono);
-      font-size: .75rem;
-      color: var(--accent);
-      margin-right: .5rem;
-      font-weight: 500;
-    }
-    .toc a {
-      font-size: .88rem;
-      color: var(--fg-secondary);
-      text-decoration: none;
-      transition: color .2s;
-    }
-    .toc a:hover { color: var(--accent); }
-
-    /* ── PROSE ── */
-    .prose h2 {
-      font-family: var(--serif);
-      font-weight: 500;
-      font-size: 1.3rem;
-      letter-spacing: -.01em;
-      margin: 2.5rem 0 1rem;
-      padding-bottom: .55rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .prose h3 {
-      font-family: var(--serif);
-      font-weight: 500;
-      font-size: 1.05rem;
-      margin: 1.8rem 0 .7rem;
-    }
-    .prose p {
-      margin-bottom: 1.1rem;
-      color: var(--fg-secondary);
-      line-height: 1.75;
-    }
-    .prose a {
-      color: var(--accent);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color .2s;
-    }
-    .prose a:hover { border-bottom-color: var(--accent); }
-
-    /* ── CALLOUT BOX ── */
-    .callout {
-      background: var(--accent-light);
-      border-left: 3px solid var(--accent);
-      padding: 1rem 1.25rem;
-      border-radius: 0 6px 6px 0;
-      margin: 1.5rem 0;
-    }
-    .callout p {
-      color: var(--fg);
-      margin: 0;
-      font-size: .9rem;
-    }
-    .callout-title {
-      font-weight: 500;
-      font-size: .82rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      margin-bottom: .35rem;
-    }
-
-    .callout-warn {
-      background: #fef7ec;
-      border-left-color: #c4820a;
-    }
-    .callout-warn .callout-title { color: #a06c05; }
-
-    /* ── CODE ── */
-    code {
-      font-family: var(--mono);
-      font-size: .82rem;
-      background: #f0f0ec;
-      padding: .15rem .4rem;
-      border-radius: 3px;
-      color: var(--fg);
-    }
-    pre {
-      background: #1e1e1e;
-      color: #d4d4d4;
-      border-radius: 6px;
-      padding: 1.2rem 1.4rem;
-      overflow-x: auto;
-      margin: 1.2rem 0 1.5rem;
-      line-height: 1.6;
-      font-size: .82rem;
-      border: 1px solid #333;
-    }
-    pre code {
-      background: none;
-      padding: 0;
-      color: inherit;
-      font-size: inherit;
-    }
-    .code-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #2d2d2d;
-      padding: .5rem 1rem;
-      border-radius: 6px 6px 0 0;
-      border: 1px solid #333;
-      border-bottom: none;
-      margin-top: 1.2rem;
-    }
-    .code-header + pre {
-      margin-top: 0;
-      border-radius: 0 0 6px 6px;
-    }
-    .code-header span {
-      font-family: var(--mono);
-      font-size: .72rem;
-      color: #888;
-      font-weight: 500;
-    }
-    .code-header .copy-btn {
-      background: none;
-      border: 1px solid #555;
-      color: #aaa;
-      padding: .2rem .5rem;
-      border-radius: 3px;
-      font-size: .68rem;
-      cursor: pointer;
-      font-family: var(--sans);
-      transition: all .2s;
-    }
-    .code-header .copy-btn:hover {
-      border-color: #888;
-      color: #ddd;
-    }
-
-    /* Syntax highlighting tokens */
-    .tok-kw   { color: #c586c0; }
-    .tok-fn   { color: #dcdcaa; }
-    .tok-str  { color: #ce9178; }
-    .tok-cmt  { color: #6a9955; font-style: italic; }
-    .tok-num  { color: #b5cea8; }
-    .tok-op   { color: #d4d4d4; }
-    .tok-cls  { color: #4ec9b0; }
-    .tok-var  { color: #9cdcfe; }
-
-    /* ── PIPELINE DIAGRAM ── */
-    .pipeline-diagram {
-      display: flex;
-      align-items: stretch;
-      gap: 0;
-      margin: 2rem 0;
-      overflow-x: auto;
-      padding: .5rem 0;
-    }
-    .pipeline-stage {
-      flex: 1;
-      min-width: 160px;
-      padding: 1.1rem 1rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      text-align: center;
-      position: relative;
-    }
-    .pipeline-stage .stage-num {
-      font-family: var(--mono);
-      font-size: .65rem;
-      font-weight: 500;
-      color: var(--accent);
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      margin-bottom: .35rem;
-    }
-    .pipeline-stage h4 {
-      font-family: var(--serif);
-      font-size: .9rem;
-      font-weight: 500;
-      margin-bottom: .3rem;
-    }
-    .pipeline-stage p {
-      font-size: .75rem;
-      color: var(--fg-muted);
-      line-height: 1.5;
-    }
-    .pipeline-arrow {
-      display: flex;
-      align-items: center;
-      padding: 0 .3rem;
-      color: var(--accent);
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    /* ── METRIC TABLE ── */
-    .metric-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1.2rem 0 1.5rem;
-      font-size: .84rem;
-    }
-    .metric-table th {
-      font-family: var(--sans);
-      font-weight: 500;
-      text-align: left;
-      padding: .65rem .8rem;
-      background: var(--accent-light);
-      color: var(--accent);
-      border-bottom: 2px solid var(--accent);
-      font-size: .78rem;
-      letter-spacing: .03em;
-    }
-    .metric-table td {
-      padding: .6rem .8rem;
-      border-bottom: 1px solid var(--border);
-      color: var(--fg-secondary);
-      line-height: 1.5;
-    }
-    .metric-table tr:hover td {
-      background: rgba(42,90,76,.03);
-    }
-
-    /* ── CLONE BUTTON ── */
-    .clone-section {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.5rem 1.5rem;
-      margin: 1.5rem 0;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .clone-section .clone-url {
-      flex: 1;
-      min-width: 250px;
-      font-family: var(--mono);
-      font-size: .82rem;
-      background: #f0f0ec;
-      padding: .55rem .85rem;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      color: var(--fg-secondary);
-      white-space: nowrap;
-      overflow-x: auto;
-    }
-    .clone-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      font-size: .82rem;
-      font-weight: 500;
-      color: #fff;
-      background: var(--accent);
-      text-decoration: none;
-      padding: .55rem 1.1rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: var(--sans);
-      transition: background .2s;
-      white-space: nowrap;
-    }
-    .clone-btn:hover { background: #1e4a3d; }
-    .clone-btn svg { width: 14px; height: 14px; }
-
-    /* ── FILE TREE ── */
-    .file-tree {
-      background: #1e1e1e;
-      color: #d4d4d4;
-      border-radius: 6px;
-      padding: 1.2rem 1.4rem;
-      margin: 1.2rem 0 1.5rem;
-      font-family: var(--mono);
-      font-size: .8rem;
-      line-height: 1.9;
-      border: 1px solid #333;
-      overflow-x: auto;
-    }
-    .file-tree .dir  { color: #9cdcfe; }
-    .file-tree .file { color: #d4d4d4; }
-    .file-tree .desc { color: #6a9955; }
-
-    /* ── SCREENSHOTS ── */
-    .screenshot {
-      margin: 1.5rem 0 2rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      transition: box-shadow .2s;
-    }
-    .screenshot:hover {
-      box-shadow: 0 4px 20px rgba(0,0,0,.06);
-    }
-    .screenshot img {
-      width: 100%;
-      display: block;
-    }
-    .screenshot figcaption {
-      padding: .75rem 1.2rem;
-      font-size: .78rem;
-      color: var(--fg-muted);
-      border-top: 1px solid var(--border);
-      line-height: 1.5;
-    }
-
-    /* ── REFERENCES ── */
-    .ref-list {
-      list-style: none;
-      counter-reset: ref-counter;
-      margin: 1rem 0;
-    }
-    .ref-list li {
-      counter-increment: ref-counter;
-      padding: .6rem 0 .6rem 2.2rem;
-      position: relative;
-      font-size: .84rem;
-      color: var(--fg-secondary);
-      line-height: 1.6;
-      border-bottom: 1px solid var(--border);
-    }
-    .ref-list li:last-child { border-bottom: none; }
-    .ref-list li::before {
-      content: "[" counter(ref-counter) "]";
-      position: absolute;
-      left: 0;
-      font-family: var(--mono);
-      font-size: .72rem;
-      color: var(--accent);
-      font-weight: 500;
-    }
-    .ref-list a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-    .ref-list a:hover { text-decoration: underline; }
-
-    /* ── TALK CARD ── */
-    .talk-card {
-      padding: 1.25rem 1.4rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-bottom: 1.2rem;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .talk-card:hover {
-      border-color: #ccc;
-      box-shadow: 0 2px 12px rgba(0,0,0,.04);
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 2.5rem var(--space);
-      border-top: 1px solid var(--border);
-      font-size: .8rem;
-      color: var(--fg-muted);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: .5rem;
-    }
-    footer a { color: var(--fg-secondary); text-decoration: none; }
-    footer a:hover { color: var(--accent); }
-
-    /* ── ANIMATIONS ── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(12px);
-      animation: fadeUp .6s ease forwards;
-    }
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in:nth-child(1) { animation-delay: .05s; }
-    .fade-in:nth-child(2) { animation-delay: .12s; }
-    .fade-in:nth-child(3) { animation-delay: .19s; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 600px) {
-      nav ul { gap: 1rem; font-size: .75rem; }
-      .pipeline-diagram { flex-direction: column; }
-      .pipeline-arrow { transform: rotate(90deg); justify-content: center; padding: .3rem 0; }
-      .clone-section { flex-direction: column; }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/article.css">
   <link rel="stylesheet" href="assets/site.css">
   <meta property="og:image" content="https://emcgleenan23.github.io/images/web/talk-slide.jpg">
 </head>
@@ -562,7 +32,7 @@
 <!-- ── ARTICLE ── -->
 <article class="article">
 
-  <div class="article-header fade-in">
+  <div class="article-header">
     <div class="breadcrumb">
       <a href="index.html">Home</a>
       <span>›</span>
@@ -591,15 +61,27 @@
         Python · NumPy · SciPy · Pandas · GPS · STATSports 
       </span>
     </div>
+    <div class="tldr">
+      <span class="label">In short</span>
+      <ul>
+        <li>Takes raw 10&nbsp;Hz STATSports exports and produces Tableau-ready summaries for weekly monitoring.</li>
+        <li>Metric thresholds come from the literature: di&nbsp;Prampero &amp; Osgnach's metabolic power model and Buchheit's training targets.</li>
+        <li>Used across Tullysaran's 2025 season, which ended in the club's first ever promotion to senior football.</li>
+      </ul>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn-primary" href="https://github.com/emcgleenan23/gps-pipeline" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg> Get the code</a>
+      <a class="btn btn-ghost" href="#quickstart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg> Quick start</a>
+    </div>
   </div>
 
-  <figure class="article-cover fade-in">
-    <img src="images/web/talk-slide.jpg" alt="The Tullysaran senior squad on the title slide of a GPS coaching talk">
-    <figcaption>The Tullysaran squad this pipeline was built for, and the promotion-winning season it tracked.</figcaption>
+  <figure class="article-cover">
+    <img src="images/web/cover-pipeline.jpg" alt="Tableau view from the pipeline: each player's total distance by 10-minute period across a full game" width="1600" height="900" fetchpriority="high">
+    <figcaption>One of the weekly Tableau reports the pipeline feeds: total distance per player, by 10-minute period, across a full game.</figcaption>
   </figure>
 
   <!-- ── TABLE OF CONTENTS ── -->
-  <div class="toc fade-in">
+  <div class="toc">
     <div class="toc-title">Contents</div>
     <ol>
       <li><a href="#overview">Overview &amp; Motivation</a></li>
@@ -639,6 +121,11 @@
       proposed by Buchheit <a href="#ref-5">[5]</a>.
     </p>
 
+    <p class="note">
+      Thanks to the Tullysaran management team, Pauric McGlone, Ciaran O'Riordan and Mickey Coogan, and to our
+      S&amp;C coaches, Caolan Harvey and Ciaran Campbell, for their support throughout the season.
+    </p>
+
     <div class="callout">
       <div class="callout-title">Why open-source this?</div>
       <p>
@@ -663,7 +150,7 @@
       The Sonra platform provides the raw multi-player speed traces used as input to the pipeline.
       Each row shows one player's speed over the full session, with drill markers overlaid on the timeline.
     </p>
-    <figure class="screenshot fade-in">
+    <figure class="screenshot">
       <img src="images/screenshot-sonra.jpg" alt="STATSports Sonra multi-player speed trace view" loading="lazy">
       <figcaption>Multi-player speed traces in STATSports Sonra, showing a full training session with 12 drills across 18 players.</figcaption>
     </figure>
@@ -674,7 +161,7 @@
       per-player % of max speed reached, and individual bar charts for total distance, HSR distance,
       sprint distance, and peak speed.
     </p>
-    <figure class="screenshot fade-in">
+    <figure class="screenshot">
       <img src="images/screenshot-tableau-summary.jpg" alt="Tableau match summary dashboard" loading="lazy">
       <figcaption>Match summary — team total distance timeline, individual metrics, and % of max speed chart.</figcaption>
     </figure>
@@ -685,7 +172,7 @@
       distance, absolute sprint counts, acceleration and deceleration zone&nbsp;3+ counts, and
       speed-band exposure (efforts at 80%, 85%, 90%, and 95% of max speed).
     </p>
-    <figure class="screenshot fade-in">
+    <figure class="screenshot">
       <img src="images/screenshot-tableau-extras.jpg" alt="Tableau extras dashboard — HML, sprints, acceleration, speed exposure" loading="lazy">
       <figcaption>Session extras — HML distance, sprint counts, acceleration/deceleration zones, and speed-band exposure counts.</figcaption>
     </figure>
@@ -697,7 +184,7 @@
       This helps identify fatigue patterns — a steep drop-off in the second half may indicate fitness
       issues or the need for tactical substitution.
     </p>
-    <figure class="screenshot fade-in">
+    <figure class="screenshot">
       <img src="images/screenshot-tableau-periods.png" alt="Tableau 10-minute period breakdown chart" loading="lazy">
       <figcaption>Match 10-minute period breakdown — each colour represents one player, with bars showing distance per 10-minute block across both halves.</figcaption>
     </figure>
@@ -709,7 +196,7 @@
       distance), with red bars showing actual weekly totals. Weeks where bars exceed the green band may
       indicate overloading; weeks below it suggest under-exposure.
     </p>
-    <figure class="screenshot fade-in">
+    <figure class="screenshot">
       <img src="images/screenshot-tableau-targets.jpg" alt="Tableau weekly HSR and sprint distance targets" loading="lazy">
       <figcaption>Weekly HSR and sprint distance against Buchheit (2023) training targets — green bands show the recommended range.</figcaption>
     </figure>
@@ -870,7 +357,7 @@
       pipeline at a raw session folder, and run.
     </p>
 
-    <div class="clone-section fade-in">
+    <div class="clone-section">
       <div class="clone-url" id="clone-url">git clone https://github.com/emcgleenan23/gps-pipeline.git</div>
       <button class="clone-btn" onclick="copyClone()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -927,7 +414,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       file with a new player's max speed) without re-processing the raw CSVs.
     </p>
 
-    <div class="pipeline-diagram fade-in">
+    <div class="pipeline-diagram">
       <div class="pipeline-stage">
         <div class="stage-num">Raw Data</div>
         <h4>STATSports Export</h4>
@@ -1261,7 +748,9 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
 
 
     <!-- ── 9. CONFIGURATION ── -->
-    <h2 id="configuration">9. Configuration &amp; Customisation</h2>
+    <details class="section-details">
+      <summary><h2 id="configuration">9. Configuration &amp; Customisation</h2><small>Thresholds, columns, file paths</small></summary>
+      <div class="details-body">
 
     <p>
       All tuneable parameters live in <code>config.py</code>. The file is divided into two sections: directory
@@ -1342,10 +831,13 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       The <code>schedule_manager.py</code> tool provides an interactive CLI for managing the schedule
       without editing CSVs by hand.
     </p>
-
+      </div>
+    </details>
 
     <!-- ── 10. EXTENDING ── -->
-    <h2 id="extending">10. Extending the Pipeline</h2>
+    <details class="section-details">
+      <summary><h2 id="extending">10. Extending the Pipeline</h2><small>Adding new metrics</small></summary>
+      <div class="details-body">
 
     <p>
       The code is deliberately modular. All signal processing functions in <code>processing.py</code>
@@ -1361,7 +853,8 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
       preserved in the Stage&nbsp;1 output; or integration with the Tableau Hyper API for direct
       dashboard refresh.
     </p>
-
+      </div>
+    </details>
 
     <!-- ── 11. REFERENCES ── -->
     <h2 id="references">11. References</h2>
@@ -1498,7 +991,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
     <h2>More projects</h2>
     <div class="more-grid">
       <article class="card compact">
-        <div class="card-media"><img src="images/web/cover-dashboard.jpg" alt="" loading="lazy"><span class="badge">Dashboard · Live demo</span></div>
+        <div class="card-media"><img src="images/web/cover-dashboard.jpg" alt="" loading="lazy" width="1200" height="750"><span class="badge">Dashboard · Live demo</span></div>
         <div class="card-body">
           <h3><a href="gps-performance-dashboard.html">GPS Performance Dashboard</a></h3>
           <p>10-second session analysis, most demanding passages and season load as a time series.</p>
@@ -1506,7 +999,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
         </div>
       </article>
       <article class="card compact">
-        <div class="card-media"><img src="images/web/cover-pfv.jpg" alt="" loading="lazy"><span class="badge">Research · Interactive</span></div>
+        <div class="card-media"><img src="images/web/cover-pfv.jpg" alt="" loading="lazy" width="1200" height="750"><span class="badge">Research · Interactive</span></div>
         <div class="card-body">
           <h3><a href="pfv-practitioners-guide.html">In-Situ PFv Profiling — A Practitioner's Guide</a></h3>
           <p>Force-velocity profiles from the GPS data you already collect, with an in-browser tool.</p>
@@ -1514,7 +1007,7 @@ python run.py --folder <span class="tok-str">"~/Desktop/2026-04-11-Match-RawData
         </div>
       </article>
       <article class="card compact">
-        <div class="card-media"><img src="images/web/cover-scouting.jpg" alt="" loading="lazy" style="object-fit:contain;background:#fff;padding:2rem .6rem .4rem"><span class="badge">Football · ML</span></div>
+        <div class="card-media"><img src="images/web/cover-scouting.jpg" alt="" loading="lazy" width="1200" height="750" style="object-fit:contain;background:#fff;padding:2rem .6rem .4rem"><span class="badge">Football · ML</span></div>
         <div class="card-body">
           <h3><a href="football-scouting.html">Can Open Data Spot the Next €30m Player?</a></h3>
           <p>A transparent scouting screen from free data, back-tested and explained.</p>

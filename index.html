@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>document.documentElement.classList.add('js')</script>
   <title>Eamon McGleenan — Sports Data Science &amp; GPS Analytics</title>
   <meta name="description" content="PhD researcher in Predictive Sports Analytics at Queen's University Belfast. GPS-derived performance monitoring, force-velocity profiling and open-source sports data tools.">
   <meta property="og:title" content="Eamon McGleenan — Sports Data Science &amp; GPS Analytics">
@@ -34,9 +35,20 @@
       font-size: clamp(2.6rem, 6.2vw, 4.4rem); line-height: 1.02; letter-spacing: -.035em;
       margin: 1rem 0 1.25rem;
     }
-    .hero .meta { margin-top: 1.1rem; font-size: .92rem; color: var(--fg-secondary); }
-    .hero .actions { margin-top: 2rem; display: flex; gap: .5rem; flex-wrap: wrap; }
-    .hero .actions .btn-ghost { padding: .62rem .85rem; }
+    .hero .lead {
+      font-family: var(--serif); font-weight: 400; color: var(--ink);
+      font-size: clamp(1.25rem, 2.3vw, 1.55rem); line-height: 1.35; letter-spacing: -.01em;
+      max-width: 36ch; text-wrap: pretty;
+    }
+    .hero .meta { margin-top: 1rem; font-size: .92rem; color: var(--fg-secondary); }
+    .hero .status {
+      display: inline-flex; align-items: center; gap: .55rem; margin-top: 1.4rem;
+      font-size: .84rem; font-weight: 500; color: var(--accent-strong);
+      background: var(--accent-light); padding: .45rem .85rem; border-radius: 999px;
+    }
+    .hero .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px rgba(31,86,70,.18); }
+    .hero .actions { margin-top: 1.75rem; display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .hero .actions .icon-links { margin-left: .35rem; }
 
     .hero-figure { position: relative; margin: 0; }
     .hero-figure .frame {
@@ -44,12 +56,8 @@
       aspect-ratio: 4 / 3.4; background: var(--bg-sunken);
     }
     .hero-figure .frame img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 40%; display: block; }
-    .hero-figure .avatar {
-      position: absolute; left: -26px; bottom: -26px; width: 96px; height: 96px; border-radius: 50%;
-      border: 5px solid var(--bg); box-shadow: var(--shadow); object-fit: cover; background: var(--accent-light);
-    }
     .hero-figure figcaption {
-      margin: .85rem 0 0 88px; font-size: .8rem; color: var(--fg-muted); line-height: 1.45;
+      margin: .85rem 0 0; font-size: .8rem; color: var(--fg-muted); line-height: 1.45;
     }
 
     /* ── SECTIONS ── */
@@ -65,6 +73,7 @@
     .about { display: grid; grid-template-columns: 1.35fr 1fr; gap: 3rem; align-items: start; }
     .about .prose p { color: var(--fg-secondary); font-size: 1rem; line-height: 1.78; }
     .about .prose p + p { margin-top: 1rem; }
+    .about .prose p.looking { color: var(--ink); }
     .facts { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: .4rem 1.4rem; box-shadow: var(--shadow-sm); }
     .facts div { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1rem; padding: .85rem 0; font-size: .9rem; }
     .facts div + div { border-top: 1px solid var(--border); }
@@ -82,7 +91,7 @@
       padding: 1.5rem 1.6rem; box-shadow: var(--shadow-sm);
       transition: box-shadow .3s var(--ease), border-color .3s;
     }
-    .pub:hover { box-shadow: var(--shadow); border-color: var(--border-strong); }
+    @media (hover: hover) { .pub:hover { box-shadow: var(--shadow); border-color: var(--border-strong); } }
     .pub .status {
       align-self: start; justify-self: start;
       font-size: .7rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
@@ -104,7 +113,8 @@
       padding: 1.5rem; color: var(--fg); box-shadow: var(--shadow-sm);
       transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
     }
-    .media-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--border-strong); }
+    @media (hover: hover) { .media-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--border-strong); } }
+    .media-card:active { transform: scale(.985); transition-duration: .1s; }
     .media-card .outlet { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; color: var(--ink); display: flex; align-items: center; gap: .55rem; }
     .media-card .outlet i { width: 8px; height: 8px; border-radius: 50%; background: var(--warm); display: inline-block; }
     .media-card h3 { font-family: var(--serif); font-weight: 400; font-size: 1.18rem; line-height: 1.38; color: var(--fg); letter-spacing: -.005em; }
@@ -126,7 +136,7 @@
     .talk p { font-size: .95rem; color: var(--fg-secondary); line-height: 1.7; }
     .talk .thumbs { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; padding-top: .5rem; }
     .talk .thumbs img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-sm); cursor: zoom-in; transition: opacity .2s; }
-    .talk .thumbs img:hover { opacity: .88; }
+
 
     /* qualifications */
     .quals { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
@@ -154,7 +164,7 @@
     .gallery .ph { aspect-ratio: 4 / 3; border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-card); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
     .gallery img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; transition: transform .5s var(--ease); }
     .gallery img.contain { object-fit: contain; background: #fff; }
-    .gallery .ph:hover img { transform: scale(1.04); }
+    @media (hover: hover) { .gallery .ph:hover img { transform: scale(1.04); } }
     .gallery figcaption { font-size: .78rem; color: var(--fg-muted); margin-top: .5rem; line-height: 1.4; }
 
     /* contact */
@@ -196,9 +206,8 @@
       .projects-grid, .media-grid, .quals { grid-template-columns: 1fr; }
       .pub { grid-template-columns: 1fr; gap: .8rem; }
       .section { padding-top: 3.75rem; }
-      .hero-figure .avatar { left: 12px; bottom: -30px; width: 76px; height: 76px; }
-      .hero-figure figcaption { margin-left: 100px; }
       .talk .body { padding: 1.5rem; }
+      .hero .actions .icon-links { margin-left: -.6rem; flex-basis: 100%; }
       .facts div { grid-template-columns: 1fr; gap: .15rem; }
     }
   </style>
@@ -225,45 +234,37 @@
 <!-- ── HERO ── -->
 <header class="hero">
   <div class="wrap">
-    <div class="reveal">
+    <div>
       <span class="eyebrow">PhD Researcher · Predictive Sports Analytics</span>
       <h1>Eamon McGleenan</h1>
+      <p class="lead">I build GPS-derived performance tools that coaches actually use, from in-match fatigue monitoring to open-source club pipelines.</p>
       <p class="meta">Queen's University Belfast · in collaboration with STATSports · GPS analyst, Tullysaran GAC</p>
+      <p class="status">Finishing my PhD this autumn · open to roles in sports data from 2027</p>
       <div class="actions">
         <a class="btn btn-primary" href="#projects">
           See my work
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
         </a>
-        <a class="btn btn-ghost" href="https://scholar.google.co.uk/citations?user=K2tIJRQAAAAJ&amp;hl=en&amp;oi=ao" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-          Scholar
-        </a>
-        <a class="btn btn-ghost" href="https://github.com/emcgleenan23" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-          GitHub
-        </a>
-        <a class="btn btn-ghost" href="https://www.linkedin.com/in/eamon-mcgleenan" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          LinkedIn
-        </a>
         <a class="btn btn-ghost" href="https://emcg-cv.tiiny.site" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           CV
         </a>
+        <span class="icon-links">
+          <a class="icon-link" href="https://scholar.google.co.uk/citations?user=K2tIJRQAAAAJ&amp;hl=en&amp;oi=ao" target="_blank" rel="noopener" aria-label="Google Scholar" title="Google Scholar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></a>
+          <a class="icon-link" href="https://github.com/emcgleenan23" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></a>
+          <a class="icon-link" href="https://www.linkedin.com/in/eamon-mcgleenan" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </span>
       </div>
     </div>
 
-    <figure class="hero-figure reveal">
+    <figure class="hero-figure">
       <div class="frame">
         <img src="images/web/hero-talk.jpg" alt="Eamon presenting GPS research to coaches at the CS Coaching Conference in Belfast" width="1100" height="929" fetchpriority="high">
       </div>
-      <img class="avatar" src="https://avatars.githubusercontent.com/u/86169758?v=4" alt="" width="96" height="96">
       <figcaption>Presenting evidence-informed GPS recommendations to coaches, Newforge Sports Complex, November 2025.</figcaption>
     </figure>
   </div>
 </header>
-
-</div>
 
 <!-- ── ABOUT ── -->
 <section class="section" id="about">
@@ -272,6 +273,7 @@
       <span class="eyebrow">About</span>
       <div class="section-head" style="margin-bottom:1.25rem"><h2>Sports science, software and a lifelong love of sport</h2></div>
       <p>I am a PhD candidate in the <a href="https://www.predictive-sports-analytics.com" target="_blank" rel="noopener">Predictive Sports Analytics</a> Group at Queen's University Belfast, working in collaboration with <a href="https://statsports.com" target="_blank" rel="noopener">STATSports</a> on sensor-derived performance metrics, validity testing, and applied fatigue monitoring. I hold an MSc in Medical Physics and have over six years of Python experience, with additional proficiency in SQL, R, Tableau, and Power BI.</p>
+      <p class="looking">I'm finishing my PhD this autumn and looking for a role in sports data from 2027, in performance analysis, sports science or football analytics. Everything below is open source and written up in full, so you can see exactly how I work.</p>
     </div>
     <dl class="facts reveal">
       <div><dt>Research</dt><dd>In-situ force-velocity profiling, ballistic power, neuromuscular fatigue</dd></div>
@@ -297,60 +299,23 @@
     <div class="projects-grid">
       <article class="card reveal">
         <div class="card-media">
-          <img src="images/web/cover-tullysaran.jpg" alt="Tableau match summary built from the Tullysaran GPS pipeline" loading="lazy" width="1200" height="750">
-          <span class="badge">Applied · Club</span>
-        </div>
-        <div class="card-body">
-          <h3><a href="gps-pipeline.html">GPS Analyst — Tullysaran GAC Senior Football Team</a></h3>
-          <p>Working with my local GAA club, O'Connell's Tullysaran GAC, where I've played my whole life, I developed an end-to-end performance data pipeline using STATSports Apex Pro units to monitor player speed, acceleration, directional changes, and heart rate data. Processed through Python and visualised in Tableau, the system enabled the management and coaching team to individualise training programmes and make more informed tactical decisions on match days.</p>
-          <div class="stat-line">Contributed to winning the <strong>Armagh Intermediate Football League</strong> and promotion to senior football for the first time in the club's 135-year history.</div>
-          <p class="thanks">Huge thanks to the management team; Pauric McGlone, Ciaran O'Riordan, and Mickey Coogan, as well as our S&amp;C coaches, Caolan Harvey and Ciaran Campbell, for their support throughout the year.</p>
-          <div class="card-foot">
-            <div class="actions">
-              <a class="link-arrow" href="gps-pipeline.html">View the open-source pipeline <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-            </div>
-            <div class="tags"><span>Python</span><span>GPS Analytics</span><span>Tableau</span><span>Open Source</span></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card reveal">
-        <div class="card-media">
           <img src="images/web/cover-dashboard.jpg" alt="Session analysis view of the GPS performance dashboard on a synthetic squad" loading="lazy" width="1200" height="750">
           <span class="badge">Dashboard · Live demo</span>
         </div>
         <div class="card-body">
           <h3><a href="gps-performance-dashboard.html">GPS Performance Dashboard — Session Analysis &amp; Load Monitoring</a></h3>
-          <p>The next step on from the Tullysaran pipeline: an end-to-end system that turns raw 10&nbsp;Hz STATSports exports into a browser-based dashboard for Gaelic football. It works at 10-second resolution within a session, finding each player's most demanding 1 to 10-minute passages, and treats the season's load as a time series, with changepoint detection, wavelet analysis and acute:chronic workload.</p>
+          <p>Turns raw 10&nbsp;Hz STATSports exports into a browser dashboard for Gaelic football: each player's most demanding 1 to 10-minute passages within a session, and the season's load as a time series with changepoint detection and acute:chronic workload.</p>
           <div class="stat-line">Players are <strong>pseudonymised</strong> before anything leaves the pipeline, and real-data dashboards are <strong>encrypted in the browser</strong>. The public demo runs on a synthetic squad.</div>
           <div class="card-foot">
             <div class="actions">
               <a class="link-arrow" href="gps-performance-dashboard.html">Read the write-up <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
               <a class="link-arrow" href="gps-dashboard-demo/index.html" target="_blank" rel="noopener">Try the live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></a>
+              <a class="link-arrow" href="https://github.com/emcgleenan23/gps-performance-dashboard" target="_blank" rel="noopener">Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></a>
             </div>
             <div class="tags"><span>Python</span><span>Time Series</span><span>Open Source</span></div>
           </div>
         </div>
       </article>
-
-      <article class="card reveal">
-        <div class="card-media">
-          <img src="images/web/cover-pfv.jpg" alt="Illustrative acceleration-speed profile with the top-two envelope and fitted line" loading="lazy" width="1200" height="750">
-          <span class="badge">Research · Interactive</span>
-        </div>
-        <div class="card-body">
-          <h3><a href="pfv-practitioners-guide.html">In-Situ PFv Profiling — A Practitioner's Guide</a></h3>
-          <p>An interactive companion to our published research paper on deriving force-velocity profiles from in-situ GPS data. The guide walks practitioners through the methodology, from Butterworth filtering and acceleration-speed envelope extraction through to in-match fatigue monitoring using sliding-window ballistic power.</p>
-          <div class="stat-line">Includes a <strong>browser-based tool</strong> that replicates the paper's figures from any raw STATSports CSV, with all processing run locally and nothing uploaded.</div>
-          <div class="card-foot">
-            <div class="actions">
-              <a class="link-arrow" href="pfv-practitioners-guide.html">Read the practitioner's guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-            </div>
-            <div class="tags"><span>Force-Velocity</span><span>In-Situ Monitoring</span><span>Interactive</span></div>
-          </div>
-        </div>
-      </article>
-
       <article class="card reveal">
         <div class="card-media">
           <img src="images/web/cover-scouting.jpg" alt="Back-test chart: scouting screen hit rate rising from 33% base to 55% in the top 20" loading="lazy" width="1200" height="750" style="object-fit:contain;background:#fff;padding:2.4rem .75rem .5rem">
@@ -358,13 +323,50 @@
         </div>
         <div class="card-body">
           <h3><a href="football-scouting.html">Can Open Data Spot the Next €30m Player?</a></h3>
-          <p>A transparent scouting screen across the ten strongest leagues in world football, built entirely from free FBref and Transfermarkt data. It scores young players on four signals (performance, intensity, misprofiling and underuse), always within their positional peer group.</p>
-          <div class="stat-line">Top 20 hit at <strong>55%</strong> against a 33% base rate in a point-in-time back-test. A model trained on 70,000 player-seasons reaches a <strong>ROC-AUC of 0.81</strong>, and shows age dominates everything else.</div>
+          <p>A transparent scouting screen across the ten strongest leagues in world football, built entirely from free FBref and Transfermarkt data. It scores young players on performance, intensity, misprofiling and underuse, always within their positional peer group.</p>
+          <div class="stat-line">Top 20 hit at <strong>55%</strong> against a 33% base rate in a point-in-time back-test. A model trained on 70,000 player-seasons reaches a <strong>ROC-AUC of 0.81</strong>.</div>
           <div class="card-foot">
             <div class="actions">
               <a class="link-arrow" href="football-scouting.html">Read the write-up <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <a class="link-arrow" href="https://github.com/emcgleenan23/open-source-football-exploration" target="_blank" rel="noopener">Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></a>
             </div>
             <div class="tags"><span>Python</span><span>Machine Learning</span><span>Open Data</span></div>
+          </div>
+        </div>
+      </article>
+      <article class="card reveal">
+        <div class="card-media">
+          <img src="images/web/cover-tullysaran.jpg" alt="Tableau chart of weekly high-speed and sprint distance against target bands, from the Tullysaran GPS pipeline" loading="lazy" width="1200" height="750">
+          <span class="badge">Applied · Club</span>
+        </div>
+        <div class="card-body">
+          <h3><a href="gps-pipeline.html">GPS Analyst — Tullysaran GAC Senior Football Team</a></h3>
+          <p>An end-to-end pipeline for my home club, turning STATSports Apex data into weekly Tableau reports the management used to individualise training and plan match days.</p>
+          <div class="stat-line">Contributed to winning the <strong>Armagh Intermediate Football League</strong> and promotion to senior football for the first time in the club's 135-year history.</div>
+          <div class="card-foot">
+            <div class="actions">
+              <a class="link-arrow" href="gps-pipeline.html">Read the write-up <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <a class="link-arrow" href="https://github.com/emcgleenan23/gps-pipeline" target="_blank" rel="noopener">Code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></a>
+            </div>
+            <div class="tags"><span>Python</span><span>GPS Analytics</span><span>Tableau</span></div>
+          </div>
+        </div>
+      </article>
+      <article class="card reveal">
+        <div class="card-media">
+          <img src="images/web/cover-pfv.jpg" alt="Illustrative acceleration-speed profile with the top-two envelope and fitted line" loading="lazy" width="1200" height="750">
+          <span class="badge">Research · Interactive</span>
+        </div>
+        <div class="card-body">
+          <h3><a href="pfv-practitioners-guide.html">In-Situ PFv Profiling — A Practitioner's Guide</a></h3>
+          <p>An interactive companion to our published paper on deriving force-velocity profiles from in-situ GPS data, from Butterworth filtering and envelope extraction through to in-match fatigue monitoring with sliding-window ballistic power.</p>
+          <div class="stat-line">Includes a <strong>browser-based tool</strong> that reproduces the paper's figures from a raw STATSports CSV, or from built-in demo data. Nothing is uploaded.</div>
+          <div class="card-foot">
+            <div class="actions">
+              <a class="link-arrow" href="pfv-practitioners-guide.html">Read the practitioner's guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <a class="link-arrow" href="https://journals.sagepub.com/doi/10.1177/17479541261468202" target="_blank" rel="noopener">Paper <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></a>
+            </div>
+            <div class="tags"><span>Force-Velocity</span><span>In-Situ Monitoring</span><span>Interactive</span></div>
           </div>
         </div>
       </article>
@@ -382,7 +384,7 @@
       </div>
     </div>
     <div class="pubs">
-      <div class="pub reveal">
+      <div class="pub">
         <span class="status">Published 2026</span>
         <div>
           <h3><a href="pfv-practitioners-guide.html">In-Situ PFv profiling in sub-elite Gaelic football: validation, comparison with isolated sprints, minimum data load requirements, and exploring "real-time" monitoring potential</a></h3>
@@ -396,7 +398,7 @@
           </div>
         </div>
       </div>
-      <div class="pub reveal">
+      <div class="pub">
         <span class="status">Published 2026</span>
         <div>
           <h3><a href="https://journals.sagepub.com/doi/full/10.1177/17479541251413077" target="_blank" rel="noopener">Ballistic power: GPS-derived measurements suitable for the real-time monitoring of neuromuscular fatigue during repeated sprints</a></h3>
@@ -422,17 +424,17 @@
       <p>Tullysaran's 2025 promotion, and the data behind it, made the national news.</p>
     </div>
     <div class="media-grid">
-      <a href="https://www.irishtimes.com/ireland/2025/09/05/gaa-moneyball-astrophysics-student-uses-science-to-lead-club-to-historic-win/" target="_blank" rel="noopener" class="media-card reveal">
+      <a href="https://www.irishtimes.com/ireland/2025/09/05/gaa-moneyball-astrophysics-student-uses-science-to-lead-club-to-historic-win/" target="_blank" rel="noopener" class="media-card">
         <div class="outlet"><i></i>The Irish Times</div>
         <h3>GAA moneyball: Astrophysics student uses science to lead club to historic win</h3>
         <div class="foot"><span>5 September 2025</span><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></span></div>
       </a>
-      <a href="https://www.rte.ie/news/regional/2025/0905/1531928-gaa-club-data/" target="_blank" rel="noopener" class="media-card reveal">
+      <a href="https://www.rte.ie/news/regional/2025/0905/1531928-gaa-club-data/" target="_blank" rel="noopener" class="media-card">
         <div class="outlet"><i></i>RTÉ News</div>
         <h3>Big data helps GAA club to first senior status in 135 years</h3>
         <div class="foot"><span>5 September 2025</span><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></span></div>
       </a>
-      <a href="https://thesidelineeye.com/2025/09/08/tullysaran-take-division-three-minor-title/" target="_blank" rel="noopener" class="media-card reveal">
+      <a href="https://thesidelineeye.com/2025/09/08/tullysaran-take-division-three-minor-title/" target="_blank" rel="noopener" class="media-card">
         <div class="outlet"><i></i>The Sideline Eye</div>
         <h3>Tullysaran take Division Three Minor title</h3>
         <div class="foot"><span>8 September 2025</span><span class="link-arrow">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg></span></div>
@@ -463,8 +465,8 @@
         </div>
         <p>Presented research on applying GPS tracking and data analytics to Gaelic Games coaching, covering evidence-based approaches to structuring the weekly training microcycle for club teams.</p>
         <div class="thumbs">
-          <img src="images/web/talk-room.jpg" alt="Coaches in the audience during the talk" loading="lazy" data-zoom>
-          <img src="images/web/talk-poster.jpg" alt="Coaching Conference poster: Focus on GAA/LGFA, 15 November, Newforge Sports Complex" loading="lazy" data-zoom style="object-position:top">
+          <img src="images/web/talk-room.jpg" alt="Coaches in the audience during the talk" loading="lazy" data-zoom width="800" height="1000">
+          <img src="images/web/talk-poster.jpg" alt="Coaching Conference poster: Focus on GAA/LGFA, 15 November, Newforge Sports Complex" loading="lazy" data-zoom width="800" height="1000" style="object-position:top">
         </div>
       </div>
     </article>
@@ -484,7 +486,7 @@
       <div class="qual-col reveal">
         <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>Degrees</h3>
         <ol class="timeline">
-          <li class="current"><h4>PhD Predictive Sports Analytics</h4><div class="inst">Queen's University Belfast (in progress)</div><div class="yr">2023 – Autumn 2026</div></li>
+          <li class="current"><h4>PhD Predictive Sports Analytics</h4><div class="inst">Queen's University Belfast · final year</div><div class="yr">2023 – completing autumn 2026</div></li>
           <li><h4>MSc Medical Physics</h4><div class="inst">Queen's University Belfast</div><div class="yr">2018 – 2023</div></li>
         </ol>
       </div>
@@ -500,10 +502,10 @@
     </div>
 
     <div class="gallery">
-      <figure class="reveal"><div class="ph"><img class="contain" src="images/cert-gaa-athletic-dev.jpeg" alt="GAA F3 Youth Athletic Development Level 1 certificate" loading="lazy" data-zoom></div><figcaption>GAA F3 Athletic Development Level 1</figcaption></figure>
-      <figure class="reveal"><div class="ph"><img src="images/web/f3-course.jpg" alt="Eamon with fellow coaches outside the GAA centre during the F3 course" loading="lazy" data-zoom></div><figcaption>On the F3 Athletic Development course</figcaption></figure>
-      <figure class="reveal"><div class="ph"><img class="contain" src="images/cert-setanta-conditioning.png" alt="Setanta Conditioning certificate" loading="lazy" data-zoom></div><figcaption>Setanta Conditioning</figcaption></figure>
-      <figure class="reveal"><div class="ph"><img class="contain" src="images/cert-setanta-rotational.png" alt="Setanta Explosive Rotational Power certificate" loading="lazy" data-zoom></div><figcaption>Explosive Rotational Power</figcaption></figure>
+      <figure><div class="ph"><img class="contain" src="images/cert-gaa-athletic-dev.jpeg" alt="GAA F3 Youth Athletic Development Level 1 certificate" loading="lazy" data-zoom></div><figcaption>GAA F3 Athletic Development Level 1</figcaption></figure>
+      <figure><div class="ph"><img src="images/web/f3-course.jpg" alt="Eamon with fellow coaches outside the GAA centre during the F3 course" loading="lazy" data-zoom></div><figcaption>On the F3 Athletic Development course</figcaption></figure>
+      <figure><div class="ph"><img class="contain" src="images/cert-setanta-conditioning.png" alt="Setanta Conditioning certificate" loading="lazy" data-zoom></div><figcaption>Setanta Conditioning</figcaption></figure>
+      <figure><div class="ph"><img class="contain" src="images/cert-setanta-rotational.png" alt="Setanta Explosive Rotational Power certificate" loading="lazy" data-zoom></div><figcaption>Explosive Rotational Power</figcaption></figure>
     </div>
   </div>
 </section>
