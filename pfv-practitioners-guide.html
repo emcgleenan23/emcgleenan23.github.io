@@ -3,339 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>document.documentElement.classList.add('js')</script>
   <title>In-Situ PFv Profiling — Eamon McGleenan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/article.css">
   <style>
-    :root {
-      --fg: #1a1a1a;
-      --fg-secondary: #555;
-      --fg-muted: #888;
-      --bg: #fafaf8;
-      --bg-card: #fff;
-      --accent: #2a5a4c;
-      --accent-light: #e8f0ed;
-      --border: #e5e5e0;
-      --serif: 'Newsreader', Georgia, serif;
-      --sans: 'DM Sans', system-ui, sans-serif;
-      --mono: 'JetBrains Mono', 'Fira Code', monospace;
-      --max-w: 780px;
-      --space: 1.5rem;
-    }
+    /* ── page-specific: PFv practitioner's guide ── */
+    .findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0 2rem; }
+    .finding-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.3rem; box-shadow: var(--shadow-sm); }
+    .finding-card .stat { font-family: var(--mono); font-size: 1.4rem; color: var(--accent); font-weight: 500; margin-bottom: .25rem; }
+    .finding-card h4 { font-family: var(--serif); font-size: 1rem; font-weight: 500; margin-bottom: .3rem; }
+    .finding-card p { font-size: .86rem; color: var(--fg-muted); margin: 0; line-height: 1.55; }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--sans);
-      color: var(--fg);
-      background: var(--bg);
-      line-height: 1.65;
-      font-size: 15px;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(250,250,248,.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    nav .inner {
-      max-width: var(--max-w); margin: 0 auto;
-      padding: .85rem var(--space);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    nav .name {
-      font-family: var(--serif); font-weight: 500; font-size: 1.05rem;
-      color: var(--fg); text-decoration: none; letter-spacing: -.01em;
-    }
-    nav ul { list-style: none; display: flex; gap: 1.75rem; }
-    nav a {
-      text-decoration: none; color: var(--fg-secondary);
-      font-size: .85rem; font-weight: 500; letter-spacing: .02em; transition: color .2s;
-    }
-    nav a:hover { color: var(--accent); }
-
-    /* ── ARTICLE ── */
-    .article {
-      max-width: var(--max-w); margin: 0 auto;
-      padding: 3.5rem var(--space) 2rem;
-    }
-    .article-header {
-      margin-bottom: 2.5rem; padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .breadcrumb {
-      font-size: .78rem; color: var(--fg-muted);
-      margin-bottom: 1rem; display: flex; align-items: center; gap: .4rem;
-    }
-    .breadcrumb a { color: var(--accent); text-decoration: none; }
-    .breadcrumb a:hover { text-decoration: underline; }
-    .article-header h1 {
-      font-family: var(--serif); font-weight: 300;
-      font-size: clamp(1.7rem, 4.5vw, 2.3rem);
-      line-height: 1.25; letter-spacing: -.02em; margin-bottom: .6rem;
-    }
-    .article-header .subtitle {
-      font-size: .92rem; color: var(--fg-secondary); line-height: 1.6;
-    }
-    .article-meta {
-      display: flex; gap: 1.5rem; flex-wrap: wrap;
-      margin-top: 1rem; font-size: .8rem; color: var(--fg-muted);
-    }
-    .article-meta span { display: inline-flex; align-items: center; gap: .3rem; }
-    .article-meta svg { width: 13px; height: 13px; }
-
-    /* ── TABLE OF CONTENTS ── */
-    .toc {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 6px; padding: 1.25rem 1.5rem; margin-bottom: 2.5rem;
-    }
-    .toc-title {
-      font-family: var(--sans); font-size: .8rem; font-weight: 500;
-      color: var(--fg-muted); letter-spacing: .06em;
-      text-transform: uppercase; margin-bottom: .75rem;
-    }
-    .toc ol { list-style: none; counter-reset: toc-counter; }
-    .toc ol li { counter-increment: toc-counter; margin-bottom: .35rem; }
-    .toc ol li::before {
-      content: counter(toc-counter) ".";
-      font-family: var(--mono); font-size: .75rem;
-      color: var(--accent); margin-right: .5rem; font-weight: 500;
-    }
-    .toc a { font-size: .88rem; color: var(--fg-secondary); text-decoration: none; transition: color .2s; }
-    .toc a:hover { color: var(--accent); }
-
-    /* ── PROSE ── */
-    .prose h2 {
-      font-family: var(--serif); font-weight: 500; font-size: 1.3rem;
-      letter-spacing: -.01em; margin: 2.5rem 0 1rem;
-      padding-bottom: .55rem; border-bottom: 1px solid var(--border);
-    }
-    .prose h3 {
-      font-family: var(--serif); font-weight: 500; font-size: 1.05rem;
-      margin: 1.8rem 0 .7rem;
-    }
-    .prose p { margin-bottom: 1.1rem; color: var(--fg-secondary); line-height: 1.75; }
-    .prose a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
-    .prose a:hover { border-bottom-color: var(--accent); }
-    .prose strong { color: var(--fg); }
-
-    /* ── CALLOUT BOX ── */
-    .callout {
-      background: var(--accent-light); border-left: 3px solid var(--accent);
-      padding: 1rem 1.25rem; border-radius: 0 6px 6px 0; margin: 1.5rem 0;
-    }
-    .callout p { color: var(--fg); margin: 0; font-size: .9rem; }
-    .callout-title {
-      font-weight: 500; font-size: .82rem; color: var(--accent);
-      text-transform: uppercase; letter-spacing: .04em; margin-bottom: .35rem;
-    }
-    .callout-warn { background: #fef7ec; border-left-color: #c4820a; }
-    .callout-warn .callout-title { color: #a06c05; }
-
-    /* ── CODE ── */
-    code {
-      font-family: var(--mono); font-size: .82rem;
-      background: #f0f0ec; padding: .15rem .4rem; border-radius: 3px; color: var(--fg);
-    }
-    pre {
-      background: #1e1e1e; color: #d4d4d4; border-radius: 6px;
-      padding: 1.2rem 1.4rem; overflow-x: auto; margin: 1.2rem 0 1.5rem;
-      line-height: 1.6; font-size: .82rem; border: 1px solid #333;
-    }
-    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
-    .code-header {
-      display: flex; justify-content: space-between; align-items: center;
-      background: #2d2d2d; padding: .5rem 1rem;
-      border-radius: 6px 6px 0 0; border: 1px solid #333; border-bottom: none; margin-top: 1.2rem;
-    }
-    .code-header + pre { margin-top: 0; border-radius: 0 0 6px 6px; }
-    .code-header span { font-family: var(--mono); font-size: .72rem; color: #888; font-weight: 500; }
-    .code-header .copy-btn {
-      background: none; border: 1px solid #555; color: #aaa;
-      padding: .2rem .5rem; border-radius: 3px; font-size: .68rem;
-      cursor: pointer; font-family: var(--sans); transition: all .2s;
-    }
-    .code-header .copy-btn:hover { border-color: #888; color: #ddd; }
-
-    /* ── KEY FINDINGS ── */
-    .findings {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem; margin: 1.5rem 0 2rem;
-    }
-    .finding-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
-      padding: 1.2rem 1.3rem; transition: box-shadow .2s;
-    }
-    .finding-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.04); }
-    .finding-card .stat {
-      font-family: var(--mono); font-size: 1.4rem; color: var(--accent);
-      font-weight: 500; margin-bottom: .25rem;
-    }
-    .finding-card h4 { font-family: var(--serif); font-size: .95rem; font-weight: 500; margin-bottom: .3rem; }
-    .finding-card p { font-size: .84rem; color: var(--fg-muted); margin: 0; line-height: 1.55; }
-
-    /* ── PIPELINE DIAGRAM ── */
-    .pipeline-diagram {
-      display: flex; align-items: stretch; gap: 0;
-      margin: 2rem 0; overflow-x: auto; padding: .5rem 0;
-    }
-    .pipeline-stage {
-      flex: 1; min-width: 150px; padding: 1.1rem 1rem;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 6px; text-align: center;
-    }
-    .pipeline-stage .stage-num {
-      font-family: var(--mono); font-size: .65rem; font-weight: 500;
-      color: var(--accent); letter-spacing: .06em; text-transform: uppercase; margin-bottom: .35rem;
-    }
-    .pipeline-stage h4 { font-family: var(--serif); font-size: .9rem; font-weight: 500; margin-bottom: .3rem; }
-    .pipeline-stage p { font-size: .75rem; color: var(--fg-muted); line-height: 1.5; }
-    .pipeline-arrow {
-      display: flex; align-items: center; padding: 0 .3rem;
-      color: var(--accent); font-size: 1.2rem; flex-shrink: 0;
-    }
-
-    /* ── METRIC TABLE ── */
-    .metric-table {
-      width: 100%; border-collapse: collapse; margin: 1.2rem 0 1.5rem; font-size: .84rem;
-    }
-    .metric-table th {
-      font-family: var(--sans); font-weight: 500; text-align: left;
-      padding: .65rem .8rem; background: var(--accent-light); color: var(--accent);
-      border-bottom: 2px solid var(--accent); font-size: .78rem; letter-spacing: .03em;
-    }
-    .metric-table td {
-      padding: .6rem .8rem; border-bottom: 1px solid var(--border);
-      color: var(--fg-secondary); line-height: 1.5;
-    }
-    .metric-table tr:hover td { background: rgba(42,90,76,.03); }
-    .mono { font-family: var(--mono); }
-
-    /* ── FILE TREE ── */
-    .file-tree {
-      background: #1e1e1e; color: #d4d4d4; border-radius: 6px;
-      padding: 1.2rem 1.4rem; margin: 1.2rem 0 1.5rem;
-      font-family: var(--mono); font-size: .8rem; line-height: 1.9;
-      border: 1px solid #333; overflow-x: auto;
-    }
-    .file-tree .dir  { color: #9cdcfe; }
-    .file-tree .file { color: #d4d4d4; }
-    .file-tree .desc { color: #6a9955; }
-
-    /* ── INTERACTIVE TOOL ── */
-    .tool-box {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 6px; padding: 1.5rem; margin: 1.5rem 0;
-    }
-    .tool-box h4 { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; margin-bottom: .8rem; }
+    /* interactive tool */
+    .tool-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin: 1.5rem 0; box-shadow: var(--shadow-sm); }
+    .tool-box h4 { font-family: var(--serif); font-size: 1.1rem; font-weight: 500; margin-bottom: .8rem; }
     .tool-box canvas { width: 100%; height: auto; display: block; border-radius: 4px; margin: .5rem 0; }
-    .tool-box .caption { font-size: .78rem; color: var(--fg-muted); font-style: italic; margin-top: .5rem; }
-
+    .tool-box .caption { font-size: .8rem; color: var(--fg-muted); font-style: italic; margin-top: .5rem; }
     .upload-zone {
-      border: 2px dashed var(--border); border-radius: 6px; padding: 2rem;
-      text-align: center; cursor: pointer; transition: all .2s; margin: 1rem 0; position: relative;
+      border: 2px dashed var(--border-strong); border-radius: var(--radius); padding: 1.6rem 1.25rem;
+      text-align: center; cursor: pointer; margin: 1rem 0; position: relative;
+      transition: border-color .15s, background .15s;
     }
-    .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: var(--accent-light); }
+    .upload-zone:hover, .upload-zone:focus-within, .upload-zone.dragover { border-color: var(--accent); background: var(--accent-light); }
     .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-    .upload-zone .icon { font-size: 2rem; margin-bottom: .5rem; opacity: .4; }
+    .upload-zone .icon { width: 28px; height: 28px; margin: 0 auto .5rem; color: var(--accent); }
     .upload-zone p { font-size: .88rem; color: var(--fg-muted); margin: 0; }
     .upload-zone .filename { font-family: var(--mono); font-size: .82rem; color: var(--accent); margin-top: .4rem; }
-
-    .btn {
-      display: inline-block; padding: .5rem 1.1rem; border: none; border-radius: 4px;
-      font-family: var(--sans); font-size: .85rem; font-weight: 500; cursor: pointer; transition: all .15s;
-    }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { background: #1e4a3d; }
-    .btn-outline { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
-    .btn-outline:hover { background: var(--accent); color: #fff; }
-    .btn:disabled { opacity: .4; cursor: not-allowed; }
-
     select, .input-field {
       font-family: var(--sans); font-size: .85rem; padding: .4rem .65rem;
       border: 1.5px solid var(--border); border-radius: 4px; background: var(--bg-card);
     }
     .controls-row { display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; margin: .8rem 0; }
     .controls-row label { font-size: .82rem; font-weight: 500; color: var(--fg-muted); }
-
     .status-bar {
       font-family: var(--mono); font-size: .75rem; background: #1e1e1e; color: #a6e3a1;
       padding: .6rem 1rem; border-radius: 4px; margin: .8rem 0;
       max-height: 130px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #333;
     }
-
-    /* ── TABS ── */
-    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+    .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1rem; overflow-x: auto; scrollbar-width: none; }
     .tab {
-      padding: .5rem 1.1rem; font-size: .85rem; font-weight: 500; cursor: pointer;
-      border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--fg-muted);
-      transition: all .15s; background: none; border-top: none; border-left: none; border-right: none;
-      font-family: var(--sans);
+      padding: .6rem 1.1rem; font-size: .85rem; font-weight: 500; cursor: pointer; white-space: nowrap;
+      border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--fg-muted);
+      background: none; font-family: var(--sans); transition: color .15s, border-color .15s;
     }
-    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab.active, .tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
     .tab:hover { color: var(--accent); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-
-    /* ── FOOTER ── */
-    footer {
-      max-width: var(--max-w); margin: 0 auto;
-      padding: 2.5rem var(--space); border-top: 1px solid var(--border);
-      font-size: .8rem; color: var(--fg-muted);
-      display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
-    }
-    footer a { color: var(--fg-secondary); text-decoration: none; }
-    footer a:hover { color: var(--accent); }
-
-    /* ── REFERENCES ── */
-    .ref-list {
-      list-style: none;
-      counter-reset: ref-counter;
-      margin: 1rem 0;
-    }
-    .ref-list li {
-      counter-increment: ref-counter;
-      padding: .6rem 0 .6rem 2.2rem;
-      position: relative;
-      font-size: .84rem;
-      color: var(--fg-secondary);
-      line-height: 1.6;
-      border-bottom: 1px solid var(--border);
-    }
-    .ref-list li:last-child { border-bottom: none; }
-    .ref-list li::before {
-      content: "[" counter(ref-counter) "]";
-      position: absolute;
-      left: 0;
-      font-family: var(--mono);
-      font-size: .72rem;
-      color: var(--accent);
-      font-weight: 500;
-    }
-    .ref-list a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-    .ref-list a:hover { text-decoration: underline; }
-
-    /* ── ANIMATIONS ── */
-    .fade-in { opacity: 0; transform: translateY(12px); animation: fadeUp .6s ease forwards; }
-    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-    .fade-in:nth-child(1) { animation-delay: .05s; }
-    .fade-in:nth-child(2) { animation-delay: .12s; }
-    .fade-in:nth-child(3) { animation-delay: .19s; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 600px) {
-      nav ul { gap: 1rem; font-size: .75rem; }
-      .pipeline-diagram { flex-direction: column; }
-      .pipeline-arrow { transform: rotate(90deg); justify-content: center; padding: .3rem 0; }
-      .findings { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 600px) { .findings { grid-template-columns: 1fr; } }
   </style>
   <link rel="stylesheet" href="assets/site.css">
   <meta property="og:image" content="https://emcgleenan23.github.io/images/web/cover-pfv.jpg">
@@ -361,7 +78,7 @@
 <!-- ── ARTICLE ── -->
 <article class="article">
 
-  <div class="article-header fade-in">
+  <div class="article-header">
     <div class="breadcrumb">
       <a href="index.html">Home</a>
       <span>›</span>
@@ -389,6 +106,17 @@
         Python · GPS · STATSports · Force-Velocity
       </span>
     </div>
+    <div class="tldr">
+      <span class="label">In short</span>
+      <ul>
+        <li>Builds a force-velocity profile from GPS data you already collect in training and matches, with no extra sprint testing.</li>
+        <li>Validated against isolated sprints in sub-elite Gaelic football, with the minimum data needed for a stable profile.</li>
+        <li>Sliding-window ballistic power tracks neuromuscular fatigue within a match.</li>
+      </ul>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn-primary" href="#try-it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg> Try the in-browser tool</a>
+    </div>
     <div class="paper-banner">
       <div>
         <span class="label">Published paper · 2026</span>
@@ -402,13 +130,13 @@
     </div>
   </div>
 
-  <figure class="article-cover fade-in">
-    <img src="images/web/cover-pfv.jpg" alt="Illustrative acceleration-speed profile showing the top-two envelope and the fitted line to A0 and S0">
+  <figure class="article-cover">
+    <img src="images/web/cover-pfv.jpg" alt="Illustrative acceleration-speed profile showing the top-two envelope and the fitted line to A0 and S0" width="1200" height="750" fetchpriority="high">
     <figcaption>How an in-situ profile is built: the top two accelerations in each 0.2 m/s speed bin above 3 m/s form the envelope, and the fitted line gives A₀ and S₀. Illustrative data.</figcaption>
   </figure>
 
   <!-- ── TABLE OF CONTENTS ── -->
-  <div class="toc fade-in">
+  <div class="toc">
     <div class="toc-title">Contents</div>
     <ol>
       <li><a href="#what-is-pfv">What is a PFv profile?</a></li>
@@ -634,45 +362,46 @@ STEP_S = 10                  # Sliding window step (seconds)</code></pre>
   </div><!-- /prose -->
 
   <!-- Interactive tool -->
-  <div class="tool-box">
-    <h4>Upload GPS data</h4>
+  <div class="tool-box" id="toolBox">
+    <h4>Run the method</h4>
+    <p style="font-size:.9rem;color:var(--fg-secondary);margin:0 0 .25rem">The figures below run on a synthetic 30-minute match as soon as you reach them. Drop in your own export to replace it.</p>
     <div class="upload-zone" id="uploadZone">
-      <div class="icon">📡</div>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
       <p><strong>Drop a raw STATSports CSV here</strong>, or click to browse</p>
       <p style="font-size:.75rem;color:var(--fg-muted);margin-top:.3rem">Expects columns: Time, Speed (m/s). All processing runs locally.</p>
       <div class="filename" id="fileName"></div>
-      <input type="file" id="fileInput" accept=".csv">
+      <input type="file" id="fileInput" accept=".csv" aria-label="Choose a STATSports CSV file">
     </div>
     <div class="controls-row">
-      <button class="btn btn-primary" id="btnProcess" disabled>Process data</button>
-      <button class="btn btn-outline" id="btnDemo">Load demo data</button>
+      <button class="btn btn-outline" id="btnDemo">Use demo data</button>
+      <button class="btn btn-primary" id="btnProcess" disabled>Re-run</button>
       <label>Min speed: <input type="number" class="input-field" id="minSpeed" value="3.0" step="0.5" min="1" max="6" style="width:60px"> m/s</label>
     </div>
-    <div class="status-bar" id="statusBar">Ready. Upload a CSV or load the demo data to begin.</div>
+    <div class="status-bar" id="statusBar" role="status" aria-live="polite">Loading demo data…</div>
   </div>
 
   <div class="tool-box" id="resultsBox" style="display:none">
-    <div class="tabs">
-      <button class="tab active" data-tab="fig1">Speed &amp; Accel</button>
-      <button class="tab" data-tab="fig2">AS Profile</button>
-      <button class="tab" data-tab="fig3">FV &amp; Power</button>
-      <button class="tab" data-tab="fig4">Metrics</button>
+    <div class="tabs" role="tablist" aria-label="Figures">
+      <button class="tab active" role="tab" id="t-fig1" aria-controls="tab-fig1" aria-selected="true" data-tab="fig1">Speed &amp; Accel</button>
+      <button class="tab" role="tab" id="t-fig2" aria-controls="tab-fig2" aria-selected="false" tabindex="-1" data-tab="fig2">AS Profile</button>
+      <button class="tab" role="tab" id="t-fig3" aria-controls="tab-fig3" aria-selected="false" tabindex="-1" data-tab="fig3">FV &amp; Power</button>
+      <button class="tab" role="tab" id="t-fig4" aria-controls="tab-fig4" aria-selected="false" tabindex="-1" data-tab="fig4">Metrics</button>
     </div>
-    <div class="tab-content active" id="tab-fig1">
+    <div class="tab-content active" id="tab-fig1" role="tabpanel" aria-labelledby="t-fig1">
       <canvas id="canvasSpeed" height="220"></canvas>
       <p class="caption">Raw speed (blue dots) and Butterworth-filtered speed (black line) over time.</p>
       <canvas id="canvasAccel" height="220"></canvas>
       <p class="caption">Derived acceleration from the filtered speed signal.</p>
     </div>
-    <div class="tab-content" id="tab-fig2">
+    <div class="tab-content" id="tab-fig2" role="tabpanel" aria-labelledby="t-fig2">
       <canvas id="canvasAS" height="340"></canvas>
       <p class="caption">Acceleration–speed scatter. Grey = below threshold. Green = included in fit. Red = outliers. Black line = final regression.</p>
     </div>
-    <div class="tab-content" id="tab-fig3">
+    <div class="tab-content" id="tab-fig3" role="tabpanel" aria-labelledby="t-fig3">
       <canvas id="canvasFV" height="340"></canvas>
       <p class="caption">Force-velocity profile (solid line) and power-velocity curve (dashed). Orange shading = P<sub>B</sub>. Star = P<sub>max</sub>.</p>
     </div>
-    <div class="tab-content" id="tab-fig4">
+    <div class="tab-content" id="tab-fig4" role="tabpanel" aria-labelledby="t-fig4">
       <div id="metricsOutput"></div>
     </div>
   </div>
@@ -903,7 +632,7 @@ STEP_S = 10                  # Sliding window step (seconds)</code></pre>
     <h2>More projects</h2>
     <div class="more-grid">
       <article class="card compact">
-        <div class="card-media"><img src="images/web/cover-tullysaran.jpg" alt="" loading="lazy"><span class="badge">Applied · Club</span></div>
+        <div class="card-media"><img src="images/web/cover-tullysaran.jpg" alt="" loading="lazy" width="1200" height="750"><span class="badge">Applied · Club</span></div>
         <div class="card-body">
           <h3><a href="gps-pipeline.html">GPS Processing Pipeline for Gaelic Games</a></h3>
           <p>Raw STATSports exports to Tableau-ready weekly summaries, built on evidence-informed thresholds.</p>
@@ -911,7 +640,7 @@ STEP_S = 10                  # Sliding window step (seconds)</code></pre>
         </div>
       </article>
       <article class="card compact">
-        <div class="card-media"><img src="images/web/cover-dashboard.jpg" alt="" loading="lazy"><span class="badge">Dashboard · Live demo</span></div>
+        <div class="card-media"><img src="images/web/cover-dashboard.jpg" alt="" loading="lazy" width="1200" height="750"><span class="badge">Dashboard · Live demo</span></div>
         <div class="card-body">
           <h3><a href="gps-performance-dashboard.html">GPS Performance Dashboard</a></h3>
           <p>10-second session analysis, most demanding passages and season load as a time series.</p>
@@ -919,7 +648,7 @@ STEP_S = 10                  # Sliding window step (seconds)</code></pre>
         </div>
       </article>
       <article class="card compact">
-        <div class="card-media"><img src="images/web/cover-scouting.jpg" alt="" loading="lazy" style="object-fit:contain;background:#fff;padding:2rem .6rem .4rem"><span class="badge">Football · ML</span></div>
+        <div class="card-media"><img src="images/web/cover-scouting.jpg" alt="" loading="lazy" width="1200" height="750" style="object-fit:contain;background:#fff;padding:2rem .6rem .4rem"><span class="badge">Football · ML</span></div>
         <div class="card-body">
           <h3><a href="football-scouting.html">Can Open Data Spot the Next €30m Player?</a></h3>
           <p>A transparent scouting screen from free data, back-tested and explained.</p>
@@ -1566,7 +1295,7 @@ $('#fileInput').addEventListener('change', e => {
   const reader = new FileReader();
   reader.onload = ev => {
     uploadedData = parseCSV(ev.target.result);
-    if (uploadedData) { log('CSV loaded: ' + uploadedData.length + ' samples.'); $('#btnProcess').disabled = false; }
+    if (uploadedData) { log('CSV loaded: ' + uploadedData.length + ' samples.'); runAnalysis(true); }
   };
   reader.readAsText(file);
 });
@@ -1580,15 +1309,16 @@ uz.addEventListener('drop', e => { e.preventDefault(); uz.classList.remove('drag
   if (file) { $('#fileInput').files = e.dataTransfer.files; $('#fileInput').dispatchEvent(new Event('change')); }
 });
 
-$('#btnDemo').addEventListener('click', () => {
+function loadDemo() {
   log('Generating synthetic demo data (30 min @ 10 Hz)...');
   uploadedData = generateDemoData();
   $('#fileName').textContent = 'demo_match_data.csv (synthetic)';
   log('Demo data ready: ' + uploadedData.length + ' samples.');
-  $('#btnProcess').disabled = false;
-});
+}
+$('#btnDemo').addEventListener('click', () => { loadDemo(); runAnalysis(true); });
+$('#btnProcess').addEventListener('click', () => runAnalysis(true));
 
-$('#btnProcess').addEventListener('click', () => {
+function runAnalysis(scrollToResults) {
   if (!uploadedData) return;
   const minSpeed = parseFloat($('#minSpeed').value) || 3.0;
   let fs = 10, fc = 1;
@@ -1596,40 +1326,79 @@ $('#btnProcess').addEventListener('click', () => {
   // If data was deduped to 1 Hz (small sample count relative to expected), adjust
   // Heuristic: 30 min at 10 Hz = 18000, at 1 Hz = 1800
   if (uploadedData.length < 5000 && uploadedData.length > 100) {
-    // Likely 1 Hz data (deduped or Raw Data export)
     fs = 1;
     fc = 0.4; // adjust filter for lower sample rate
     log('Detected low sample count — assuming ~1 Hz effective rate.');
   }
 
-  $('#statusBar').textContent = 'Processing...';
-  log('Sample rate: ' + fs + ' Hz, filter cut-off: ' + fc + ' Hz, min speed: ' + minSpeed + ' m/s');
+  log('Processing… sample rate: ' + fs + ' Hz, filter cut-off: ' + fc + ' Hz, min speed: ' + minSpeed + ' m/s');
 
   // Run async to allow UI update
   setTimeout(() => {
     const result = computePFV(uploadedData, fs, fc, minSpeed);
     if (!result) { log('⚠ Processing failed — check data quality.'); return; }
 
-    // Show results
     $('#resultsBox').style.display = 'block';
-    drawSpeedTrace($('#canvasSpeed'), result.rawSpeed, result.filtered, fs);
-    drawAccelTrace($('#canvasAccel'), result.accel, fs);
-    drawASProfile($('#canvasAS'), result);
-    drawFVPower($('#canvasFV'), result);
+    lastResult = result; lastFs = fs;
+    drawVisible();
     showMetrics(result);
+    $('#btnProcess').disabled = false;
 
     log('✓ All figures rendered.');
-    $('#resultsBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (scrollToResults) {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      $('#resultsBox').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    }
   }, 50);
-});
+}
 
-// Tabs
-$$('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    $$('.tab').forEach(t => t.classList.remove('active'));
-    $$('.tab-content').forEach(c => c.classList.remove('active'));
-    tab.classList.add('active');
-    $('#tab-' + tab.dataset.tab).classList.add('active');
+// Canvases size themselves from their on-screen width, so only the visible tab
+// can be drawn; the others are drawn when their tab is opened (and on resize).
+let lastResult = null, lastFs = 10;
+function drawVisible() {
+  if (!lastResult) return;
+  const tab = document.querySelector('.tab[aria-selected="true"]');
+  const name = tab ? tab.dataset.tab : 'fig1';
+  if (name === 'fig1') {
+    drawSpeedTrace($('#canvasSpeed'), lastResult.rawSpeed, lastResult.filtered, lastFs);
+    drawAccelTrace($('#canvasAccel'), lastResult.accel, lastFs);
+  } else if (name === 'fig2') drawASProfile($('#canvasAS'), lastResult);
+  else if (name === 'fig3') drawFVPower($('#canvasFV'), lastResult);
+}
+let resizeT = 0;
+window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(drawVisible, 150); });
+
+// Run the demo automatically the first time the tool comes into view,
+// so visitors without a CSV still see the method working.
+(function autoDemo() {
+  const box = $('#toolBox');
+  const go = () => { if (!uploadedData) { loadDemo(); runAnalysis(false); } };
+  if (!('IntersectionObserver' in window)) { go(); return; }
+  const io = new IntersectionObserver(entries => {
+    if (entries.some(e => e.isIntersecting)) { io.disconnect(); go(); }
+  }, { rootMargin: '0px 0px 200px 0px' });
+  io.observe(box);
+})();
+
+// Tabs (ARIA tabs pattern: arrow keys move between tabs)
+const tabs = $$('.tab');
+function selectTab(tab, focus) {
+  tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); t.tabIndex = -1; });
+  $$('.tab-content').forEach(c => c.classList.remove('active'));
+  tab.classList.add('active'); tab.setAttribute('aria-selected', 'true'); tab.tabIndex = 0;
+  $('#tab-' + tab.dataset.tab).classList.add('active');
+  drawVisible();
+  if (focus) tab.focus();
+}
+tabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => selectTab(tab));
+  tab.addEventListener('keydown', e => {
+    let j = null;
+    if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+    if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+    if (e.key === 'Home') j = 0;
+    if (e.key === 'End') j = tabs.length - 1;
+    if (j !== null) { e.preventDefault(); selectTab(tabs[j], true); }
   });
 });
 
