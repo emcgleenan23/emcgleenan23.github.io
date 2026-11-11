@@ -47,9 +47,6 @@
       background: var(--accent-light); padding: .45rem .85rem; border-radius: 999px;
     }
     .hero .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px rgba(31,86,70,.18); }
-    .hero .press { margin-top: 1.5rem; font-size: .84rem; color: var(--fg-muted); }
-    .hero .press a { color: var(--fg-secondary); text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 3px; }
-    .hero .press a:hover { color: var(--accent); text-decoration-color: currentColor; }
     .hero .actions { margin-top: 1.75rem; display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
     .hero .actions .icon-links { margin-left: .35rem; }
 
@@ -264,7 +261,6 @@
           <a class="icon-link" href="https://www.linkedin.com/in/eamon-mcgleenan" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
         </span>
       </div>
-      <p class="press">Featured in <a href="https://www.irishtimes.com/ireland/2025/09/05/gaa-moneyball-astrophysics-student-uses-science-to-lead-club-to-historic-win/" target="_blank" rel="noopener">The Irish Times</a> and <a href="https://www.rte.ie/news/regional/2025/0905/1531928-gaa-club-data/" target="_blank" rel="noopener">RTÉ News</a>, September 2025</p>
     </div>
 
     <figure class="hero-figure">
@@ -304,6 +300,23 @@
     </div>
 
     <div class="projects-grid">
+      <article class="card reveal">
+        <div class="card-media">
+          <img src="images/web/cover-jump-analysis.jpg" alt="Hip height, estimated force and joint angle traces for one countermovement jump, with the phases shaded" loading="lazy" width="1200" height="750">
+          <span class="badge">Live demo</span>
+        </div>
+        <div class="card-body">
+          <h3><a href="jump-analysis/">Jump Analysis from Phone Video</a></h3>
+          <p>Film a countermovement jump on a phone and get it back broken down by phase and by joint: jump height from flight time, hip, knee and ankle angles in each phase, an estimated force curve and landing quality. Pose estimation runs in the browser, so the video never leaves the device.</p>
+          <div class="stat-line">Scale is <strong>calibrated from the flight itself</strong>, because gravity sets the curve of the jump, so no tape measure or athlete height is needed.</div>
+          <div class="card-foot">
+            <div class="actions">
+              <a class="link-arrow" href="jump-analysis/">Try it with your own jump <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            </div>
+            <div class="tags"><span>Computer vision</span><span>Biomechanics</span><span>TypeScript</span></div>
+          </div>
+        </div>
+      </article>
       <article class="card reveal">
         <div class="card-media">
           <img src="images/web/cover-dashboard.jpg" alt="Session analysis view of the GPS performance dashboard on a synthetic squad" loading="lazy" width="1200" height="750">
